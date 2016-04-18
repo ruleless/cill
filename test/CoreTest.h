@@ -8,6 +8,7 @@ class CoreTest : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(CoreTest);
 	CPPUNIT_TEST(printPlat);
+	CPPUNIT_TEST(testBuffer);
 	CPPUNIT_TEST_SUITE_END();
   public:
     CoreTest();
@@ -18,6 +19,7 @@ class CoreTest : public CppUnit::TestFixture
 	virtual void tearDown();
 
 	void printPlat();
+	void testBuffer();
 };
 
 #endif
