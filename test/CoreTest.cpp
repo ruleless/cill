@@ -2,6 +2,7 @@
 
 #include "CillConfig.h"
 #include "Buffer.h"
+#include "StrBuffer.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(CoreTest);
 
@@ -47,4 +48,14 @@ void CoreTest::testBuffer()
 		ib>>n;
 		CPPUNIT_ASSERT(n == *it);
 	}
+}
+
+void CoreTest::testStrBuffer()
+{
+	core::ostrbuf osb;
+	osb<<1;
+	osb<<2;
+	osb<<3;
+	printf("osb:%s", osb.c_str());
+	CPPUNIT_ASSERT(strcmp("123", osb.c_str()) == 0);
 }

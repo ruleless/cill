@@ -5,7 +5,8 @@
 #include <memory.h>
 
 NAMESPACE_BEG(core)
-class BufferAllocatorDummy
+
+class AllocatorDummy
 {
   public:
 	size_t init_size() const
@@ -29,7 +30,7 @@ class BufferAllocatorDummy
 };
 
 template<size_t _init_size = 256>
-class BufferAllocatorHeap
+class AllocatorHeap
 {
   public:
 	size_t init_size() const
@@ -71,7 +72,7 @@ class BufferAllocatorHeap
 };
 
 template <size_t _init_size = 256>
-class BufferAllocatorStack
+class AllocatorStack
 {
   protected:
 	enum
@@ -104,11 +105,11 @@ class BufferAllocatorStack
 };
 
 template <size_t _init_size = 256>
-class BufferAllocatorStackOrHeap : public BufferAllocatorStack<_init_size>,
-								   public BufferAllocatorHeap<_init_size>
+class AllocatorStackOrHeap : public AllocatorStack<_init_size>,
+							 public AllocatorHeap<_init_size>
 {
-	typedef BufferAllocatorHeap<_init_size>	  heap;
-	typedef BufferAllocatorStack<_init_size>  stack;
+	typedef AllocatorHeap<_init_size>	  heap;
+	typedef AllocatorStack<_init_size>  stack;
   public:
 	size_t init_size() const
 	{
@@ -157,7 +158,7 @@ class BufferAllocatorStackOrHeap : public BufferAllocatorStack<_init_size>,
 };
 
 template<class Allocator>
-class BufferAllocatorEx : public Allocator
+class AllocatorEx : public Allocator
 {
 	typedef Allocator base;
   public:
@@ -180,6 +181,34 @@ class BufferAllocatorEx : public Allocator
 		return ptr;
 	}
 };
+
+typedef AllocatorStackOrHeap<32>          AlctStackOrHeap32;
+typedef AllocatorEx<AlctStackOrHeap32>    AlctEx32;
+
+typedef AllocatorStackOrHeap<64>          AlctStackOrHeap64;
+typedef AllocatorEx<AlctStackOrHeap64>    AlctEx64;
+
+typedef AllocatorStackOrHeap<128>         AlctStackOrHeap128;
+typedef AllocatorEx<AlctStackOrHeap128>   AlctEx128;
+
+typedef AllocatorStackOrHeap<256>         AlctStackOrHeap256;
+typedef AllocatorEx<AlctStackOrHeap256>   AlctEx256;
+
+typedef AllocatorStackOrHeap<512>         AlctStackOrHeap512;
+typedef AllocatorEx<AlctStackOrHeap512>   AlctEx512;
+
+typedef AllocatorStackOrHeap<1024>        AlctStackOrHeap1024;
+typedef AllocatorEx<AlctStackOrHeap1024>  AlctEx1024;
+
+typedef AllocatorStackOrHeap<2048>        AlctStackOrHeap2048;
+typedef AllocatorEx<AlctStackOrHeap2048>  AlctEx2048;
+
+typedef AllocatorStackOrHeap<4096>        AlctStackOrHeap4096;
+typedef AllocatorEx<AlctStackOrHeap4096>  AlctEx4096;
+
+typedef AllocatorStackOrHeap<8192>        AlctStackOrHeap8192;
+typedef AllocatorEx<AlctStackOrHeap8192>  AlctEx8192;
+
 NAMESPACE_END // namespace core
 
 #endif // __CORE_ALLOCATOR_H__

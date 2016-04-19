@@ -490,43 +490,16 @@ class InBuffer : public BasicBuffer
 	}
 };
 
-typedef BufferAllocatorStackOrHeap<32>          AlctStackOrHeap32;
-typedef BufferAllocatorEx<AlctStackOrHeap32>    BufferAlctEx32;
-typedef OutBuffer<BufferAlctEx32>               obuf32;
-
-typedef BufferAllocatorStackOrHeap<64>          AlctStackOrHeap64;
-typedef BufferAllocatorEx<AlctStackOrHeap64>    BufferAlctEx64;
-typedef OutBuffer<BufferAlctEx64>               obuf64;
-
-typedef BufferAllocatorStackOrHeap<128>         AlctStackOrHeap128;
-typedef BufferAllocatorEx<AlctStackOrHeap128>   BufferAlctEx128;
-typedef OutBuffer<BufferAlctEx128>              obuf128;
-
-typedef BufferAllocatorStackOrHeap<256>         AlctStackOrHeap256;
-typedef BufferAllocatorEx<AlctStackOrHeap256>   BufferAlctEx256;
-typedef OutBuffer<BufferAlctEx256>              obuf256, obuf;
-
-typedef BufferAllocatorStackOrHeap<512>         AlctStackOrHeap512;
-typedef BufferAllocatorEx<AlctStackOrHeap512>   BufferAlctEx512;
-typedef OutBuffer<BufferAlctEx512>              obuf512;
-
-typedef BufferAllocatorStackOrHeap<1024>        AlctStackOrHeap1024;
-typedef BufferAllocatorEx<AlctStackOrHeap1024>  BufferAlctEx1024;
-typedef OutBuffer<BufferAlctEx1024>             obuf1024;
-
-typedef BufferAllocatorStackOrHeap<2048>        AlctStackOrHeap2048;
-typedef BufferAllocatorEx<AlctStackOrHeap2048>  BufferAlctEx2048;
-typedef OutBuffer<BufferAlctEx2048>             obuf2048;
-
-typedef BufferAllocatorStackOrHeap<4096>        AlctStackOrHeap4096;
-typedef BufferAllocatorEx<AlctStackOrHeap4096>  BufferAlctEx4096;
-typedef OutBuffer<BufferAlctEx4096>             obuf4096;
-
-typedef BufferAllocatorStackOrHeap<8192>        AlctStackOrHeap8192;
-typedef BufferAllocatorEx<AlctStackOrHeap8192>  BufferAlctEx8192;
-typedef OutBuffer<BufferAlctEx8192>             obuf8192;
-
-typedef OutBuffer<BufferAllocatorDummy>         ofixbuf;
+typedef OutBuffer<AlctEx32>               obuf32;
+typedef OutBuffer<AlctEx64>               obuf64;
+typedef OutBuffer<AlctEx128>              obuf128;
+typedef OutBuffer<AlctEx256>              obuf256, obuf;
+typedef OutBuffer<AlctEx512>              obuf512;
+typedef OutBuffer<AlctEx1024>             obuf1024;
+typedef OutBuffer<AlctEx2048>             obuf2048;
+typedef OutBuffer<AlctEx4096>             obuf4096;
+typedef OutBuffer<AlctEx8192>             obuf8192;
+typedef OutBuffer<AllocatorDummy>         ofixbuf;
 
 NAMESPACE_END // namespace core
 

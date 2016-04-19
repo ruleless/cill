@@ -256,7 +256,7 @@ typedef uint32					uintptr;
 
 #endif // #if COMPILER != COMPILER_GNU
 
-NAMESPACE_END
+NAMESPACE_END // namespace core
 
 #if _MSC_VER >= 1500
 #define UnorderedMap			std::tr1::unordered_map
@@ -291,6 +291,70 @@ enum
 #else // #if PLATFORM == PLATFORM_WIN32
 typedef int					SOCKET;
 #endif // #if PLATFORM == PLATFORM_WIN32
+
+// 输出格式宏定义
+#if COMPILER != COMPILER_GNU
+
+#	define PRI64			"lld"
+#	define PRIu64			"llu"
+#	define PRIx64			"llx"
+#	define PRIX64			"llX"
+#	define PRIzu			"lu"
+#	define PRIzd			"ld"
+#	define PRTime			PRI64
+
+#else // #if COMPILER != COMPILER_GNU
+
+#ifdef _LP64
+#	ifndef PRI64
+#		define PRI64		"ld"
+#	endif
+
+#	ifndef PRIu64
+#		define PRIu64		"lu"
+#	endif
+
+#	ifndef PRIx64
+#		define PRIx64		"lx"
+#	endif
+
+#	ifndef PRIX64
+#		define PRIX64		"lX"
+#	endif
+
+#	ifndef PRTime
+#		define PRTime		PRI64
+#	endif
+#else // #ifdef _LP64
+#	ifndef PRI64
+#		define PRI64		"lld"
+#	endif
+
+#	ifndef PRIu64
+#		define PRIu64		"llu"
+#	endif
+
+#	ifndef PRIx64
+#		define PRIx64		"llx"
+#	endif
+
+#	ifndef PRIX64
+#		define PRIX64		"llX"
+#	endif
+
+#	ifndef PRTime
+#		define PRTime		"ld"
+#	endif
+#endif // #ifdef _LP64
+
+#ifndef PRIzd
+#	define PRIzd			"zd"
+#endif
+
+#ifndef PRIzu
+#	define PRIzu			"zu"
+#endif
+#endif // #if COMPILER != COMPILER_GNU
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
