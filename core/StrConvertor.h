@@ -1,10 +1,13 @@
-#ifndef __STRCONVERTOR_H__
-#define __STRCONVERTOR_H__
+#ifndef __CORE_STRCONVERTOR_H__
+#define __CORE_STRCONVERTOR_H__
 
-#include "platform.h"
+#include <string>
+#include "CillConfig.h"
+
+NAMESPACE_BEG(core)
 
 template<typename T> 
-T str2value(const std::string& s) 
+T str2value(const std::string& s)
 {
 	std::istringstream is(s);
 	T t;
@@ -13,7 +16,7 @@ T str2value(const std::string& s)
 }
 
 template<typename T>
-T str2value(const char* s) 
+T str2value(const char* s)
 {
 	std::istringstream is(s);
 	T t;
@@ -120,4 +123,6 @@ inline void str2value(uint64& value, const char * pstr)
 		throw std::runtime_error("not a number");
 }
 
-#endif // __STRCONVERTOR_H__
+NAMESPACE_END // namespace core
+
+#endif // __CORE_STRCONVERTOR_H__

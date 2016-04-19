@@ -45,7 +45,13 @@
 #	define __fileno fileno
 #	ifndef __va_copy
 #		define __va_copy va_copy
-#	endif // __va_copy
+#	endif
+
+#	define __strtoq strtoq
+#	define __strtouq strtouq
+#	define __strtoll strtoll
+#	define __strtoull strtoull
+#	define __atoll atoll
 #else // unix
 #	define __isnan _isnan
 #	define __isinf(x) (!_finite(x) && !_isnan(x))

@@ -3,6 +3,7 @@
 #include "CillConfig.h"
 #include "Buffer.h"
 #include "StrBuffer.h"
+#include "StrConvertor.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(CoreTest);
 
@@ -58,4 +59,17 @@ void CoreTest::testStrBuffer()
 	osb<<3;
 	printf("osb:%s", osb.c_str());
 	CPPUNIT_ASSERT(strcmp("123", osb.c_str()) == 0);
+}
+
+void CoreTest::testStrConvertor()
+{
+	for (int i = 999; i < 9999; ++i)
+	{
+		std::string s = core::val2str(i);
+		char dest[MAX_BUF];
+		__snprintf(dest, sizeof(dest), "%d", i);
+		CPPUNIT_ASSERT(strcmp(dest, s.c_str()) == 0);
+		
+		CPPUNIT_ASSERT(core::str2value<int>(dest) == i);
+	}	
 }
