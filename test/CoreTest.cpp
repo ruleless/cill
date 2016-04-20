@@ -4,6 +4,7 @@
 #include "Buffer.h"
 #include "StrBuffer.h"
 #include "StrConvertor.h"
+#include "Trace.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(CoreTest);
 
@@ -72,4 +73,25 @@ void CoreTest::testStrConvertor()
 		
 		CPPUNIT_ASSERT(core::str2value<int>(dest) == i);
 	}	
+}
+
+void CoreTest::testTrace()
+{
+	core::createTrace();
+	core::output2Console();
+	core::output2Html("log.html");
+	
+	Info("I am Info\n");
+	Trace("I am Trace\n");
+	Warning("I am Warning\n");
+	Error("I am Error\n");
+	Emphasis("I am Emphasis\n");
+
+	InfoLn("I am InfoLn");
+	TraceLn("I am TraceLn");
+	WarningLn("I am WarningLn");
+	ErrorLn("I am ErrorLn");
+	EmphasisLn("I am EmphasisLn");
+
+	core::closeTrace();
 }

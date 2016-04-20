@@ -11,6 +11,7 @@ class CoreTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testBuffer);
 	CPPUNIT_TEST(testStrBuffer);
 	CPPUNIT_TEST(testStrConvertor);
+	CPPUNIT_TEST(testTrace);
 	CPPUNIT_TEST_SUITE_END();
   public:
     CoreTest();
@@ -24,6 +25,7 @@ class CoreTest : public CppUnit::TestFixture
 	void testBuffer();
 	void testStrBuffer();
 	void testStrConvertor();
+	void testTrace();
 };
 
 #endif
