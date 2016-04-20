@@ -95,3 +95,9 @@ void CoreTest::testTrace()
 
 	core::closeTrace();
 }
+
+void CoreTest::testTimeStamp()
+{
+	core::uint64 ts = core::stampsPerSecond();
+	printf("stampsPerSecond:%"PRIu64"\n", ts);
+}

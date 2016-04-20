@@ -8,6 +8,7 @@
 #include <list>
 
 #include "CillConfig.h"
+#include "TimeStamp.h"
 #include "StrBuffer.h"
 
 #if PLATFORM == PLATFORM_WIN32
@@ -156,12 +157,12 @@ NAMESPACE_END // namespace core
 //--------------------------------------------------------------------------
 // Macro Define
 #ifdef LIMIT_FREQUENCY // 控制每个输出点的最快频率是1秒
-#	define LIMIT_FREQ(e) \
-		static ulong s_lastTraceTime = getTickCount(); \
-		if (!hasLimitFrequency() || (getTickCount() - s_lastTraceTime) > 1000) \
-		{ s_lastTraceTime = getTickCount(); e}
-#else
-#	define LIMIT_FREQ(e)	e
+#define LIMIT_FREQ(e) \
+	static ulong s_lastTraceTime = core::getTickCount();				\
+	if (!core::hasLimitFrequency() || (core::getTickCount() - s_lastTraceTime) > 1000) \
+	{ s_lastTraceTime = core::getTickCount(); e}
+#else // #ifdef LIMIT_FREQUENCY
+#define LIMIT_FREQ(e)	e
 #endif
 
 #define Info(x) { if(core::getTraceLevel() & core::levelInfo) { LIMIT_FREQ(core::ostrbuf osb; osb<<x; core::output(osb.c_str(), core::levelInfo);) }}

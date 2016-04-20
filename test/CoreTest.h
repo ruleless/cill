@@ -12,6 +12,7 @@ class CoreTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testStrBuffer);
 	CPPUNIT_TEST(testStrConvertor);
 	CPPUNIT_TEST(testTrace);
+	CPPUNIT_TEST(testTimeStamp);
 	CPPUNIT_TEST_SUITE_END();
   public:
     CoreTest();
@@ -26,6 +27,7 @@ class CoreTest : public CppUnit::TestFixture
 	void testStrBuffer();
 	void testStrConvertor();
 	void testTrace();
+	void testTimeStamp();
 };
 
 #endif

@@ -29,6 +29,8 @@
 
 #define NAMESPACE_BEG(spaceName) namespace spaceName {
 #define NAMESPACE_END }
+
+#define LIMIT_FREQUENCY
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
