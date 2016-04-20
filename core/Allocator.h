@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <memory.h>
 
+#include "CillDefine.h"
+
 NAMESPACE_BEG(core)
 
 class AllocatorDummy

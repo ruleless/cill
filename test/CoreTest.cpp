@@ -4,6 +4,7 @@
 #include "Buffer.h"
 #include "StrBuffer.h"
 #include "StrConvertor.h"
+#include "CoreBase.h"
 #include "Trace.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(CoreTest);
@@ -98,6 +99,19 @@ void CoreTest::testTrace()
 
 void CoreTest::testTimeStamp()
 {
-	core::uint64 ts = core::stampsPerSecond();
-	printf("stampsPerSecond:%"PRIu64"\n", ts);
+	core::uint64 exstamp = 0;
+	for (int i = 0; i < 10; ++i)
+	{
+		core::uint64 tmstamp = core::timestamp();
+		printf("idx:%d timestamp:%"PRIu64"  delta:%"PRIu64"\n",
+			   i, tmstamp, exstamp ? tmstamp-exstamp : 0);
+		exstamp = tmstamp;		
+	}
+
+	core::ulong ms = 250;
+	core::ulong curtick = core::getTickCount();
+	printf("curtick:%lu\n", curtick);
+	core::sleepms(ms);
+	printf("tick after sleep %lu ms:%lu delta:%lu\n",
+		   ms, core::getTickCount(), core::getTickCount()-curtick);
 }
