@@ -14,4 +14,30 @@ void sleepms(ulong ms)
 #endif
 }
 
+char* coreStrError(int ierrorno = 0)
+{
+#if PLATFORM == PLATFORM_WIN32
+	if(ierrorno == 0)
+		ierrorno = GetLastError();
+
+	static char lpMsgBuf[256] = {0};
+	
+	__snprintf(lpMsgBuf, 256, "errorno=%d",  ierrorno);
+	return lpMsgBuf;
+#else
+	if(ierrorno != 0)
+		return strerror(ierrorno);
+	return strerror(errno);
+#endif
+}
+
+int coreLastError()
+{
+#if PLATFORM == PLATFORM_WIN32
+	return GetLastError();
+#else
+	return errno;
+#endif
+}
+
 NAMESPACE_END // namespace core

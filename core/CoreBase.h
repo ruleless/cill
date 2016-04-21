@@ -57,6 +57,7 @@
 #endif
 
 #include <windows.h>
+#include <process.h>
 
 #if _MSC_VER >= 1500
 #	include <unordered_map>
@@ -94,6 +95,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/ioctl.h>
+#include <sys/wait.h>
 #include <sys/socket.h>
 #include <sys/uio.h>
 #include <sys/resource.h>

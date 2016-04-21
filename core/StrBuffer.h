@@ -128,6 +128,13 @@ class StrBuffer : public BasicBuffer, public Allocator
 		return this->operator<<((const char *)num);
 	}
 
+	ostrbuffer& operator<< (void *p)
+	{
+		char num[32] = {0};
+		__snprintf(num, sizeof(num), "%p", p);
+		return this->operator<<((const char *)num);
+	}
+
 	ostrbuffer& operator<< (const char* value)
 	{
 		this->trim_eof();
