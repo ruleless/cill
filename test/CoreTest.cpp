@@ -9,6 +9,7 @@
 #include "core/StrHelper.h"
 #include "core/Trace.h"
 #include "core/ObjectPool.h"
+#include "core/SmartPointer.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(CoreTest);
 
@@ -212,3 +213,26 @@ void CoreTest::testStrHelper()
 	CPPUNIT_ASSERT(!core::strIHasSuffix("abcdef", "Cd"));
 	CPPUNIT_ASSERT(core::strIHasSuffix("abcd.txt", ".TXT"));
 }
+
+//--------------------------------------------------------------------------
+class TestClass : public core::RefCountable
+{
+  public:
+    TestClass() : core::RefCountable()
+	{
+		TraceLn("New a TestClass. addr:"<<(ulong)this);
+	}
+	
+    virtual ~TestClass()
+	{
+		TraceLn("Delete a Test Class. addr:"<<(ulong)this);
+	}
+};
+
+typedef core::SmartPointer<TestClass> TestClassPtr;
+
+void CoreTest::testSmartPointer()
+{
+	TestClassPtr t(new TestClass);
+}
+//--------------------------------------------------------------------------

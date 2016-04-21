@@ -17,6 +17,8 @@ class CoreTest : public CppUnit::TestFixture
 
 	CPPUNIT_TEST(testPoolObject);
 	CPPUNIT_TEST(testStrHelper);
+
+	CPPUNIT_TEST(testSmartPointer);
 	
 	CPPUNIT_TEST_SUITE_END();
   public:
@@ -38,6 +40,8 @@ class CoreTest : public CppUnit::TestFixture
 	void testPoolObject();
 
 	void testStrHelper();
+
+	void testSmartPointer();
 };
 
 #endif
