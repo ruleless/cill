@@ -9,12 +9,14 @@ class CoreTest : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE(CoreTest);
 	CPPUNIT_TEST(printPlat);
 	CPPUNIT_TEST(testBuffer);
+	CPPUNIT_TEST(testMemoryStream);
 	CPPUNIT_TEST(testStrBuffer);
 	CPPUNIT_TEST(testStrConvertor);
 	CPPUNIT_TEST(testTrace);
 	CPPUNIT_TEST(testTimeStamp);
 
 	CPPUNIT_TEST(testPoolObject);
+	CPPUNIT_TEST(testStrHelper);
 	
 	CPPUNIT_TEST_SUITE_END();
   public:
@@ -27,12 +29,15 @@ class CoreTest : public CppUnit::TestFixture
 
 	void printPlat();
 	void testBuffer();
+	void testMemoryStream();
 	void testStrBuffer();
 	void testStrConvertor();
 	void testTrace();
 	void testTimeStamp();
 
 	void testPoolObject();
+
+	void testStrHelper();
 };
 
 #endif

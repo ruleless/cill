@@ -3,8 +3,10 @@
 #include "core/CoreBase.h"
 #include "core/CoreStd.h"
 #include "core/Buffer.h"
+#include "core/MemoryStream.h"
 #include "core/StrBuffer.h"
 #include "core/StrConvertor.h"
+#include "core/StrHelper.h"
 #include "core/Trace.h"
 #include "core/ObjectPool.h"
 
@@ -54,6 +56,35 @@ void CoreTest::testBuffer()
 	}
 }
 
+void CoreTest::testMemoryStream()
+{
+	srand(time(NULL));
+
+	core::MemoryStream *pStream = core::MemoryStream::ObjPool().createObject();
+	CPPUNIT_ASSERT(pStream);
+	
+	std::vector<int> ia;
+	int sz = 0;
+	for (int i = 0; i < 100000; ++i)
+	{
+		int n = rand() % 65535;
+		ia.push_back(n);
+		sz += sizeof(n);
+		*pStream<<n;
+	}
+	CPPUNIT_ASSERT(pStream->length() == sz);
+	
+	std::vector<int>::const_iterator it = ia.begin();
+	for (; it != ia.end(); ++it)
+	{
+		int n = 0;
+		*pStream>>n;
+		CPPUNIT_ASSERT(n == *it);
+	}
+
+	CPPUNIT_ASSERT(pStream->length() == 0);
+}
+
 void CoreTest::testStrBuffer()
 {
 	core::ostrbuf osb;
@@ -78,24 +109,18 @@ void CoreTest::testStrConvertor()
 }
 
 void CoreTest::testTrace()
-{
-	core::createTrace();
-	core::output2Console();
-	core::output2Html("log.html");
-	
+{	
 	Info("I am Info\n");
 	Trace("I am Trace\n");
 	Warning("I am Warning\n");
 	Error("I am Error\n");
 	Emphasis("I am Emphasis\n");
 
-	InfoLn("I am InfoLn");
 	TraceLn("I am TraceLn");
 	WarningLn("I am WarningLn");
 	ErrorLn("I am ErrorLn");
-	EmphasisLn("I am EmphasisLn");
-
-	core::closeTrace();
+	EmphasisLn("I am EmphasisLn");	
+	InfoLn("I am InfoLn");	
 }
 
 void CoreTest::testTimeStamp()
@@ -166,3 +191,24 @@ void CoreTest::testPoolObject()
 	}
 }
 //--------------------------------------------------------------------------
+
+void CoreTest::testStrHelper()
+{
+	std::string str = "  teststr  ";
+	core::ltrim(str);
+	CPPUNIT_ASSERT(strcmp(str.c_str(), "teststr  ") == 0);
+	core::rtrim(str);
+	CPPUNIT_ASSERT(strcmp(str.c_str(), "teststr") == 0);
+
+	str = "abcDeFGH";
+	std::string retStr = core::stringToLower(str);
+	CPPUNIT_ASSERT(strcmp(retStr.c_str(), "abcdefgh") == 0);
+	retStr = core::stringToUpper(str);
+	CPPUNIT_ASSERT(strcmp(retStr.c_str(), "ABCDEFGH") == 0);
+
+	CPPUNIT_ASSERT(core::strIHasSuffix("abcd", "cd"));
+	CPPUNIT_ASSERT(core::strIHasSuffix("abcd", "CD"));
+	CPPUNIT_ASSERT(core::strIHasSuffix("abcd", "Cd"));
+	CPPUNIT_ASSERT(!core::strIHasSuffix("abcdef", "Cd"));
+	CPPUNIT_ASSERT(core::strIHasSuffix("abcd.txt", ".TXT"));
+}
