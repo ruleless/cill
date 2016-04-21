@@ -10,6 +10,7 @@
 #include "core/Trace.h"
 #include "core/ObjectPool.h"
 #include "core/SmartPointer.h"
+#include "core/ThreadPool.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(CoreTest);
 
@@ -234,5 +235,44 @@ typedef core::SmartPointer<TestClass> TestClassPtr;
 void CoreTest::testSmartPointer()
 {
 	TestClassPtr t(new TestClass);
+}
+//--------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------
+class TestTask : public core::TPTask
+{
+  public:
+    TestTask()
+	{
+		TraceLn("TestTask created!");
+	}	
+	
+    virtual ~TestTask()
+	{
+		TraceLn("TestTask deleting!");
+	}
+
+	virtual bool process()
+	{
+		TraceLn("process TestTask!");
+		return true;
+	}
+};
+
+void CoreTest::testThreadPool()
+{
+	new core::ThreadPool();
+
+	core::ThreadPool::getSingletonPtr()->createThreadPool(2, 4, 8);
+	for (int i = 0; i < 8; ++i)
+	{
+		CPPUNIT_ASSERT(core::ThreadPool::getSingletonPtr()->addTask(new TestTask()));
+	}
+
+	core::sleepms(200);
+
+	core::ThreadPool::getSingletonPtr()->finalise();
+	
+	delete core::ThreadPool::getSingletonPtr();
 }
 //--------------------------------------------------------------------------

@@ -41,7 +41,7 @@ bool TPThread::join(void)
 			}
 			else
 			{				
-				WarningLn("TPThread::join: waiting for thread("<<(void*)this<<"), try={"<<i<<"} times");
+				WarningLn("TPThread::join: waiting for thread("<<(void*)this<<"), try "<<i<<" times");
 			}
 			break;
 		case WAIT_FAILED:
@@ -309,7 +309,7 @@ void ThreadPool::destroy()
 		}
 		else
 		{
-			ErrorLn("ThreadPool::destroy(): waiting for thread("<<count<<")[<<"<<taskaddrs<<"], try="<<itry<<" times");
+			WarningLn("ThreadPool::destroy(): waiting for thread("<<count<<")["<<taskaddrs<<"], try "<<itry<<" times");
 		}
 	}
 

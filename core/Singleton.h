@@ -37,6 +37,6 @@ class Singleton
 
 NAMESPACE_END // namespace core
 
-#define SINGLETON_INIT(T)	template<> T* Singleton<T>::mSingleton = 0;
+#define SINGLETON_INIT(T) template<> T* Singleton<T>::mSingleton = 0;
 
 #endif // __CORE_SINGLETON_H__

@@ -19,6 +19,8 @@ class CoreTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testStrHelper);
 
 	CPPUNIT_TEST(testSmartPointer);
+
+	CPPUNIT_TEST(testThreadPool);
 	
 	CPPUNIT_TEST_SUITE_END();
   public:
@@ -42,6 +44,8 @@ class CoreTest : public CppUnit::TestFixture
 	void testStrHelper();
 
 	void testSmartPointer();
+
+	void testThreadPool();
 };
 
 #endif
