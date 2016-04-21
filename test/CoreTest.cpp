@@ -6,6 +6,7 @@
 #include "core/StrBuffer.h"
 #include "core/StrConvertor.h"
 #include "core/Trace.h"
+#include "core/ObjectPool.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(CoreTest);
 
@@ -115,3 +116,53 @@ void CoreTest::testTimeStamp()
 	printf("tick after sleep %lu ms:%lu delta:%lu\n",
 		   ms, core::getTickCount(), core::getTickCount()-curtick);
 }
+
+//--------------------------------------------------------------------------
+class PoolTest : public core::PoolObject
+{
+  public:
+	static core::ObjectPool<PoolTest>& ObjPool()
+	{
+		static core::ObjectPool<PoolTest> s_pool("PoolTest");
+		return s_pool;
+	}
+
+	virtual void onReclaimObject()
+	{
+		// printf("onReclaimObject():0x%"PRIx64"\n", this);
+	}
+	
+	virtual void onEabledPoolObject()
+	{
+		// printf("onEabledPoolObject():0x%"PRIx64"\n", this);
+	}
+
+	virtual size_t getPoolObjectBytes()
+	{
+		return 0;
+	}
+	
+    PoolTest() {}
+    virtual ~PoolTest()
+	{
+		// printf("~PoolTest():0x%"PRIx64"\n", this);
+	}
+};
+
+void CoreTest::testPoolObject()
+{
+	std::vector<PoolTest *> tests;
+	for (int i = 0; i < 500000; ++i)
+	{
+		PoolTest *o = NULL;
+		CPPUNIT_ASSERT(o = PoolTest::ObjPool().createObject());
+		tests.push_back(o);		
+	}
+
+	std::vector<PoolTest *>::iterator it = tests.begin();
+	for (; it != tests.end(); ++it)
+	{
+		PoolTest::ObjPool().reclaimObject(*it);
+	}
+}
+//--------------------------------------------------------------------------
