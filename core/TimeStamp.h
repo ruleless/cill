@@ -1,7 +1,7 @@
 #ifndef __CORE_TIMESTAMP_H__
 #define __CORE_TIMESTAMP_H__
 
-#include "CillConfig.h"
+#include "CoreBase.h"
 
 #ifdef unix
 #define USE_RDTSC

@@ -1,8 +1,8 @@
 #ifndef __CORE_STRBUFFER_H__
 #define __CORE_STRBUFFER_H__
 
+#include "CoreBase.h"
 #include "Buffer.h"
-#include "CillConfig.h"
 
 NAMESPACE_BEG(core)
 

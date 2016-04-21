@@ -7,7 +7,7 @@
 #include <string>
 #include <list>
 
-#include "CillConfig.h"
+#include "CoreBase.h"
 #include "TimeStamp.h"
 #include "StrBuffer.h"
 

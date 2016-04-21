@@ -1,11 +1,11 @@
 #include "CoreTest.h"
 
-#include "CillConfig.h"
-#include "Buffer.h"
-#include "StrBuffer.h"
-#include "StrConvertor.h"
-#include "CoreBase.h"
-#include "Trace.h"
+#include "core/CoreBase.h"
+#include "core/CoreStd.h"
+#include "core/Buffer.h"
+#include "core/StrBuffer.h"
+#include "core/StrConvertor.h"
+#include "core/Trace.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(CoreTest);
 

@@ -2,7 +2,7 @@
 #define __CORE_STRCONVERTOR_H__
 
 #include <string>
-#include "CillConfig.h"
+#include "CoreBase.h"
 
 NAMESPACE_BEG(core)
 

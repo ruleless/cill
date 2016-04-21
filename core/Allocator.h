@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <memory.h>
 
-#include "CillDefine.h"
+#include "CoreBase.h"
 
 NAMESPACE_BEG(core)
 
