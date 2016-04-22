@@ -36,7 +36,7 @@ bool TPThread::join(void)
 		case WAIT_TIMEOUT:
 			if(i > 20)
 			{
-				logErrorLn("TPThread::join: can't join thread("<<(void*)this)<<")";
+				logErrorLn("TPThread::join: can't join thread("<<(void*)this<<")");
 				return false;
 			}
 			else
@@ -81,7 +81,7 @@ bool TPThread::onWaitCondSignal(void)
 	else
 	{
 		mState = ThreadState_Sleep;
-		DWORD ret = WaitForSingleObject(mCond, mThreadWaitSecond * 1000);
+		uint32 ret = WaitForSingleObject(mCond, mThreadWaitSecond * 1000);
 		ResetEvent(mCond);
 
 		// 如果是因为超时了， 说明这个线程很久没有被用到， 我们应该注销这个线程。
@@ -309,7 +309,7 @@ void ThreadPool::destroy()
 		}
 		else
 		{
-			logWarningLn("ThreadPool::destroy(): waiting for thread("<<count<<")["<<taskaddrs<<"], try "<<itry<<" times");
+			logWarningLn("ThreadPool::destroy(): waiting for thread("<<count<<")["<<taskaddrs.c_str()<<"], try "<<itry<<" times");
 		}
 	}
 
