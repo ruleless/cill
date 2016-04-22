@@ -13,7 +13,7 @@ THREAD_ID TPThread::createThread(void)
 #else
 	if(pthread_create(&mTid, NULL, TPThread::threadFunc, (void*)this)!= 0)
 	{
-		ErrorLn("createThread error!");
+		logErrorLn("createThread error!");
 	}
 #endif
 	return mTid;
@@ -36,17 +36,17 @@ bool TPThread::join(void)
 		case WAIT_TIMEOUT:
 			if(i > 20)
 			{
-				ErrorLn("TPThread::join: can't join thread("<<(void*)this)<<")";
+				logErrorLn("TPThread::join: can't join thread("<<(void*)this)<<")";
 				return false;
 			}
 			else
 			{				
-				WarningLn("TPThread::join: waiting for thread("<<(void*)this<<"), try "<<i<<" times");
+				logWarningLn("TPThread::join: waiting for thread("<<(void*)this<<"), try "<<i<<" times");
 			}
 			break;
 		case WAIT_FAILED:
 		default:			
-			ErrorLn("TPThread::join: can't join thread("<<(void*)this<<")");
+			logErrorLn("TPThread::join: can't join thread("<<(void*)this<<")");
 			return false;
 		};
 	}
@@ -54,7 +54,7 @@ bool TPThread::join(void)
 	void* status;
 	if(pthread_join(id(), &status))
 	{
-		ErrorLn("TPThread::join: can't join thread("<<(void*)this<<")\n");
+		logErrorLn("TPThread::join: can't join thread("<<(void*)this<<")\n");
 		return false;
 	}
 #endif
@@ -93,7 +93,7 @@ bool TPThread::onWaitCondSignal(void)
 		}
 		else if(ret != WAIT_OBJECT_0)
 		{
-			ErrorLn("TPThread::onWaitCondSignal: WaitForSingleObject is error, ret="<<ret);
+			logErrorLn("TPThread::onWaitCondSignal: WaitForSingleObject is error, ret="<<ret);
 		}
 	}
 #else
@@ -126,7 +126,7 @@ bool TPThread::onWaitCondSignal(void)
 		}
 		else if(ret != 0)
 		{
-			ErrorLn("TPThread::onWaitCondSignal: pthread_cond_timedwait is error, "<<coreStrError());
+			logErrorLn("TPThread::onWaitCondSignal: pthread_cond_timedwait is error, "<<coreStrError());
 		}
 	}
 #endif
@@ -212,7 +212,7 @@ __THREAD_END__:
 		TPTask *task = tptd->task();
 		if(task)
 		{
-			WarningLn("TPThread::threadFunc: task "<<(void*)task<<" not finish, thread."<<(void*)tptd<<" will exit.");
+			logWarningLn("TPThread::threadFunc: task "<<(void*)task<<" not finish, thread."<<(void*)tptd<<" will exit.");
 			delete task;
 		}
 
@@ -309,7 +309,7 @@ void ThreadPool::destroy()
 		}
 		else
 		{
-			WarningLn("ThreadPool::destroy(): waiting for thread("<<count<<")["<<taskaddrs<<"], try "<<itry<<" times");
+			logWarningLn("ThreadPool::destroy(): waiting for thread("<<count<<")["<<taskaddrs<<"], try "<<itry<<" times");
 		}
 	}
 
@@ -332,7 +332,7 @@ void ThreadPool::destroy()
 	THREAD_MUTEX_LOCK(mFinishedTaskListMutex);
 	if(mFinishedTaskList.size() > 0)
 	{
-		WarningLn("ThreadPool::~ThreadPool(): Discarding "<<mFinishedTaskList.size()<<" finished tasks.");
+		logWarningLn("ThreadPool::~ThreadPool(): Discarding "<<mFinishedTaskList.size()<<" finished tasks.");
 
 		std::list<TPTask*>::iterator finiiter = mFinishedTaskList.begin();
 		for(; finiiter != mFinishedTaskList.end(); ++finiiter)
@@ -349,7 +349,7 @@ void ThreadPool::destroy()
 	THREAD_MUTEX_LOCK(mBufferedTaskListMutex);
 	if(mBufferedTaskList.size() > 0)
 	{
-		WarningLn("ThreadPool::~ThreadPool(): Discarding "<<mBufferedTaskList.size()<<" buffered tasks.");
+		logWarningLn("ThreadPool::~ThreadPool(): Discarding "<<mBufferedTaskList.size()<<" buffered tasks.");
 
 		while(mBufferedTaskList.size() > 0)
 		{
@@ -364,7 +364,7 @@ void ThreadPool::destroy()
 	THREAD_MUTEX_DELETE(mBufferedTaskListMutex);
 	THREAD_MUTEX_DELETE(mFinishedTaskListMutex);
 	
-	TraceLn("ThreadPool::destroy(): successfully!");
+	logTraceLn("ThreadPool::destroy(): successfully!");
 }
 
 bool ThreadPool::createThreadPool(uint32 inewThreadCount, uint32 inormalMaxThreadCount, uint32 imaxThreadCount)
@@ -381,7 +381,7 @@ bool ThreadPool::createThreadPool(uint32 inewThreadCount, uint32 inormalMaxThrea
 
 		if(!tptd)
 		{
-			ErrorLn("ThreadPool::createThreadPool: create is error!");
+			logErrorLn("ThreadPool::createThreadPool: create is error!");
 			return false;
 		}
 
@@ -412,7 +412,7 @@ void ThreadPool::bufferTask(TPTask* tptask)
 	size_t size = mBufferedTaskList.size();
 	if(size > THREAD_BUSY_SIZE)
 	{
-		WarningLn("ThreadPool::bufferTask: task buffered("<<size<<")!");
+		logWarningLn("ThreadPool::bufferTask: task buffered("<<size<<")!");
 	}
 
 	THREAD_MUTEX_UNLOCK(mBufferedTaskListMutex);
@@ -431,7 +431,7 @@ TPTask* ThreadPool::popbufferTask(void)
 
 		if(size > THREAD_BUSY_SIZE)
 		{
-			WarningLn("ThreadPool::popbufferTask: task buffered("<<size<<")!");
+			logWarningLn("ThreadPool::popbufferTask: task buffered("<<size<<")!");
 		}
 	}
 
@@ -455,7 +455,7 @@ bool ThreadPool::addFreeThread(TPThread* tptd)
 	{
 		THREAD_MUTEX_UNLOCK(mThreadStateListMutex);
 
-		ErrorLn("ThreadPool::addFreeThread: mBusyThreadList not found thread."<<(uint32)tptd->id());
+		logErrorLn("ThreadPool::addFreeThread: mBusyThreadList not found thread."<<(uint32)tptd->id());
 
 		delete tptd;
 		return false;
@@ -481,7 +481,7 @@ bool ThreadPool::addBusyThread(TPThread* tptd)
 	else
 	{
 		THREAD_MUTEX_UNLOCK(mThreadStateListMutex);
-		ErrorLn("ThreadPool::addBusyThread: mFreeThreadList not found thread."<<(uint32)tptd->id());
+		logErrorLn("ThreadPool::addBusyThread: mFreeThreadList not found thread."<<(uint32)tptd->id());
 
 		delete tptd;
 		return false;
@@ -516,8 +516,8 @@ bool ThreadPool::removeHangThread(TPThread* tptd)
 		--mCurrentThreadCount;
 		--mCurrentFreeThreadCount;
 
-		InfoLn("ThreadPool::removeHangThread: thread."<<(uint32)tptd->id()<<" is destroy. "
-			   "currentFreeThreadCount:"<<mCurrentFreeThreadCount<<", currentThreadCount:"<<mCurrentThreadCount);
+		logInfoLn("ThreadPool::removeHangThread: thread."<<(uint32)tptd->id()<<" is destroy. "
+				  "currentFreeThreadCount:"<<mCurrentFreeThreadCount<<", currentThreadCount:"<<mCurrentThreadCount);
 
 		if (tptd)
 			delete tptd;
@@ -526,7 +526,7 @@ bool ThreadPool::removeHangThread(TPThread* tptd)
 	{
 		THREAD_MUTEX_UNLOCK(mThreadStateListMutex);
 
-		ErrorLn("ThreadPool::removeHangThread: not found thread."<<(uint32)tptd->id());
+		logErrorLn("ThreadPool::removeHangThread: not found thread."<<(uint32)tptd->id());
 
 		return false;
 	}
@@ -628,7 +628,7 @@ bool ThreadPool::addTask(TPTask* tptask)
 		mBusyThreadList.push_back(tptd);
 		--mCurrentFreeThreadCount;
 
-		InfoLn("ThreadPool::addTask() currFree:"<<mCurrentFreeThreadCount<<", currThreadCount:"<<mCurrentThreadCount);
+		logInfoLn("ThreadPool::addTask() currFree:"<<mCurrentFreeThreadCount<<", currThreadCount:"<<mCurrentThreadCount);
 
 		tptd->task(tptask); // 给线程设置新任务
 
@@ -638,7 +638,7 @@ bool ThreadPool::addTask(TPTask* tptask)
 		if(tptd->sendCondSignal()!= 0)
 #endif
 		{
-			ErrorLn("ThreadPool::addTask: pthread_cond_signal is error!");
+			logErrorLn("ThreadPool::addTask: pthread_cond_signal is error!");
 			THREAD_MUTEX_UNLOCK(mThreadStateListMutex);
 			return false;
 		}
@@ -653,7 +653,7 @@ bool ThreadPool::addTask(TPTask* tptask)
 	{
 		THREAD_MUTEX_UNLOCK(mThreadStateListMutex);
 
-		WarningLn("ThreadPool::addTask: can't createthread, the poolsize is full("<<mMaxThreadCount<<").");
+		logWarningLn("ThreadPool::addTask: can't createthread, the poolsize is full("<<mMaxThreadCount<<").");
 
 		return false;
 	}
@@ -663,7 +663,7 @@ bool ThreadPool::addTask(TPTask* tptask)
 		TPThread* tptd = createThread(300); // 设定5分钟未使用则退出的线程
 		if(!tptd)
 		{
-			ErrorLn("ThreadPool::addTask() the ThreadPool create thread error!"<<coreStrError());
+			logErrorLn("ThreadPool::addTask() the ThreadPool create thread error!"<<coreStrError());
 		}
 
 		mAllThreadList.push_back(tptd); // 所有的线程列表
@@ -672,7 +672,7 @@ bool ThreadPool::addTask(TPTask* tptask)
 		++mCurrentFreeThreadCount;
 	}
 
-	InfoLn("ThreadPool::addTask: new Thread, currThreadCount: "<<mCurrentThreadCount);
+	logInfoLn("ThreadPool::addTask: new Thread, currThreadCount: "<<mCurrentThreadCount);
 
 	THREAD_MUTEX_UNLOCK(mThreadStateListMutex);
 	return true;

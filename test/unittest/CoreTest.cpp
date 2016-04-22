@@ -112,17 +112,17 @@ void CoreTest::testStrConvertor()
 
 void CoreTest::testTrace()
 {	
-	Info("I am Info\n");
-	Trace("I am Trace\n");
-	Warning("I am Warning\n");
-	Error("I am Error\n");
-	Emphasis("I am Emphasis\n");
+	logInfo("I am Info\n");
+	logTrace("I am Trace\n");
+	logWarning("I am Warning\n");
+	logError("I am Error\n");
+	logEmphasis("I am Emphasis\n");
 
-	TraceLn("I am TraceLn");
-	WarningLn("I am WarningLn");
-	ErrorLn("I am ErrorLn");
-	EmphasisLn("I am EmphasisLn");	
-	InfoLn("I am InfoLn");	
+	logTraceLn("I am TraceLn");
+	logWarningLn("I am WarningLn");
+	logErrorLn("I am ErrorLn");
+	logEmphasisLn("I am EmphasisLn");	
+	logInfoLn("I am InfoLn");	
 }
 
 void CoreTest::testTimeStamp()
@@ -221,12 +221,12 @@ class TestClass : public core::RefCountable
   public:
     TestClass() : core::RefCountable()
 	{
-		TraceLn("New a TestClass. addr:"<<(ulong)this);
+		logTraceLn("New a TestClass. addr:"<<(ulong)this);
 	}
 	
     virtual ~TestClass()
 	{
-		TraceLn("Delete a Test Class. addr:"<<(ulong)this);
+		logTraceLn("Delete a Test Class. addr:"<<(ulong)this);
 	}
 };
 
@@ -244,17 +244,17 @@ class TestTask : public core::TPTask
   public:
     TestTask()
 	{
-		TraceLn("TestTask created!");
+		logTraceLn("TestTask created!");
 	}	
 	
     virtual ~TestTask()
 	{
-		TraceLn("TestTask deleting!");
+		logTraceLn("TestTask deleting!");
 	}
 
 	virtual bool process()
 	{
-		TraceLn("process TestTask!");
+		logTraceLn("process TestTask!");
 		return true;
 	}
 };

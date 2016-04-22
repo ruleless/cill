@@ -19,7 +19,7 @@ class MemoryStreamException
 
 	void PrintPosError() const
 	{
-		ErrorLn("Attempted to "<<(_m_add ? "put" : "get")<<" in MemoryStream (pos:"<<_m_pos<<"  size: "<<_m_size<<").");
+		logErrorLn("Attempted to "<<(_m_add ? "put" : "get")<<" in MemoryStream (pos:"<<_m_pos<<"  size: "<<_m_size<<").");
 	}
   private:
 	bool _m_add;
@@ -472,7 +472,7 @@ class MemoryStream : public PoolObject
 		}
 
 		fbuffer += " \n";
-		Trace(fbuffer.c_str());
+		logTrace(fbuffer.c_str());
 
 		rpos_ = trpos;
     }
@@ -494,7 +494,7 @@ class MemoryStream : public PoolObject
 		}
 
 		fbuffer += " \n";
-		Trace(fbuffer.c_str());
+		logTrace(fbuffer.c_str());
 
 		rpos_ = trpos;
     }
@@ -560,7 +560,7 @@ class MemoryStream : public PoolObject
 
 		fbuffer += "\n";
 
-		Trace(fbuffer.c_str());
+		logTrace(fbuffer.c_str());
 
 		rpos_ = trpos;
     }
