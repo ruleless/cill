@@ -1,4 +1,4 @@
-CILLDIR:=..
+CILLDIR:=../..
 
 CXXFLAGS:=-I $(CILLDIR)
 LDFLAGS:=-lcppunit -L $(CILLDIR)/lib -lcill -lpthread

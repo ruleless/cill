@@ -1,3 +1,3 @@
-dirs:=core build
+dirs:=core cmd build
 
 include build.mak
