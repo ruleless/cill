@@ -17,7 +17,7 @@ Command::~Command()
 	mpListener->onCommandDestroy(this);
 }
 
-bool Command::parseCommond(const vector<string> &argv, obuf &outStream)
+bool Command::parseCommond(const std::vector<std::string> &argv, core::obuf &outStream)
 {
 	if (argv.size() >= 1)
 	{
@@ -30,25 +30,25 @@ bool Command::parseCommond(const vector<string> &argv, obuf &outStream)
 bool Command::process()
 {
 	mNextInterval = _runCommand();
-	mExRunTime = getTickCount();
+	mExRunTime = core::getTickCount();
 
 	return true;
 }
 
-TPTask::TPTaskState Command::presentMainThread()
+core::TPTask::TPTaskState Command::presentMainThread()
 {
-	TPTask::TPTaskState retState = TPTask_Completed;
+	core::TPTask::TPTaskState retState = core::TPTask::TPTask_Completed;
 	if (mForceQuit || 0 == mNextInterval)
 	{
-		retState = TPTask_Completed;
+		retState = core::TPTask::TPTask_Completed;
 	}
-	else if (getTickCount() < mExRunTime+mNextInterval)
+	else if (core::getTickCount() < mExRunTime+mNextInterval)
 	{
-		retState = TPTask_ContinueMainThread;
+		retState = core::TPTask::TPTask_ContinueMainThread;
 	}
 	else
 	{
-		retState = TPTask_ContinueChildThread;
+		retState = core::TPTask::TPTask_ContinueChildThread;
 	}
 	
 	if (mpListener->onOutputStream(this, mMyStream))

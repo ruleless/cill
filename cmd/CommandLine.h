@@ -5,8 +5,6 @@
 #include "Command.h"
 #include "Input.h"
 
-using namespace std;
-
 NAMESPACE_BEG(cmd)
 
 class CommandLine : public Command::Listener, public Input::Listener
@@ -19,11 +17,11 @@ class CommandLine : public Command::Listener, public Input::Listener
 	void finalisze();
 
 	void run();
-	Command* _parseUserCommand(const vector<string> &argv);
-	bool _parseSysCommand(const vector<string> &argv);
+	Command* _parseUserCommand(const std::vector<std::string> &argv);
+	bool _parseSysCommand(const std::vector<std::string> &argv);
 
 	virtual void onCommandDestroy(Command *pCmd);
-	virtual bool onOutputStream(Command *pCmd, const obuf& ob);
+	virtual bool onOutputStream(Command *pCmd, const core::obuf& ob);
 	virtual void onInputDestroy(Input *pInput);
 
 	inline bool quit()
@@ -35,11 +33,12 @@ class CommandLine : public Command::Listener, public Input::Listener
 		mbQuit = b;
 	}
   protected:
-	ThreadPool *mpThreadPool;
-	bool mbQuit;
-	obuf mOutStream;
+	core::ThreadPool *mpThreadPool;
+	core::obuf mOutStream;	
 
 	Input *mpInput;
+
+	bool mbQuit;
 	
 	typedef std::set<Command *> CommandList;
 	CommandList mCommandList;

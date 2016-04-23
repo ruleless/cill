@@ -26,11 +26,11 @@ bool Input::process()
 	return true;
 }
 
-TPTask::TPTaskState Input::presentMainThread()
+core::TPTask::TPTaskState Input::presentMainThread()
 {
 	if (gpCommandLine->quit())
 	{
-		return TPTask_Completed;
+		return core::TPTask::TPTask_Completed;
 	}
 
 	if (mInputBuffer.size() > 0)
@@ -39,10 +39,10 @@ TPTask::TPTaskState Input::presentMainThread()
 		mInputBuffer.clear();
 	}
 
-	TPTask::TPTaskState retState = 	TPTask_ContinueChildThread;
+	core::TPTask::TPTaskState retState = core::TPTask::TPTask_ContinueChildThread;
 	if (mNextCmdLine.size() > 0)
 	{
-		retState = TPTask_ContinueMainThread;
+		retState = core::TPTask::TPTask_ContinueMainThread;
 	}
 	
 	return retState;

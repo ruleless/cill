@@ -5,7 +5,7 @@
 
 NAMESPACE_BEG(cmd)
 
-class Input : public TPTask
+class Input : public core::TPTask
 {
   public:
 	struct Listener 
@@ -26,7 +26,7 @@ class Input : public TPTask
 	}
 
 	virtual bool process();
-	virtual TPTask::TPTaskState presentMainThread();
+	virtual core::TPTask::TPTaskState presentMainThread();
   protected:
 	std::string mInputBuffer;
 	std::string mNextCmdLine;

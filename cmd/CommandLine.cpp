@@ -9,9 +9,9 @@ CommandLine *gpCommandLine = NULL;
 
 CommandLine::CommandLine()
 		:mpThreadPool(NULL)
-		,mbQuit(false)
 		,mOutStream()
 		,mpInput(NULL)
+		,mbQuit(false)
 		,mCommandList()
 {
 }
@@ -22,7 +22,7 @@ CommandLine::~CommandLine()
 
 bool CommandLine::initialise()
 {
-	mpThreadPool = new ThreadPool();
+	mpThreadPool = new core::ThreadPool();
 	if (!mpThreadPool->createThreadPool(10, 20, 30))
 	{
 		return false;
@@ -46,7 +46,7 @@ void CommandLine::run()
 	std::string hint = ">";
 	while (true)
 	{
-		sleepms(16);
+		core::sleepms(16);
 
 		if (hint.length() > 0)
 		{
@@ -60,11 +60,11 @@ void CommandLine::run()
 			std::string cmdLine = mpInput->getCmdLine();
 			if (cmdLine.length() > 0)
 			{
-				replace(cmdLine, "\r", " ");
-				replace(cmdLine, "\n", " ");
+				core::replace(cmdLine, "\r", " ");
+				core::replace(cmdLine, "\n", " ");
 
 				std::vector<std::string> argv;
-				split<>(cmdLine, ' ', argv);
+				core::split<>(cmdLine, ' ', argv);
 				Command *pCommand = _parseUserCommand(argv);
 				if (pCommand)
 				{
@@ -90,7 +90,7 @@ void CommandLine::run()
 		mpThreadPool->onMainThreadTick();
 		if (mOutStream.size() > 0)
 		{
-			InBuffer ib(mOutStream.data(), mOutStream.size());
+			core::InBuffer ib(mOutStream.data(), mOutStream.size());
 			while (ib.space() > 0)
 			{
 				const char *buf = NULL;
@@ -111,7 +111,7 @@ void CommandLine::run()
 	}
 }
 
-Command* CommandLine::_parseUserCommand(const vector<string> &argv)
+Command* CommandLine::_parseUserCommand(const std::vector<std::string> &argv)
 {
 	Command *pCommand = NULL;
 	if (argv.size() > 0)
@@ -134,7 +134,7 @@ Command* CommandLine::_parseUserCommand(const vector<string> &argv)
 	return pCommand;
 }
 
-bool CommandLine::_parseSysCommand(const vector<string> &argv)
+bool CommandLine::_parseSysCommand(const std::vector<std::string> &argv)
 {
 	bool isSysCmd = true;
 	bool stopAllCmd = false;
@@ -167,7 +167,7 @@ void CommandLine::onCommandDestroy(Command *pCmd)
 	mCommandList.erase(it);
 }
 
-bool CommandLine::onOutputStream(Command *pCmd, const obuf& ob)
+bool CommandLine::onOutputStream(Command *pCmd, const core::obuf& ob)
 {
 	mOutStream.push_back(ob.data(), ob.size());
 	return true;
