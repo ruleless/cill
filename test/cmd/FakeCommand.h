@@ -15,7 +15,7 @@ class FakeCommand : public cmd::Command
 
 	virtual ~FakeCommand() {}
 
-	virtual ulong _runCommand();
+	virtual core::ulong _runCommand();
 };
 
 #endif // __FAKECOMMAND_H__
