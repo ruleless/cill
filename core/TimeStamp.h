@@ -124,10 +124,10 @@ inline uint64 getTimeStamp()
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
-extern uint64 stampsPerSecond();
-extern double stampsPerSecondD();
+CORE_API uint64 stampsPerSecond();
+CORE_API double stampsPerSecondD();
 
-extern ulong getTickCount();
+CORE_API ulong getTickCount();
 
 inline double stampsToSeconds( uint64 stamps )
 {
@@ -137,7 +137,7 @@ inline double stampsToSeconds( uint64 stamps )
 
 //--------------------------------------------------------------------------
 // TimeStamp
-class TimeStamp
+class CORE_CLASS TimeStamp
 {
   public:
 	TimeStamp(uint64 stamps = 0) : stamp_(stamps) {}

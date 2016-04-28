@@ -5,7 +5,7 @@
 
 NAMESPACE_BEG(core)
 
-class ThreadMutex 
+class CORE_CLASS ThreadMutex 
 {
 public:
 	ThreadMutex(void)

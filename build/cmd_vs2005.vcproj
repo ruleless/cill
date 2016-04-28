@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="cmdtest"
-	ProjectGUID="{D87C535F-0F58-4237-A596-CD3BC261E36E}"
+	Name="cmd"
+	ProjectGUID="{15840733-744B-4FEB-8447-1FFB38F8F16C}"
 	RootNamespace="Win32Dll"
 	Keyword="Win32Proj"
 	>
@@ -18,8 +18,8 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="release"
-			IntermediateDirectory="obj/$(ProjectName)/$(ConfigurationName)"
-			ConfigurationType="1"
+			IntermediateDirectory="obj/Lib$(ProjectName)/$(ConfigurationName)"
+			ConfigurationType="4"
 			CharacterSet="2"
 			WholeProgramOptimization="0"
 			>
@@ -60,16 +60,11 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="libcill.lib"
-				AdditionalLibraryDirectories="..\lib"
-				GenerateDebugInformation="true"
+				Name="VCLibrarianTool"
+				OutputFile="..\lib\lib$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -81,12 +76,6 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 				CommandLine=""
 			/>
@@ -94,8 +83,8 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="debug"
-			IntermediateDirectory="obj/$(ProjectName)/$(ConfigurationName)"
-			ConfigurationType="1"
+			IntermediateDirectory="Obj/Lib$(ProjectName)/$(ConfigurationName)"
+			ConfigurationType="2"
 			CharacterSet="2"
 			WholeProgramOptimization="0"
 			>
@@ -118,7 +107,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../"
-				PreprocessorDefinitions="WIN32"
+				PreprocessorDefinitions="WIN32;_CMD_DLL_EXPORT"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -137,9 +126,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cill_d.lib cmd_d.lib"
+				AdditionalDependencies="cill_d.lib"
 				AdditionalLibraryDirectories="..\lib"
 				GenerateDebugInformation="true"
+				ImportLibrary="../lib/$(TargetName)_d.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -172,15 +162,55 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\test\cmd\FakeCommand.cpp"
+			RelativePath="..\cmd\AutoRegisterCommand.h"
 			>
 		</File>
 		<File
-			RelativePath="..\test\cmd\FakeCommand.h"
+			RelativePath="..\cmd\CillCmd.h"
 			>
 		</File>
 		<File
-			RelativePath="..\test\cmd\Main.cpp"
+			RelativePath="..\cmd\CmdBase.h"
+			>
+		</File>
+		<File
+			RelativePath="..\cmd\Command.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\cmd\Command.h"
+			>
+		</File>
+		<File
+			RelativePath="..\cmd\CommandFactory.h"
+			>
+		</File>
+		<File
+			RelativePath="..\cmd\CommandFactoryImpl.h"
+			>
+		</File>
+		<File
+			RelativePath="..\cmd\CommandFactoryRegistry.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\cmd\CommandFactoryRegistry.h"
+			>
+		</File>
+		<File
+			RelativePath="..\cmd\CommandLine.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\cmd\CommandLine.h"
+			>
+		</File>
+		<File
+			RelativePath="..\cmd\Input.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\cmd\Input.h"
 			>
 		</File>
 	</Files>

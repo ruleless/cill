@@ -239,7 +239,7 @@ class ObjectPool
 };
 
 // ≥ÿ∂‘œÛ
-class PoolObject
+class CORE_CLASS PoolObject
 {
   public:
 	virtual ~PoolObject() {}

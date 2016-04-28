@@ -129,20 +129,20 @@ static uint64 calcStampsPerSecond()
 
 //--------------------------------------------------------------------------
 // 每秒cpu所耗时间
-uint64 stampsPerSecond()
+CORE_API uint64 stampsPerSecond()
 {
 	static uint64 _stampsPerSecondCache = calcStampsPerSecond();
 	return _stampsPerSecondCache;
 }
 
 // 每秒cpu所耗时间 double版本
-double stampsPerSecondD()
+CORE_API double stampsPerSecondD()
 {
 	static double stampsPerSecondCacheD = double(stampsPerSecond());
 	return stampsPerSecondCacheD;
 }
 
-ulong getTickCount()
+CORE_API ulong getTickCount()
 {
 #if defined (__WIN32__) || defined(_WIN32) || defined(WIN32)
 	return ::GetTickCount();

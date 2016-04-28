@@ -5,25 +5,26 @@
 
 NAMESPACE_BEG(core)
 
-std::string& ltrim(std::string &s);
-std::string& rtrim(std::string &s);
-std::string  trim(std::string s);
+CORE_API std::string& ltrim(std::string &s);
 
-int replace(std::string& str, const std::string& pattern, const std::string& newpat);
-int replace(std::wstring& str, const std::wstring& pattern, const std::wstring& newpat);
+CORE_API std::string& rtrim(std::string &s);
+CORE_API std::string  trim(std::string s);
 
-char* strToUpper(char* s);
-char* strToLower(char* s);
-std::string stringToLower(const std::string& str);
-std::string stringToUpper(const std::string& str);
+CORE_API int replace(std::string& str, const std::string& pattern, const std::string& newpat);
+CORE_API int replace(std::wstring& str, const std::wstring& pattern, const std::wstring& newpat);
 
-int coreStrICmp(const char *src, const char *dest);
+CORE_API char* strToUpper(char* s);
+CORE_API char* strToLower(char* s);
+CORE_API std::string stringToLower(const std::string& str);
+CORE_API std::string stringToUpper(const std::string& str);
 
-bool strHasSuffix(const char *str, const char *suffix);
-bool strIHasSuffix(const char *str, const char *suffix);
+CORE_API int coreStrICmp(const char *src, const char *dest);
 
-int bytes2string(unsigned char *pSrc, int nSrcLen, unsigned char *pDst, int nDstMaxLen);
-int string2bytes(unsigned char *szSrc, unsigned char *pDst, int nDstMaxLen);
+CORE_API bool strHasSuffix(const char *str, const char *suffix);
+CORE_API bool strIHasSuffix(const char *str, const char *suffix);
+
+CORE_API int bytes2string(unsigned char *pSrc, int nSrcLen, unsigned char *pDst, int nDstMaxLen);
+CORE_API int string2bytes(unsigned char *szSrc, unsigned char *pDst, int nDstMaxLen);
 
 template<typename T>
 inline void split(const std::basic_string< T >& s, T c, std::vector< std::basic_string< T > > &v)
@@ -52,7 +53,7 @@ inline void split(const std::basic_string< T >& s, T c, std::vector< std::basic_
 	}
 }
 
-std::vector< std::string >
+CORE_API std::vector< std::string >
 splits(const std::string& s, const std::string& delim, const bool keep_empty = true);
 
 NAMESPACE_END // namespace core

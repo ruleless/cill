@@ -30,10 +30,10 @@ enum TraceLevel // 消息级别
 	levelAll = levelInfo|levelTrace|levelWarning|levelError|levelEmphasis,
 };
 
-class STrace
+class CORE_CLASS STrace
 {
   public:
-	class Listener
+	class CORE_CLASS Listener
 	{
 	  protected:
 		int mLevel;
@@ -123,33 +123,33 @@ extern STrace* gTrace;
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
-// Trace API
-extern void createTrace(int level = levelAll, bool hasTime = true);
-extern void closeTrace();
-extern int setTraceLevel(int level);
-extern int getTraceLevel();
-extern void setTraceHasTime(bool b);
-extern bool setTraceHasLimitFrequency(bool limitFrequency);
-extern bool hasLimitFrequency();
-extern void registerTrace(STrace::Listener* sink);
-extern void unregisterTrace(STrace::Listener* sink);
+// Trace CORE_API
+CORE_API void createTrace(int level = levelAll, bool hasTime = true);
+CORE_API void closeTrace();
+CORE_API int setTraceLevel(int level);
+CORE_API int getTraceLevel();
+CORE_API void setTraceHasTime(bool b);
+CORE_API bool setTraceHasLimitFrequency(bool limitFrequency);
+CORE_API bool hasLimitFrequency();
+CORE_API void registerTrace(STrace::Listener* sink);
+CORE_API void unregisterTrace(STrace::Listener* sink);
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
 // Set Output Target
-extern STrace::Listener* output2Console(int level = levelAll, bool hasTime = true);
-extern STrace::Listener* output2Html(const char* filename, int level = levelAll, bool hasTime = true);
+CORE_API STrace::Listener* output2Console(int level = levelAll, bool hasTime = true);
+CORE_API STrace::Listener* output2Html(const char* filename, int level = levelAll, bool hasTime = true);
 
 #if PLATFORM == PLATFORM_WIN32
-extern void addTraceToRichEdit(void* hWndRichEdit, const char* msg, TraceLevel level);
-extern void dispatch2RichEdit(STrace::Listener* tl);
-extern STrace::Listener* output2RichEdit(void* hwnd, int level = levelAll, bool hasTime = true);
+CORE_API void addTraceToRichEdit(void* hWndRichEdit, const char* msg, TraceLevel level);
+CORE_API void dispatch2RichEdit(STrace::Listener* tl);
+CORE_API extern STrace::Listener* output2RichEdit(void* hwnd, int level = levelAll, bool hasTime = true);
 #endif
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
 // output trace info
-extern void output(const char* msg, TraceLevel level = levelTrace);
+CORE_API void output(const char* msg, TraceLevel level = levelTrace);
 //--------------------------------------------------------------------------
 
 NAMESPACE_END // namespace core

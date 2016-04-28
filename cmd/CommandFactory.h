@@ -5,7 +5,7 @@
 
 NAMESPACE_BEG(cmd)
 
-class CommandFactory
+class CMD_CLASS CommandFactory
 {
   public:
 	virtual std::string getName() = 0;

@@ -13,7 +13,7 @@ NAMESPACE_BEG(core)
 //--------------------------------------------------------------------------
 // 线程对象，负责处理 TPTask 任务
 class ThreadPool;
-class TPThread
+class CORE_CLASS TPThread
 {
   public:
 	friend class ThreadPool;
@@ -111,7 +111,7 @@ class TPThread
 
 //--------------------------------------------------------------------------
 // 线程池
-class ThreadPool : public Singleton<ThreadPool>
+class CORE_CLASS ThreadPool : public Singleton<ThreadPool>
 {
   public:
 	ThreadPool();

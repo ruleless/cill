@@ -5,7 +5,7 @@
 
 NAMESPACE_BEG(core)
 
-class RefCountable
+class CORE_CLASS RefCountable
 {
   public:
 	void incRef(void) const
@@ -49,7 +49,7 @@ class RefCountable
 };
 
 #if PLATFORM == PLATFORM_WIN32
-class SafeRefCountable 
+class CORE_CLASS SafeRefCountable 
 {
   public:
 	void incRef(void) const
@@ -92,7 +92,7 @@ class SafeRefCountable
 	volatile mutable long refCount_;
 };
 #else
-class SafeRefCountable 
+class CORE_CLASS SafeRefCountable 
 {
   public:
 	void incRef(void) const

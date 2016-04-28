@@ -5,7 +5,7 @@
 
 NAMESPACE_BEG(core)
 
-class TaskManager
+class CORE_CLASS TaskManager
 {
   public:
 	TaskManager();

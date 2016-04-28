@@ -6,7 +6,7 @@
 
 NAMESPACE_BEG(core)
 
-class ThreadGuard
+class CORE_CLASS ThreadGuard
 {
 public:
 	explicit ThreadGuard(ThreadMutex* mutexPtr) : mpMutex(mutexPtr)

@@ -2,24 +2,24 @@
 
 NAMESPACE_BEG(core)
 
-std::string& ltrim(std::string &s)
+CORE_API std::string& ltrim(std::string &s)
 {
 	s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
 	return s;
 }
 
-std::string &rtrim(std::string &s)
+CORE_API std::string &rtrim(std::string &s)
 {
 	s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
 	return s;
 }
 
-std::string trim(std::string s)
+CORE_API std::string trim(std::string s)
 {
 	return ltrim(rtrim(s));
 }
 
-int replace(std::string& str, const std::string& pattern, const std::string& newpat)
+CORE_API int replace(std::string& str, const std::string& pattern, const std::string& newpat)
 { 
 	int count = 0; 
 	const size_t nsize = newpat.size(); 
@@ -36,7 +36,7 @@ int replace(std::string& str, const std::string& pattern, const std::string& new
 	return count;
 }
 
-int replace(std::wstring& str, const std::wstring& pattern, const std::wstring& newpat)
+CORE_API int replace(std::wstring& str, const std::wstring& pattern, const std::wstring& newpat)
 { 
 	int count = 0;
 	const size_t nsize = newpat.size(); 
@@ -53,7 +53,7 @@ int replace(std::wstring& str, const std::wstring& pattern, const std::wstring& 
 	return count; 
 }
 
-char* strToUpper(char* s)
+CORE_API char* strToUpper(char* s)
 {
 	assert(s != NULL);
 
@@ -66,7 +66,7 @@ char* strToUpper(char* s)
 	return s; 
 }
 
-char* strToLower(char* s)
+CORE_API char* strToLower(char* s)
 {
 	assert(s != NULL);
 
@@ -79,21 +79,21 @@ char* strToLower(char* s)
 	return s; 
 }
 
-std::string stringToLower(const std::string& str)
+CORE_API std::string stringToLower(const std::string& str)
 {
 	std::string t = str;
 	std::transform(t.begin(), t.end(), t.begin(), ::tolower);
 	return t;
 }
 
-std::string stringToUpper(const std::string& str)
+CORE_API std::string stringToUpper(const std::string& str)
 {
 	std::string t = str;
 	std::transform(t.begin(), t.end(), t.begin(), ::toupper);
 	return t;
 }
 
-int coreStrICmp(const char *src, const char *dest)
+CORE_API int coreStrICmp(const char *src, const char *dest)
 {
 	int srclen = strlen(src), destlen = strlen(dest);
 	if (srclen != destlen)
@@ -112,7 +112,7 @@ int coreStrICmp(const char *src, const char *dest)
 	return 0;
 }
 
-bool strHasSuffix(const char *str, const char *suffix)
+CORE_API bool strHasSuffix(const char *str, const char *suffix)
 {
 	int n = strlen(str);
 	int k = strlen(suffix);
@@ -124,7 +124,7 @@ bool strHasSuffix(const char *str, const char *suffix)
 	return false;
 }
 
-bool strIHasSuffix(const char *str, const char *suffix)
+CORE_API bool strIHasSuffix(const char *str, const char *suffix)
 {
 	int n = strlen(str);
 	int k = strlen(suffix);
@@ -136,7 +136,7 @@ bool strIHasSuffix(const char *str, const char *suffix)
 	return false;
 }
 
-int bytes2string(unsigned char *src, int srcsize, unsigned char *dst, int dstsize)
+CORE_API int bytes2string(unsigned char *src, int srcsize, unsigned char *dst, int dstsize)
 {     
 	if (dst != NULL)
 	{  
@@ -160,7 +160,7 @@ int bytes2string(unsigned char *src, int srcsize, unsigned char *dst, int dstsiz
 	return srcsize * 2;
 }
 
-int string2bytes(unsigned char* src, unsigned char* dst, int dstsize)
+CORE_API int string2bytes(unsigned char* src, unsigned char* dst, int dstsize)
 {  
 	if(src == NULL)
 		return 0;  
@@ -184,7 +184,7 @@ int string2bytes(unsigned char* src, unsigned char* dst, int dstsize)
 	return iLen;  
 }
 
-std::vector< std::string >
+CORE_API std::vector< std::string >
 splits(const std::string& s, const std::string& delim, const bool keep_empty)
 {
 	std::vector< std::string > result;

@@ -84,7 +84,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="debug"
 			IntermediateDirectory="Obj/Lib$(ProjectName)/$(ConfigurationName)"
-			ConfigurationType="4"
+			ConfigurationType="2"
 			CharacterSet="2"
 			WholeProgramOptimization="0"
 			>
@@ -107,7 +107,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../"
-				PreprocessorDefinitions="WIN32"
+				PreprocessorDefinitions="WIN32;_CORE_DLL_EXPORT"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -125,11 +125,15 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="..\lib\lib$(ProjectName)_d.lib"
+				Name="VCLinkerTool"
+				GenerateDebugInformation="true"
+				ImportLibrary="../lib/$(TargetName)_d.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -141,6 +145,12 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 				CommandLine=""
 			/>
@@ -149,186 +159,126 @@
 	<References>
 	</References>
 	<Files>
-		<Filter
-			Name="core"
+		<File
+			RelativePath="..\core\Allocator.h"
 			>
-			<File
-				RelativePath="..\core\Allocator.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\Buffer.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\CillCore.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\CoreBase.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\CoreStd.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\core\CoreStd.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\MemoryStream.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\core\MemoryStream.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\MemoryStreamConverter.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\ObjectPool.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\RefCountable.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\Singleton.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\SmartPointer.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\StrBuffer.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\StrConvertor.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\StrHelper.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\core\StrHelper.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\Task.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\TaskManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\core\TaskManager.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\ThreadGuard.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\ThreadMutex.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\ThreadPool.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\core\ThreadPool.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\ThreadTask.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\TimeStamp.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\core\TimeStamp.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\Trace.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\core\Trace.h"
-				>
-			</File>
-			<File
-				RelativePath="..\core\TraceImpl.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="cmd"
+		</File>
+		<File
+			RelativePath="..\core\Buffer.h"
 			>
-			<File
-				RelativePath="..\cmd\AutoRegisterCommand.h"
-				>
-			</File>
-			<File
-				RelativePath="..\cmd\CillCmd.h"
-				>
-			</File>
-			<File
-				RelativePath="..\cmd\CmdBase.h"
-				>
-			</File>
-			<File
-				RelativePath="..\cmd\Command.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\cmd\Command.h"
-				>
-			</File>
-			<File
-				RelativePath="..\cmd\CommandFactory.h"
-				>
-			</File>
-			<File
-				RelativePath="..\cmd\CommandFactoryImpl.h"
-				>
-			</File>
-			<File
-				RelativePath="..\cmd\CommandFactoryRegistry.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\cmd\CommandFactoryRegistry.h"
-				>
-			</File>
-			<File
-				RelativePath="..\cmd\CommandLine.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\cmd\CommandLine.h"
-				>
-			</File>
-			<File
-				RelativePath="..\cmd\Input.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\cmd\Input.h"
-				>
-			</File>
-		</Filter>
+		</File>
+		<File
+			RelativePath="..\core\CillCore.h"
+			>
+		</File>
+		<File
+			RelativePath="..\core\CoreBase.h"
+			>
+		</File>
+		<File
+			RelativePath="..\core\CoreStd.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\core\CoreStd.h"
+			>
+		</File>
+		<File
+			RelativePath="..\core\MemoryStream.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\core\MemoryStream.h"
+			>
+		</File>
+		<File
+			RelativePath="..\core\MemoryStreamConverter.h"
+			>
+		</File>
+		<File
+			RelativePath="..\core\ObjectPool.h"
+			>
+		</File>
+		<File
+			RelativePath="..\core\RefCountable.h"
+			>
+		</File>
+		<File
+			RelativePath="..\core\Singleton.h"
+			>
+		</File>
+		<File
+			RelativePath="..\core\SmartPointer.h"
+			>
+		</File>
+		<File
+			RelativePath="..\core\StrBuffer.h"
+			>
+		</File>
+		<File
+			RelativePath="..\core\StrConvertor.h"
+			>
+		</File>
+		<File
+			RelativePath="..\core\StrHelper.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\core\StrHelper.h"
+			>
+		</File>
+		<File
+			RelativePath="..\core\Task.h"
+			>
+		</File>
+		<File
+			RelativePath="..\core\TaskManager.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\core\TaskManager.h"
+			>
+		</File>
+		<File
+			RelativePath="..\core\ThreadGuard.h"
+			>
+		</File>
+		<File
+			RelativePath="..\core\ThreadMutex.h"
+			>
+		</File>
+		<File
+			RelativePath="..\core\ThreadPool.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\core\ThreadPool.h"
+			>
+		</File>
+		<File
+			RelativePath="..\core\ThreadTask.h"
+			>
+		</File>
+		<File
+			RelativePath="..\core\TimeStamp.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\core\TimeStamp.h"
+			>
+		</File>
+		<File
+			RelativePath="..\core\Trace.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\core\Trace.h"
+			>
+		</File>
+		<File
+			RelativePath="..\core\TraceImpl.cpp"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

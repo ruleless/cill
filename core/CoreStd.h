@@ -5,11 +5,11 @@
 
 NAMESPACE_BEG(core)
 
-void sleepms(ulong ms);
+CORE_API void sleepms(ulong ms);
 
 // 获得系统产生的最后一次错误描述
-char* coreStrError(int ierrorno = 0);
-int coreLastError();
+CORE_API char* coreStrError(int ierrorno = 0);
+CORE_API int coreLastError();
 
 NAMESPACE_END // namespace core
 

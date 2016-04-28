@@ -5,7 +5,7 @@
 
 NAMESPACE_BEG(cmd)
 
-class Input : public core::TPTask
+class CMD_CLASS Input : public core::TPTask
 {
   public:
 	struct Listener 

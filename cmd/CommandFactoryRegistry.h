@@ -5,7 +5,7 @@
 
 NAMESPACE_BEG(cmd)
 
-class CommandFactoryRegistry
+class CMD_CLASS CommandFactoryRegistry
 {
   public:
 	CommandFactoryRegistry();

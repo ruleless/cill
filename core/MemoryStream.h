@@ -8,7 +8,7 @@
 
 NAMESPACE_BEG(core)
 
-class MemoryStreamException
+class CORE_CLASS MemoryStreamException
 {
   public:
 	MemoryStreamException(bool _add, size_t _pos, size_t _esize, size_t _size)
@@ -28,7 +28,7 @@ class MemoryStreamException
 	size_t _m_size;
 };
 
-class MemoryStream : public PoolObject
+class CORE_CLASS MemoryStream : public PoolObject
 {
 	union PackFloatXType
 	{

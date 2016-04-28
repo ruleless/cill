@@ -231,6 +231,42 @@
 #define NAMESPACE_END }
 
 #define LIMIT_FREQUENCY
+
+// 导入导出定义
+#if PLATFORM == PLATFORM_WIN32
+#	ifdef _LIB
+#		define CLASS_EXPORT
+#		define CLASS_IMPORT
+#		define API_EXPORT
+#		define API_IMPORT
+#		define VAR_EXPORT
+#		define VAR_IMPORT
+#	else
+#		define CLASS_EXPORT		__declspec(dllexport)
+#		define CLASS_IMPORT		__declspec(dllimport)
+#		define API_EXPORT		__declspec(dllexport)
+#		define API_IMPORT		__declspec(dllimport)
+#		define VAR_EXPORT		__declspec(dllexport)
+#		define VAR_IMPORT		__declspec(dllimport)
+#	endif
+#else
+#	define CLASS_EXPORT
+#	define CLASS_IMPORT
+#	define API_EXPORT
+#	define API_IMPORT
+#	define VAR_EXPORT
+#	define VAR_IMPORT
+#endif
+
+#ifdef _CORE_DLL_EXPORT
+#define CORE_CLASS		CLASS_EXPORT
+#define CORE_API		API_EXPORT
+#define CORE_VAR		VAR_EXPORT
+#else
+#define CORE_CLASS		CLASS_IMPORT
+#define CORE_API		API_IMPORT
+#define CORE_VAR		VAR_IMPORT
+#endif
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------

@@ -5,7 +5,7 @@
 
 NAMESPACE_BEG(core)
 
-class Task
+class CORE_CLASS Task
 {
   public:
 	virtual ~Task() {}

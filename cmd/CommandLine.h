@@ -7,7 +7,7 @@
 
 NAMESPACE_BEG(cmd)
 
-class CommandLine : public Command::Listener, public Input::Listener
+class CMD_CLASS CommandLine : public Command::Listener, public Input::Listener
 {  
   public:
 	CommandLine();
@@ -44,7 +44,7 @@ class CommandLine : public Command::Listener, public Input::Listener
 	CommandList mCommandList;
 };
 
-extern CommandLine *gpCommandLine;
+extern CMD_VAR CommandLine *gpCommandLine;
 
 NAMESPACE_END // namespace cmd
 

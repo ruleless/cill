@@ -2,7 +2,7 @@
 
 NAMESPACE_BEG(core)
 
-void sleepms(ulong ms)
+CORE_API void sleepms(ulong ms)
 {
 #if PLATFORM == PLATFORM_WIN32
 	::Sleep(ms);
@@ -14,7 +14,7 @@ void sleepms(ulong ms)
 #endif
 }
 
-char* coreStrError(int ierrorno = 0)
+CORE_API char* coreStrError(int ierrorno = 0)
 {
 #if PLATFORM == PLATFORM_WIN32
 	if(ierrorno == 0)
@@ -31,7 +31,7 @@ char* coreStrError(int ierrorno = 0)
 #endif
 }
 
-int coreLastError()
+CORE_API int coreLastError()
 {
 #if PLATFORM == PLATFORM_WIN32
 	return GetLastError();

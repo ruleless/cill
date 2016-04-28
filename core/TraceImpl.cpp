@@ -16,8 +16,8 @@
 NAMESPACE_BEG(core)
 
 //--------------------------------------------------------------------------
-// Trace API
-void createTrace(int level, bool hasTime)
+// Trace CORE_API
+CORE_API void createTrace(int level, bool hasTime)
 {
 	if (gTrace)
 	{
@@ -32,7 +32,7 @@ void createTrace(int level, bool hasTime)
 	}
 }
 
-void closeTrace()
+CORE_API void closeTrace()
 {
 	if (gTrace)
 	{
@@ -41,37 +41,37 @@ void closeTrace()
 	}
 }
 
-int setTraceLevel(int level)
+CORE_API int setTraceLevel(int level)
 {
 	return gTrace->setTraceLevel(level);
 }
 
-int getTraceLevel()
+CORE_API int getTraceLevel()
 {
 	return gTrace->getTraceLevel();
 }
 
-void setTraceHasTime(bool b)
+CORE_API void setTraceHasTime(bool b)
 {
 	gTrace->hasTime(b);
 }
 
-bool setTraceHasLimitFrequency(bool limitFrequency)
+CORE_API bool setTraceHasLimitFrequency(bool limitFrequency)
 {
 	return gTrace->setTraceLimitFrequency(limitFrequency);
 }
 
-bool hasLimitFrequency()
+CORE_API bool hasLimitFrequency()
 {
 	return gTrace->hasLimitFrequency();
 }
 
-void registerTrace(STrace::Listener* sink)
+CORE_API void registerTrace(STrace::Listener* sink)
 {
 	gTrace->registerTrace(sink);
 }
 
-void unregisterTrace(STrace::Listener* sink)
+CORE_API void unregisterTrace(STrace::Listener* sink)
 {
 	gTrace->unregisterTrace(sink);
 }
@@ -123,7 +123,7 @@ public:
 	}
 };
 
-STrace::Listener* output2Console(int level, bool hasTime)
+CORE_API STrace::Listener* output2Console(int level, bool hasTime)
 {
 	TraceConsole* sink = new TraceConsole();
 	sink->setTraceLevel(level);
@@ -244,7 +244,7 @@ public:
 	}
 };
 
-STrace::Listener* output2Html(const tchar* filename, int level, bool hasTime)
+CORE_API STrace::Listener* output2Html(const tchar* filename, int level, bool hasTime)
 {
 	TraceHtmlFile* sink = new TraceHtmlFile();
 	if (!sink->create(filename, true))
@@ -290,7 +290,7 @@ public:
 	}
 };
 
-void addTraceToRichEdit(void* hWndRichEdit, const char* msg, TraceLevel level)
+CORE_API void addTraceToRichEdit(void* hWndRichEdit, const char* msg, TraceLevel level)
 {
 	assert(msg != NULL);
 
@@ -385,7 +385,7 @@ void addTraceToRichEdit(void* hWndRichEdit, const char* msg, TraceLevel level)
 	}
 }
 
-void dispatch2RichEdit(STrace::Listener* tl)
+CORE_API void dispatch2RichEdit(STrace::Listener* tl)
 {
 	TraceRichEdit* tre = (TraceRichEdit*)tl;
 	if (tre)
@@ -394,7 +394,7 @@ void dispatch2RichEdit(STrace::Listener* tl)
 	}
 }
 
-STrace::Listener* output2RichEdit(void* hwnd, int level, bool hasTime)
+CORE_API STrace::Listener* output2RichEdit(void* hwnd, int level, bool hasTime)
 {
 	TraceRichEdit* sink = new TraceRichEdit(hwnd);
 	sink->setTraceLevel(level);
@@ -406,7 +406,7 @@ STrace::Listener* output2RichEdit(void* hwnd, int level, bool hasTime)
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
-void output(const tchar* msg, TraceLevel level)
+CORE_API void output(const tchar* msg, TraceLevel level)
 {
 	if (NULL == gTrace)
 	{

@@ -6,7 +6,7 @@
 
 NAMESPACE_BEG(core)
 
-class TPTask : public Task
+class CORE_CLASS TPTask : public Task
 {
   public:
 	enum TPTaskState
