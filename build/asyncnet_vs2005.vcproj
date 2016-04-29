@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="asyncnettest"
-	ProjectGUID="{D87C535F-0F58-4237-A596-CD3BC261E36E}"
+	Name="asyncnet"
+	ProjectGUID="{E2FDCDC8-D7A7-46A1-A875-467FA7CA7128}"
 	RootNamespace="Win32Dll"
 	Keyword="Win32Proj"
 	>
@@ -18,8 +18,8 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="release"
-			IntermediateDirectory="obj/$(ProjectName)/$(ConfigurationName)"
-			ConfigurationType="1"
+			IntermediateDirectory="obj/Lib$(ProjectName)/$(ConfigurationName)"
+			ConfigurationType="4"
 			CharacterSet="2"
 			WholeProgramOptimization="0"
 			>
@@ -60,16 +60,11 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="libcill.lib"
-				AdditionalLibraryDirectories="..\lib"
-				GenerateDebugInformation="true"
+				Name="VCLibrarianTool"
+				OutputFile="..\lib\lib$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -81,12 +76,6 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 				CommandLine=""
 			/>
@@ -94,8 +83,8 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="debug"
-			IntermediateDirectory="obj/$(ProjectName)/$(ConfigurationName)"
-			ConfigurationType="1"
+			IntermediateDirectory="Obj/Lib$(ProjectName)/$(ConfigurationName)"
+			ConfigurationType="2"
 			CharacterSet="2"
 			WholeProgramOptimization="0"
 			>
@@ -118,7 +107,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../"
-				PreprocessorDefinitions="WIN32"
+				PreprocessorDefinitions="WIN32;ASYNCNET_EXPORT"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -137,9 +126,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cill_d.lib cmd_d.lib"
-				AdditionalLibraryDirectories="..\lib"
 				GenerateDebugInformation="true"
+				ImportLibrary="../lib/$(TargetName)_d.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -171,18 +159,126 @@
 	<References>
 	</References>
 	<Files>
-		<File
-			RelativePath="..\test\cmd\FakeCommand.cpp"
+		<Filter
+			Name="source"
 			>
-		</File>
-		<File
-			RelativePath="..\test\cmd\FakeCommand.h"
+			<File
+				RelativePath="..\asyncnet\AsyncNet.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\AsyncNet.h"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\TraceLog.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\TraceLog.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="system"
 			>
-		</File>
-		<File
-			RelativePath="..\test\cmd\Main.cpp"
-			>
-		</File>
+			<File
+				RelativePath="..\asyncnet\imembase.c"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\imembase.h"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\imemdata.c"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\imemdata.h"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\inetbase.c"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\inetbase.h"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\inetcode.c"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\inetcode.h"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\inetkcp.c"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\inetkcp.h"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\inetnot.c"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\inetnot.h"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\ineturl.c"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\ineturl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\iposix.c"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\iposix.h"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\isecure.c"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\isecure.h"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\itimer.c"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\itimer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\itoolbox.c"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\itoolbox.h"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\system.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
