@@ -106,6 +106,13 @@ class StrBuffer : public BasicBuffer, public Allocator
 		__snprintf(num, sizeof(num), "%d", n);
 		return this->operator<<((const char *)num);
 	}
+
+	ostrbuffer& operator<< (long n)
+	{
+		char num[32] = {0};
+		__snprintf(num, sizeof(num), "%d", n);
+		return this->operator<<((const char *)num);
+	}
 	
 	ostrbuffer& operator<< (uint n)
 	{

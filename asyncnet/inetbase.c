@@ -2054,7 +2054,11 @@ struct IPOLL_DRIVER IPOLL_SELECT = {
 /* startup select device */
 static int ips_startup(void)
 {
+#if defined(_WIN32) || defined(WIN32)
+	return inet_init();
+#else
 	return 0;
+#endif
 }
 
 /* shutdown select device                                            */

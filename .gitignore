@@ -14,6 +14,7 @@
 *.pdb
 *.lib
 *.html
+*.exp
 Debug/
 Obj/
 main

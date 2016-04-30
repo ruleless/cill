@@ -187,5 +187,5 @@ int Trace::color(int color)
 }
 
 
-NAMESPACE_END(AsyncNet)
+NAMESPACE_END // namespace AsyncNet
 

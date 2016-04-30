@@ -63,7 +63,7 @@
 #endif
 
 #ifndef NAMESPACE_END
-#define NAMESPACE_END(x) }
+#define NAMESPACE_END }
 #endif
 
 #ifndef __cplusplus
@@ -2203,7 +2203,7 @@ static inline void StringLower(std::string &s) {
 }
 
 
-NAMESPACE_END(System)
+NAMESPACE_END // namespace AsyncNet
 
 
 #endif

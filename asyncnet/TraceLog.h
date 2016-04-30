@@ -76,7 +76,7 @@ protected:
 #define TRACE_RTT_REPORT        8192
 
 
-NAMESPACE_END(AsyncNet)
+NAMESPACE_END // namespace AsyncNet
 
 
 #endif

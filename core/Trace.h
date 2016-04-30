@@ -158,24 +158,24 @@ NAMESPACE_END // namespace core
 // Macro Define
 #ifdef LIMIT_FREQUENCY // 控制每个输出点的最快频率是1秒
 #define LIM_FREQ(e) \
-	static ulong s_lastTraceTime = core::getTickCount();				\
+	static core::ulong s_lastTraceTime = core::getTickCount();				\
 	if (!core::hasLimitFrequency() || (core::getTickCount() - s_lastTraceTime) > 1000) \
 	{ s_lastTraceTime = core::getTickCount(); e}
 #else // #ifdef LIMIT_FREQUENCY
 #define LIM_FREQ(e)	e
 #endif
 
-#define logInfo(x) { if(core::getTraceLevel() & core::levelInfo) { LIM_FREQ(core::ostrbuf osb; osb<<x; core::output(osb.c_str(), core::levelInfo);) }}
-#define logTrace(x) { if(core::getTraceLevel() & core::levelTrace) { LIM_FREQ(core::ostrbuf osb; osb<<x; core::output(osb.c_str(), core::levelTrace);) }}
-#define logWarning(x) { if(core::getTraceLevel() & core::levelWarning) { LIM_FREQ(core::ostrbuf osb; osb<<"WARNING: "<<x; core::output(osb.c_str(), core::levelWarning);) }}
-#define logError(x) { if(core::getTraceLevel() & core::levelError) { LIM_FREQ(core::ostrbuf osb; osb<<"ERROR: "<<x; core::output(osb.c_str(), core::levelError);) }}
-#define logEmphasis(x) { if(core::getTraceLevel() & core::levelEmphasis) { LIM_FREQ(core::ostrbuf osb; osb<<x; core::output(osb.c_str(), core::levelEmphasis);) }}
+#define logInfo(x) { if(core::getTraceLevel() & core::levelInfo) { LIM_FREQ(core::ostrbuf __osb; __osb<<x; core::output(__osb.c_str(), core::levelInfo);) }}
+#define logTrace(x) { if(core::getTraceLevel() & core::levelTrace) { LIM_FREQ(core::ostrbuf __osb; __osb<<x; core::output(__osb.c_str(), core::levelTrace);) }}
+#define logWarning(x) { if(core::getTraceLevel() & core::levelWarning) { LIM_FREQ(core::ostrbuf __osb; __osb<<"WARNING: "<<x; core::output(__osb.c_str(), core::levelWarning);) }}
+#define logError(x) { if(core::getTraceLevel() & core::levelError) { LIM_FREQ(core::ostrbuf __osb; __osb<<"ERROR: "<<x; core::output(__osb.c_str(), core::levelError);) }}
+#define logEmphasis(x) { if(core::getTraceLevel() & core::levelEmphasis) { LIM_FREQ(core::ostrbuf __osb; __osb<<x; core::output(__osb.c_str(), core::levelEmphasis);) }}
 
-#define logInfoLn(x) { if(core::getTraceLevel() & core::levelInfo) { LIM_FREQ(core::ostrbuf osb; osb<<x<<"\n"; core::output(osb.c_str(), core::levelInfo);) }}
-#define logTraceLn(x) { if(core::getTraceLevel() & core::levelTrace) { LIM_FREQ(core::ostrbuf osb; osb<<x<<"\n"; core::output(osb.c_str(), core::levelTrace);) }}
-#define logWarningLn(x) { if(core::getTraceLevel() & core::levelWarning) { LIM_FREQ(core::ostrbuf osb; osb<<"WARNING: "<<x<<"\n"; core::output(osb.c_str(), core::levelWarning);) }}
-#define logErrorLn(x) { if(core::getTraceLevel() & core::levelError) { LIM_FREQ(core::ostrbuf osb; osb<<"ERROR: "<<x<<"\n"; core::output(osb.c_str(), core::levelError);) }}
-#define logEmphasisLn(x) { if(core::getTraceLevel() & core::levelEmphasis) { LIM_FREQ(core::ostrbuf osb; osb<<x<<"\n"; core::output(osb.c_str(), core::levelEmphasis);) }}
+#define logInfoLn(x) { if(core::getTraceLevel() & core::levelInfo) { LIM_FREQ(core::ostrbuf __osb; __osb<<x<<"\n"; core::output(__osb.c_str(), core::levelInfo);) }}
+#define logTraceLn(x) { if(core::getTraceLevel() & core::levelTrace) { LIM_FREQ(core::ostrbuf __osb; __osb<<x<<"\n"; core::output(__osb.c_str(), core::levelTrace);) }}
+#define logWarningLn(x) { if(core::getTraceLevel() & core::levelWarning) { LIM_FREQ(core::ostrbuf __osb; __osb<<"WARNING: "<<x<<"\n"; core::output(__osb.c_str(), core::levelWarning);) }}
+#define logErrorLn(x) { if(core::getTraceLevel() & core::levelError) { LIM_FREQ(core::ostrbuf __osb; __osb<<"ERROR: "<<x<<"\n"; core::output(__osb.c_str(), core::levelError);) }}
+#define logEmphasisLn(x) { if(core::getTraceLevel() & core::levelEmphasis) { LIM_FREQ(core::ostrbuf __osb; __osb<<x<<"\n"; core::output(__osb.c_str(), core::levelEmphasis);) }}
 
 #define logInfoOnce(x) { static bool f=true; if(f) { f=!f; Info(x); }}
 #define logTraceOnce(x) { static bool f=true; if(f) { f=!f; STrace(x); }}
@@ -189,7 +189,7 @@ NAMESPACE_END // namespace core
 #define logErrorOnceLn(x) { static bool f=true; if(f) { f=!f; ErrorLn(x); }}
 #define logEmphasisOnceLn(x) { static bool f=true; if(f) { f=!f; EmphasisLn(x); }}
 
-#define logVerify(x) { if(!(x)) { LIM_FREQ(core::ostrbuf osb; osb<<"VERIFY: "<<#x<<"\n"; core::output(osb.c_str(), core::levelError);) }}
+#define logVerify(x) { if(!(x)) { LIM_FREQ(core::ostrbuf __osb; __osb<<"VERIFY: "<<#x<<"\n"; core::output(__osb.c_str(), core::levelError);) }}
 //--------------------------------------------------------------------------
 
 #else // #ifndef DISABLE_TRACE

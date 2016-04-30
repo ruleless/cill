@@ -18,6 +18,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "echoclient", "echoclient_vs
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{E9AAE810-DD1B-462F-98B2-5371F683C2A0} = {E9AAE810-DD1B-462F-98B2-5371F683C2A0}
+		{E2FDCDC8-D7A7-46A1-A875-467FA7CA7128} = {E2FDCDC8-D7A7-46A1-A875-467FA7CA7128}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cmd", "cmd_vs2005.vcproj", "{15840733-744B-4FEB-8447-1FFB38F8F16C}"
 	ProjectSection(WebsiteProperties) = preProject
@@ -29,6 +33,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "echoserver", "echoserver_vs
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{E9AAE810-DD1B-462F-98B2-5371F683C2A0} = {E9AAE810-DD1B-462F-98B2-5371F683C2A0}
+		{E2FDCDC8-D7A7-46A1-A875-467FA7CA7128} = {E2FDCDC8-D7A7-46A1-A875-467FA7CA7128}
 	EndProjectSection
 EndProject
 Global

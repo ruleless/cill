@@ -1,4 +1,5 @@
 #include "Trace.h"
+#include "CoreStd.h"
 
 #ifndef DISABLE_TRACE
 
@@ -78,15 +79,6 @@ CORE_API void unregisterTrace(STrace::Listener* sink)
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
-#define  STD_COLOR_NONE		"\033[0m"
-#define  STD_COLOR_BLACK	"\033[30m"
-#define  STD_COLOR_GREEN	"\033[32m"
-#define  STD_COLOR_PURPLE	"\033[35m"
-#define  STD_COLOR_RED		"\033[31m"
-#define  STD_COLOR_EMPHASIS	"\033[4;33m"
-
-#define  STD_COLOR_YELLOW	"\033[33m"
-
 // 输出到控制台
 class TraceConsole : public STrace::Listener
 {
@@ -95,31 +87,26 @@ public:
 	{
 		assert(msg != NULL);
 
-#if PLATFORM == PLATFORM_WIN32
-		if (time && hasTime())
-			std::cout<<time;
-		std::cout<<msg;
-#else
-		static const char* color[] =
+		static int color[] =
 		{
 			0,
-			STD_COLOR_NONE,	    // Info
-			STD_COLOR_GREEN,	// Trace
+			CONSOLE_TEXT_WHITE,	    // Info
+			CONSOLE_TEXT_GREEN,		// Trace
 			0,
-			STD_COLOR_PURPLE,	// Warning
+			CONSOLE_TEXT_YELLOW,	// Warning
 			0,0,0,
-			STD_COLOR_RED,		// Error
+			CONSOLE_TEXT_RED,		// Error
 			0,0,0,0,0,0,0,
-			STD_COLOR_EMPHASIS, // Emphasis
+			CONSOLE_TEXT_BOLD_RED,	// Emphasis
 		};
 
+		consoleSetColor(color[level]);
 		if (time && hasTime())
 		{
-			printf("%s%s", color[level], time);
+			printf("%s", time);
 		}
-		printf("%s%s", color[level], msg);
-		printf(STD_COLOR_NONE);
-#endif
+		printf("%s", msg);
+		consoleResetColor();
 	}
 };
 
