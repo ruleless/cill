@@ -15,9 +15,9 @@ RM=-rm -rf
 # dirs:=$(filter-out $(exclude_dirs),$(dirs))
 SUBDIRS:=$(dirs)
 
-SRCS=$(wildcard *.cpp)
-OBJS=$(SRCS:%.cpp=%.o)
-DEPENDS=$(SRCS:%.cpp=%.d)
+SRCS=$(wildcard *.c)
+OBJS=$(SRCS:%.c=%.o)
+DEPENDS=$(SRCS:%.c=%.d)
 
 
 # Phony Target
@@ -35,7 +35,7 @@ $(LIBPATH):
 
 # First Layer
 $(TARGET):$(OBJS)
-	$(CXX) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS)
 ifdef EXEPATH
 	cp $@ $(EXEPATH)
 endif
@@ -53,15 +53,15 @@ subdirs:$(SUBDIRS)
 
 
 # Second Layer for object file deprule
-$(OBJS):%.o:%.cpp
-	$(CXX) -c $< -o $@ $(CXXFLAGS)
+$(OBJS):%.o:%.c
+	$(CC) -c $< -o $@ $(CFLAGS)
 
 ## Second Layer for dependency file deprule
 -include $(DEPENDS)
 
 $(DEPENDS):%.d:%.cpp
 	set -e; rm -f $@; \
-	$(CXX) -MM $(CXXFLAGS) $< > $@.$$$$; \
+	$(CC) -MM $(CFLAGS) $< > $@.$$$$; \
 	sed 's,\($*\)\.o[:]*,\1.o $@:,g' < $@.$$$$ > $@; \
 	rm $@.$$$$
 

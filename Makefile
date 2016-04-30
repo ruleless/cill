@@ -1,3 +1,3 @@
-dirs:=core cmd build
+dirs:=core cmd build asyncnet
 
 include build.mak

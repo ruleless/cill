@@ -19,7 +19,7 @@
 #include "AsyncNet.h"
 #include "TraceLog.h"
 #include "system.h"
-#include "inetnot.h"
+#include "src/inetnot.h"
 
 //=====================================================================
 // 服务端接口

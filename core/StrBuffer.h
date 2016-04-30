@@ -107,12 +107,14 @@ class StrBuffer : public BasicBuffer, public Allocator
 		return this->operator<<((const char *)num);
 	}
 
+#if defined( __WIN32__ ) || defined( WIN32 ) || defined( _WIN32 )	
 	ostrbuffer& operator<< (long n)
 	{
 		char num[32] = {0};
 		__snprintf(num, sizeof(num), "%d", n);
 		return this->operator<<((const char *)num);
 	}
+#endif   
 	
 	ostrbuffer& operator<< (uint n)
 	{

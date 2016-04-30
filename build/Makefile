@@ -1,9 +1,9 @@
-TOPDIR:=..
+CILLDIR:=..
 
-DIRS:=$(TOPDIR)/core $(TOPDIR)/cmd
+DIRS:=$(CILLDIR)/core $(CILLDIR)/cmd
 OBJS:=$(foreach v,$(DIRS),$(wildcard $(v)/*.o))
 
 LIB:=libcill.a
-LIBPATH:=$(TOPDIR)/lib
+LIBPATH:=$(CILLDIR)/lib
 
-include ./build.mak
+include $(CILLDIR)/link.mak
