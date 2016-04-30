@@ -160,125 +160,117 @@
 	</References>
 	<Files>
 		<Filter
-			Name="source"
+			Name="src"
 			>
 			<File
-				RelativePath="..\asyncnet\AsyncNet.cpp"
+				RelativePath="..\asyncnet\src\imembase.c"
 				>
 			</File>
 			<File
-				RelativePath="..\asyncnet\AsyncNet.h"
+				RelativePath="..\asyncnet\src\imembase.h"
 				>
 			</File>
 			<File
-				RelativePath="..\asyncnet\TraceLog.cpp"
+				RelativePath="..\asyncnet\src\imemdata.c"
 				>
 			</File>
 			<File
-				RelativePath="..\asyncnet\TraceLog.h"
+				RelativePath="..\asyncnet\src\imemdata.h"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\src\inetbase.c"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\src\inetbase.h"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\src\inetcode.c"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\src\inetcode.h"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\src\inetkcp.c"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\src\inetkcp.h"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\src\inetnot.c"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\src\inetnot.h"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\src\ineturl.c"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\src\ineturl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\src\iposix.c"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\src\iposix.h"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\src\isecure.c"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\src\isecure.h"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\src\itimer.c"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\src\itimer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\src\itoolbox.c"
+				>
+			</File>
+			<File
+				RelativePath="..\asyncnet\src\itoolbox.h"
 				>
 			</File>
 		</Filter>
-		<Filter
-			Name="system"
+		<File
+			RelativePath="..\asyncnet\AsyncNet.cpp"
 			>
-			<File
-				RelativePath="..\asyncnet\imembase.c"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\imembase.h"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\imemdata.c"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\imemdata.h"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\inetbase.c"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\inetbase.h"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\inetcode.c"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\inetcode.h"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\inetkcp.c"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\inetkcp.h"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\inetnot.c"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\inetnot.h"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\ineturl.c"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\ineturl.h"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\iposix.c"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\iposix.h"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\isecure.c"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\isecure.h"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\itimer.c"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\itimer.h"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\itoolbox.c"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\itoolbox.h"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\main.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\system.h"
-				>
-			</File>
-		</Filter>
+		</File>
+		<File
+			RelativePath="..\asyncnet\AsyncNet.h"
+			>
+		</File>
+		<File
+			RelativePath="..\asyncnet\system.h"
+			>
+		</File>
+		<File
+			RelativePath="..\asyncnet\TraceLog.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\asyncnet\TraceLog.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

@@ -2032,7 +2032,7 @@ static inline void StringStrip(std::string &str, const char *seps) {
 		if (skip == 0) 
 			break;
 	}
-	for (p2 = str.size() - 1; (ssize_t)p2 >= 0 && p2 >= p1; p2--) {
+	for (p2 = str.size() - 1; p2 >= p1; p2--) {
 		char ch = str[p2];
 		int skip = 0;
 		for (i = 0; seps[i]; i++) {
