@@ -230,7 +230,7 @@
 #define NAMESPACE_BEG(spaceName) namespace spaceName {
 #define NAMESPACE_END }
 
-#define LIMIT_FREQUENCY
+// #define LIMIT_FREQUENCY
 
 // 导入导出定义
 #if PLATFORM == PLATFORM_WIN32
@@ -362,34 +362,27 @@ typedef int					SOCKET;
 
 // 输出格式宏定义
 #if COMPILER != COMPILER_GNU
-
 #	define PRI64			"lld"
 #	define PRIu64			"llu"
 #	define PRIx64			"llx"
 #	define PRIX64			"llX"
+#	define PRTime			PRI64
 #	define PRIzu			"lu"
 #	define PRIzd			"ld"
-#	define PRTime			PRI64
-
 #else // #if COMPILER != COMPILER_GNU
-
 #ifdef _LP64
 #	ifndef PRI64
 #		define PRI64		"ld"
 #	endif
-
 #	ifndef PRIu64
 #		define PRIu64		"lu"
 #	endif
-
 #	ifndef PRIx64
 #		define PRIx64		"lx"
 #	endif
-
 #	ifndef PRIX64
 #		define PRIX64		"lX"
 #	endif
-
 #	ifndef PRTime
 #		define PRTime		PRI64
 #	endif
@@ -397,28 +390,22 @@ typedef int					SOCKET;
 #	ifndef PRI64
 #		define PRI64		"lld"
 #	endif
-
 #	ifndef PRIu64
 #		define PRIu64		"llu"
 #	endif
-
 #	ifndef PRIx64
 #		define PRIx64		"llx"
 #	endif
-
 #	ifndef PRIX64
 #		define PRIX64		"llX"
 #	endif
-
 #	ifndef PRTime
 #		define PRTime		"ld"
 #	endif
 #endif // #ifdef _LP64
-
 #ifndef PRIzd
 #	define PRIzd			"zd"
 #endif
-
 #ifndef PRIzu
 #	define PRIzu			"zu"
 #endif
@@ -467,7 +454,7 @@ typedef int					SOCKET;
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
-//线程定义
+// 线程定义
 #if PLATFORM == PLATFORM_WIN32
 #	define THREAD_ID							HANDLE
 #	define THREAD_SINGNAL						HANDLE
@@ -491,6 +478,22 @@ typedef int					SOCKET;
 #	define THREAD_MUTEX_LOCK(x)					pthread_mutex_lock(&x)
 #	define THREAD_MUTEX_UNLOCK(x)				pthread_mutex_unlock(&x)		
 #endif
+//--------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------
+// memory management
+#ifdef _USE_KMEM
+#include "imembase.h"
+#define malloc ikmem_malloc
+#define realloc ikmem_realloc
+#define free ikmem_free
+
+inline void* operator new(size_t size) throw(std::bad_alloc) { return malloc(size); }
+inline void* operator new[](size_t size) throw(std::bad_alloc) { return malloc(size); }
+ 
+inline void operator delete(void* ptr) throw() { free(ptr); }
+inline void operator delete[](void* ptr) throw() { free(ptr); }
+#endif // #ifdef _USE_KMEM
 //--------------------------------------------------------------------------
 
 #endif // __CORE_BASE_H__

@@ -1,7 +1,7 @@
 phonyt:=objt
 
-CILLDIR:=../..
+ROOTDIR:=../..
 
-# CXXFLAGS:=-I $(CILLDIR)/include
+CFLAGS:=-I $(ROOTDIR)/kmem
 
-include $(CILLDIR)/cbuild.mak
+include $(ROOTDIR)/cbuild.mak

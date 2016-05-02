@@ -7,8 +7,8 @@ CXXFLAGS+=-g -Wall
 
 CILLDIR:=../..
 
-CXXFLAGS:=-I $(CILLDIR)
-LDFLAGS:=-lpthread -lrt -ldl -L $(CILLDIR)/lib -lcill -lasyncnet
+CXXFLAGS:=-I $(CILLDIR) -I $(CILLDIR)/kmem
+LDFLAGS:=-L $(CILLDIR)/lib -lcill -lasyncnet -lkmem -lpthread -lrt -ldl
 
 SRCS=$(wildcard *.cpp)
 OBJS=$(SRCS:%.cpp=%.o)
@@ -25,6 +25,9 @@ EchoClient.out:EchoClient.o
 
 $(OBJS):%.o:%.cpp
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
+
+clean:
+	-rm $(OBJS) $(TARGETS)
 
 fake:
 	@echo $(OBJS)

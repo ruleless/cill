@@ -1,7 +1,7 @@
 CILLDIR:=../..
 
-CXXFLAGS:=-I $(CILLDIR)
-LDFLAGS:=-lcppunit -L $(CILLDIR)/lib -lcill -lpthread
+CXXFLAGS:=-D_USE_KMEM -I $(CILLDIR) -I $(CILLDIR)/kmem
+LDFLAGS:=-L $(CILLDIR)/lib -lcill -lkmem -lcppunit -lpthread
 
 TARGET:=main.out
 

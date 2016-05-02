@@ -1,7 +1,7 @@
 CILLDIR:=../..
 
 CXXFLAGS:=-I $(CILLDIR)
-LDFLAGS:=-L $(CILLDIR)/lib -lcill -lpthread
+LDFLAGS:=-L $(CILLDIR)/lib -lcill -lkmem -lpthread
 
 TARGET:=main.out
 

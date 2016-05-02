@@ -2,6 +2,6 @@ phonyt:=objt
 
 CILLDIR:=..
 
-# CXXFLAGS:=-I $(CILLDIR)/include
+CXXFLAGS:=-D_USE_KMEM -I $(CILLDIR)/kmem
 
 include $(CILLDIR)/build.mak

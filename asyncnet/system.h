@@ -1752,17 +1752,6 @@ public:
 #endif
 
 
-#ifndef CLASS_USE_KMEM
-#define CLASS_USE_KMEM \
-	void* operator new (size_t size) { return ikmem_malloc(size); } \
-	void operator delete (void *ptr) { ikmem_free(ptr); } \
-	void* operator new[] (size_t size) { return ikmem_malloc(size); } \
-	void operator delete[] (void *ptr) { ikmem_free(ptr); } 
-
-#endif
-
-
-
 //---------------------------------------------------------------------
 // Posix Ê±¼ä
 //---------------------------------------------------------------------
