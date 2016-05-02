@@ -106,7 +106,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../"
+				AdditionalIncludeDirectories="../;../kmem"
 				PreprocessorDefinitions="WIN32"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
@@ -126,6 +126,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="kmem_d.lib"
+				AdditionalLibraryDirectories="..\lib"
 				GenerateDebugInformation="true"
 				ImportLibrary="../lib/$(TargetName)_d.lib"
 			/>
@@ -162,14 +164,6 @@
 		<Filter
 			Name="src"
 			>
-			<File
-				RelativePath="..\asyncnet\src\imembase.c"
-				>
-			</File>
-			<File
-				RelativePath="..\asyncnet\src\imembase.h"
-				>
-			</File>
 			<File
 				RelativePath="..\asyncnet\src\imemdata.c"
 				>

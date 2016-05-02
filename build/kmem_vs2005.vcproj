@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="echoclient"
-	ProjectGUID="{5C48CB80-79AA-435A-B8CB-494B0F476AB9}"
+	Name="kmem"
+	ProjectGUID="{C61064FA-DFCD-4936-960D-53714D1D7BB1}"
 	RootNamespace="Win32Dll"
 	Keyword="Win32Proj"
 	>
@@ -84,7 +84,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="debug"
 			IntermediateDirectory="Obj/Lib$(ProjectName)/$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="2"
 			WholeProgramOptimization="0"
 			>
@@ -106,8 +106,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../;../kmem"
-				PreprocessorDefinitions="WIN32"
+				AdditionalIncludeDirectories="../"
+				PreprocessorDefinitions="WIN32;_MEM_DLL_EXPORT"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -126,8 +126,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="asyncnet_d.lib cill_d.lib"
-				AdditionalLibraryDirectories="..\lib"
 				GenerateDebugInformation="true"
 				ImportLibrary="../lib/$(TargetName)_d.lib"
 			/>
@@ -162,7 +160,11 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\test\echotest\EchoClient.cpp"
+			RelativePath="..\kmem\imembase.c"
+			>
+		</File>
+		<File
+			RelativePath="..\kmem\imembase.h"
 			>
 		</File>
 	</Files>

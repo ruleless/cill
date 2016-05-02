@@ -19,13 +19,33 @@
 #ifndef __IMEMBASE_H__
 #define __IMEMBASE_H__
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+
+/*====================================================================*/
+/* export define for dynamic library								  */
+/*====================================================================*/
+#if defined( __WIN32__ ) || defined( WIN32 ) || defined( _WIN32 )
+#	ifdef _LIB
+#		define __EXPORT
+#		define __IMPORT
+#	else
+#		define __EXPORT		__declspec(dllexport)
+#		define __IMPORT		__declspec(dllimport)
+#	endif
+#else
+#	define __EXPORT
+#	define __IMPORT
+#endif
+
+#ifdef _MEM_DLL_EXPORT
+#define MEM_API		__EXPORT
+#define MEM_VAR		__EXPORT
+#else
+#define MEM_API		__IMPORT
+#define MEM_VAR		__IMPORT
+#endif
 
 
 /*====================================================================*/
@@ -68,15 +88,15 @@ struct IVECTOR
 	struct IALLOCATOR *allocator;
 };
 
-void iv_init(struct IVECTOR *v, struct IALLOCATOR *allocator);
-void iv_destroy(struct IVECTOR *v);
-int iv_resize(struct IVECTOR *v, size_t newsize);
-int iv_reserve(struct IVECTOR *v, size_t newsize);
+MEM_API void iv_init(struct IVECTOR *v, struct IALLOCATOR *allocator);
+MEM_API void iv_destroy(struct IVECTOR *v);
+MEM_API int iv_resize(struct IVECTOR *v, size_t newsize);
+MEM_API int iv_reserve(struct IVECTOR *v, size_t newsize);
 
-size_t iv_pop(struct IVECTOR *v, void *data, size_t size);
-int iv_push(struct IVECTOR *v, const void *data, size_t size);
-int iv_insert(struct IVECTOR *v, size_t pos, const void *data, size_t size);
-int iv_erase(struct IVECTOR *v, size_t pos, size_t size);
+MEM_API size_t iv_pop(struct IVECTOR *v, void *data, size_t size);
+MEM_API int iv_push(struct IVECTOR *v, const void *data, size_t size);
+MEM_API int iv_insert(struct IVECTOR *v, size_t pos, const void *data, size_t size);
+MEM_API int iv_erase(struct IVECTOR *v, size_t pos, size_t size);
 
 #define iv_size(v) ((v)->size)
 #define iv_data(v) ((v)->data)
@@ -125,15 +145,15 @@ struct IMEMNODE
 };
 
 
-void imnode_init(struct IMEMNODE *mn, ilong nodesize, struct IALLOCATOR *ac);
-void imnode_destroy(struct IMEMNODE *mnode);
-ilong imnode_new(struct IMEMNODE *mnode);
-void imnode_del(struct IMEMNODE *mnode, ilong index);
-ilong imnode_head(const struct IMEMNODE *mnode);
-ilong imnode_next(const struct IMEMNODE *mnode, ilong index);
-ilong imnode_prev(const struct IMEMNODE *mnode, ilong index);
-void*imnode_data(struct IMEMNODE *mnode, ilong index);
-const void* imnode_data_const(const struct IMEMNODE *mnode, ilong index);
+MEM_API void imnode_init(struct IMEMNODE *mn, ilong nodesize, struct IALLOCATOR *ac);
+MEM_API void imnode_destroy(struct IMEMNODE *mnode);
+MEM_API ilong imnode_new(struct IMEMNODE *mnode);
+MEM_API void imnode_del(struct IMEMNODE *mnode, ilong index);
+MEM_API ilong imnode_head(const struct IMEMNODE *mnode);
+MEM_API ilong imnode_next(const struct IMEMNODE *mnode, ilong index);
+MEM_API ilong imnode_prev(const struct IMEMNODE *mnode, ilong index);
+MEM_API void*imnode_data(struct IMEMNODE *mnode, ilong index);
+MEM_API const void* imnode_data_const(const struct IMEMNODE *mnode, ilong index);
 
 #define IMNODE_NODE(mnodeptr, i) ((mnodeptr)->mnode[i])
 #define IMNODE_PREV(mnodeptr, i) ((mnodeptr)->mprev[i])
@@ -445,42 +465,42 @@ typedef struct IKMEMHOOK ikmemhook_t;
 void ikmem_init(int page_shift, int pg_malloc, size_t *sz);
 void ikmem_destroy(void);
 
-void* ikmem_malloc(size_t size);
-void* ikmem_realloc(void *ptr, size_t size);
-void ikmem_free(void *ptr);
-void ikmem_shrink(void);
+MEM_API void* ikmem_malloc(size_t size);
+MEM_API void* ikmem_realloc(void *ptr, size_t size);
+MEM_API void ikmem_free(void *ptr);
+MEM_API void ikmem_shrink(void);
 
-imemcache_t *ikmem_create(const char *name, size_t size);
-void ikmem_delete(imemcache_t *cache);
-void *ikmem_cache_alloc(imemcache_t *cache);
-void ikmem_cache_free(imemcache_t *cache, void *ptr);
+MEM_API imemcache_t *ikmem_create(const char *name, size_t size);
+MEM_API void ikmem_delete(imemcache_t *cache);
+MEM_API void *ikmem_cache_alloc(imemcache_t *cache);
+MEM_API void ikmem_cache_free(imemcache_t *cache, void *ptr);
 
-size_t ikmem_ptr_size(const void *ptr);
-void ikmem_option(size_t watermark);
-imemcache_t *ikmem_get(const char *name);
-imemcache_t *ikmem_vector(int id);
+MEM_API size_t ikmem_ptr_size(const void *ptr);
+MEM_API void ikmem_option(size_t watermark);
+MEM_API imemcache_t *ikmem_get(const char *name);
+MEM_API imemcache_t *ikmem_vector(int id);
 
-ilong ikmem_page_info(ilong *pg_inuse, ilong *pg_new, ilong *pg_del);
-ilong ikmem_cache_info(int id, int *inuse, int *cnew, int *cdel, int *cfree);
-ilong ikmem_waste_info(ilong *kmem_inuse, ilong *total_mem);
+MEM_API ilong ikmem_page_info(ilong *pg_inuse, ilong *pg_new, ilong *pg_del);
+MEM_API ilong ikmem_cache_info(int id, int *inuse, int *cnew, int *cdel, int *cfree);
+MEM_API ilong ikmem_waste_info(ilong *kmem_inuse, ilong *total_mem);
 
-int ikmem_hook_install(const ikmemhook_t *hook);
-const ikmemhook_t *ikmem_hook_get(int id);
+MEM_API int ikmem_hook_install(const ikmemhook_t *hook);
+MEM_API const ikmemhook_t *ikmem_hook_get(int id);
 
 
 /*====================================================================*/
 /* IVECTOR / IMEMNODE MANAGEMENT                                      */
 /*====================================================================*/
-extern struct IALLOCATOR ikmem_allocator;
+extern MEM_VAR struct IALLOCATOR ikmem_allocator;
 
 typedef struct IVECTOR ivector_t;
 typedef struct IMEMNODE imemnode_t;
 
-ivector_t *iv_create(void);
-void iv_delete(ivector_t *vec);
+MEM_API ivector_t *iv_create(void);
+MEM_API void iv_delete(ivector_t *vec);
 
-imemnode_t *imnode_create(ilong nodesize, int grow_limit);
-void imnode_delete(imemnode_t *);
+MEM_API imemnode_t *imnode_create(ilong nodesize, int grow_limit);
+MEM_API void imnode_delete(imemnode_t *);
 
 
 #ifdef __cplusplus
