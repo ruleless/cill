@@ -126,7 +126,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="asyncnet_d.lib cill_d.lib"
+				AdditionalDependencies="asyncnet_d.lib cill_d.lib kmem_d.lib"
 				AdditionalLibraryDirectories="..\lib"
 				GenerateDebugInformation="true"
 				ImportLibrary="../lib/$(TargetName)_d.lib"

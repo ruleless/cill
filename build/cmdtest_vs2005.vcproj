@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="asyncnettest"
+	Name="cmdtest"
 	ProjectGUID="{D87C535F-0F58-4237-A596-CD3BC261E36E}"
 	RootNamespace="Win32Dll"
 	Keyword="Win32Proj"
@@ -117,7 +117,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../"
+				AdditionalIncludeDirectories="../;../kmem"
 				PreprocessorDefinitions="WIN32"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
@@ -137,7 +137,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cill_d.lib cmd_d.lib"
+				AdditionalDependencies="cill_d.lib cmd_d.lib kmem_d.lib"
 				AdditionalLibraryDirectories="..\lib"
 				GenerateDebugInformation="true"
 			/>

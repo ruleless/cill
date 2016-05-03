@@ -14,6 +14,8 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION(CoreTest);
 
+using namespace core;
+
 CoreTest::CoreTest()
 {
 }
@@ -41,7 +43,11 @@ void CoreTest::testBuffer()
 	
 	core::obuf ob;
 	std::vector<int> ia;
+#if PLATFORM == PLATFORM_WIN32
+	for (int i = 0; i < 100; ++i)
+#else
 	for (int i = 0; i < 100000; ++i)
+#endif
 	{
 		int n = rand() % 65535;
 		ia.push_back(n);
@@ -67,7 +73,11 @@ void CoreTest::testMemoryStream()
 	
 	std::vector<int> ia;
 	int sz = 0;
+#if PLATFORM == PLATFORM_WIN32
+	for (int i = 0; i < 100; ++i)
+#else
 	for (int i = 0; i < 100000; ++i)
+#endif
 	{
 		int n = rand() % 65535;
 		ia.push_back(n);
@@ -179,7 +189,11 @@ class PoolTest : public core::PoolObject
 void CoreTest::testPoolObject()
 {
 	std::vector<PoolTest *> tests;
+#if PLATFORM == PLATFORM_WIN32
+	for (int i = 0; i < 500; ++i)
+#else
 	for (int i = 0; i < 500000; ++i)
+#endif
 	{
 		PoolTest *o = NULL;
 		CPPUNIT_ASSERT(o = PoolTest::ObjPool().createObject());
@@ -221,12 +235,12 @@ class TestClass : public core::RefCountable
   public:
     TestClass() : core::RefCountable()
 	{
-		logTraceLn("New a TestClass. addr:"<<(ulong)this);
+		logTraceLn("New a TestClass. addr:"<<(void *)this);
 	}
 	
     virtual ~TestClass()
 	{
-		logTraceLn("Delete a Test Class. addr:"<<(ulong)this);
+		logTraceLn("Delete a Test Class. addr:"<<(void *)this);
 	}
 };
 

@@ -24,7 +24,7 @@ void MemTest::testSimple()
 	int alcttimes = 10000;
 	for (int i = 0; i < alcttimes; ++i)
 	{
-		int alctsz = random()%65535;
+		int alctsz = rand()%65535;
 		if (alctsz > 0)
 		{
 			int *tt = (int *)malloc(alctsz);

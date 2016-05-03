@@ -106,8 +106,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../"
-				PreprocessorDefinitions="WIN32;_CORE_DLL_EXPORT"
+				AdditionalIncludeDirectories="../;../kmem"
+				PreprocessorDefinitions="WIN32;_CORE_DLL_EXPORT;_USE_KMEM"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"

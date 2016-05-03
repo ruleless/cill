@@ -34,9 +34,9 @@ int main(int argc, char *argv[])
 	}
 	else
 	{
-		logWarningLn("no remote address assgined!use 127.0.0.0:8001");
+		logWarningLn("no remote address assgined!use 127.0.0.1:8010");
 		ip = "127.0.0.1";
-		port = 8001;
+		port = 8010;
 	}
 
 	AsyncCore *asncore = asn_core_new();

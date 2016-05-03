@@ -9,7 +9,7 @@
 int main(int argc, char *argv[])
 {
 	core::createTrace();
-	core::output2Console();
+	// core::output2Console();
 	core::output2Html("log.html");
 	
 	CppUnit::TextUi::TestRunner runner;
@@ -17,6 +17,6 @@ int main(int argc, char *argv[])
 	runner.run();
 
 	core::closeTrace();
-	
+	getchar();
 	exit(0);
 }

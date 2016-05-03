@@ -13,7 +13,7 @@ int main()
 	core::output2Html("EchoServer.html");
 
 	AsyncCore *asncore = asn_core_new();
-	long hidListen = asn_core_new_listen(asncore, "0.0.0.0", 8001, 0);
+	long hidListen = asn_core_new_listen(asncore, "0.0.0.0", 8010, 0);
 	if (hidListen < 0)
 	{
 		logError("create listen node err:"<<coreStrError(coreLastError()));

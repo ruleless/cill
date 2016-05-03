@@ -482,17 +482,25 @@ typedef int					SOCKET;
 
 //--------------------------------------------------------------------------
 // memory management
-#ifdef _USE_KMEM
+#ifndef _USE_NO_KMEM
 #include "imembase.h"
 #define malloc ikmem_malloc
 #define realloc ikmem_realloc
 #define free ikmem_free
 
+#if PLATFORM == PLATFORM_WIN32
+inline void* __cdecl operator new(size_t size) { return malloc(size); }
+inline void* __cdecl operator new[](size_t size) { return malloc(size); }
+ 
+inline void __cdecl operator delete(void* ptr) { free(ptr); }
+inline void __cdecl operator delete[](void* ptr) { free(ptr); }
+#else // #if PLATFORM == PLATFORM_WIN32
 inline void* operator new(size_t size) throw(std::bad_alloc) { return malloc(size); }
 inline void* operator new[](size_t size) throw(std::bad_alloc) { return malloc(size); }
- 
+
 inline void operator delete(void* ptr) throw() { free(ptr); }
 inline void operator delete[](void* ptr) throw() { free(ptr); }
+#endif
 #endif // #ifdef _USE_KMEM
 //--------------------------------------------------------------------------
 

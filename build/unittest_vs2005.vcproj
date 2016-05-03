@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="echoserver"
-	ProjectGUID="{655FFB55-B0D8-4462-8997-FB5316588329}"
+	Name="unittest"
+	ProjectGUID="{669DE04B-11F3-4F12-8C93-FB18704E0A3F}"
 	RootNamespace="Win32Dll"
 	Keyword="Win32Proj"
 	>
@@ -18,8 +18,8 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="release"
-			IntermediateDirectory="obj/Lib$(ProjectName)/$(ConfigurationName)"
-			ConfigurationType="4"
+			IntermediateDirectory="obj/$(ProjectName)/$(ConfigurationName)"
+			ConfigurationType="1"
 			CharacterSet="2"
 			WholeProgramOptimization="0"
 			>
@@ -60,11 +60,16 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="..\lib\lib$(ProjectName).lib"
+				Name="VCLinkerTool"
+				AdditionalDependencies="libcill.lib"
+				AdditionalLibraryDirectories="..\lib"
+				GenerateDebugInformation="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -76,6 +81,12 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 				CommandLine=""
 			/>
@@ -83,7 +94,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="debug"
-			IntermediateDirectory="Obj/Lib$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="obj/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="2"
 			WholeProgramOptimization="0"
@@ -107,7 +118,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../;../kmem"
-				PreprocessorDefinitions="WIN32;_CMD_DLL_EXPORT"
+				PreprocessorDefinitions="WIN32"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -126,10 +137,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="asyncnet_d.lib cill_d.lib kmem_d.lib"
+				AdditionalDependencies="cill_d.lib kmem_d.lib libcppunit_d.lib"
 				AdditionalLibraryDirectories="..\lib"
 				GenerateDebugInformation="true"
-				ImportLibrary="../lib/$(TargetName)_d.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -162,7 +172,23 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\test\echotest\EchoServer.cpp"
+			RelativePath="..\test\unittest\CoreTest.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\test\unittest\CoreTest.h"
+			>
+		</File>
+		<File
+			RelativePath="..\test\unittest\Main.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\test\unittest\MemTest.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\test\unittest\MemTest.h"
 			>
 		</File>
 	</Files>
