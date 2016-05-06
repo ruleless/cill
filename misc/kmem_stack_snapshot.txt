@@ -1,0 +1,18 @@
+kmem.dll!imslab_init(IMEMSLAB * slab=0x004e0400, void * membase=0x004e0400, unsigned int memsize=65664, int obj_size=16392, unsigned int coloroff=32)  行454	C
+kmem.dll!imemcache_slab_create(IMEMCACHE * cache=0x01e68890, int * num=0x0018f6fc)  行918 + 0x1c 字节	C
+kmem.dll!imemcache_list_alloc(IMEMCACHE * cache=0x01e68890)  行1019 + 0xd 字节	C
+kmem.dll!imemcache_fill_batch(IMEMCACHE * cache=0x01e68890, int array_index=3)  行1134 + 0x9 字节	C
+kmem.dll!imemcache_alloc(IMEMCACHE * cache=0x01e68890)  行1201 + 0xd 字节	C
+kmem.dll!imemcache_gfp_alloc(IMEMGFP * gfp=0x01e69a14)  行1313 + 0x9 字节	C
+kmem.dll!imem_gfp_alloc(IMEMGFP * gfp=0x01e69a14)  行564 + 0xc 字节	C
+kmem.dll!imemcache_slab_create(IMEMCACHE * cache=0x01d624c8, int * num=0x0018f79c)  行896 + 0xf 字节	C
+kmem.dll!imemcache_list_alloc(IMEMCACHE * cache=0x01d624c8)  行1019 + 0xd 字节	C
+kmem.dll!imemcache_fill_batch(IMEMCACHE * cache=0x01d624c8, int array_index=3)  行1134 + 0x9 字节	C
+kmem.dll!imemcache_alloc(IMEMCACHE * cache=0x01d624c8)  行1201 + 0xd 字节	C
+kmem.dll!imemcache_gfp_alloc(IMEMGFP * gfp=0x01d6364c)  行1313 + 0x9 字节	C
+kmem.dll!imem_gfp_alloc(IMEMGFP * gfp=0x01d6364c)  行564 + 0xc 字节	C
+kmem.dll!imemcache_slab_create(IMEMCACHE * cache=0x01d78e48, int * num=0x0018f83c)  行896 + 0xf 字节	C
+kmem.dll!imemcache_list_alloc(IMEMCACHE * cache=0x01d78e48)  行1019 + 0xd 字节	C
+kmem.dll!imemcache_fill_batch(IMEMCACHE * cache=0x01d78e48, int array_index=3)  行1134 + 0x9 字节	C
+kmem.dll!imemcache_alloc(IMEMCACHE * cache=0x01d78e48)  行1201 + 0xd 字节	C
+kmem.dll!ikmem_core_malloc(unsigned int size=12)  行1942 + 0x9 字节	Ckmem.dll!ikmem_malloc(unsigned int size=12)  行2109 + 0x9 字节	C
