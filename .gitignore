@@ -17,6 +17,7 @@
 *.exp
 Debug/
 Obj/
+lib/
 main
 temp
 tmp
