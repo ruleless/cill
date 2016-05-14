@@ -55,7 +55,7 @@ char *ihost_ipstr[IMAX_ADDRESS];
 char *ihost_names[IMAX_ADDRESS];
 
 /* host address count */
-int ihost_addr_num = 0;	
+int ihost_addr_num = 0;
 
 /* refresh address list */
 int inet_updateaddr(int resolvname)
@@ -89,7 +89,7 @@ int inet_updateaddr(int resolvname)
 	for (i = 0; i < count; i++) {
 		bytes = (unsigned char*)&(ihost_addr[i].s_addr);
 		for (j = 0; j < 4; j++) ip4[j] = bytes[j];
-		sprintf(ihost_ipstr[i], "%d.%d.%d.%d", 
+		sprintf(ihost_ipstr[i], "%d.%d.%d.%d",
 			ip4[0], ip4[1], ip4[2], ip4[3]);
 		strcpy(ihost_names[i], ihost_ipstr[i]);
 	}
@@ -116,9 +116,9 @@ static int inet_sockpair_imp(int fds[2])
 	int sock[2] = { -1, -1 };
 	int listener;
 
-	if ((listener = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
+	if ((listener = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 		return -1;
-	
+
 	addr1.sin_family = AF_INET;
 	addr1.sin_port = 0;
 
@@ -133,7 +133,7 @@ static int inet_sockpair_imp(int fds[2])
 
 	if (isockname(listener, (struct sockaddr*)&addr1, NULL))
 		goto failed;
-	
+
 	if (listen(listener, 1))
 		goto failed;
 
@@ -282,7 +282,7 @@ int async_sock_connect(CAsyncSock *asyncsock, const struct sockaddr *remote,
 	asyncsock->rc4_send_y = -1;
 	asyncsock->rc4_recv_x = -1;
 	asyncsock->rc4_recv_y = -1;
-	
+
 	if (addrlen <= 20) {
 		asyncsock->fd = isocket(AF_INET, SOCK_STREAM, 0);
 		asyncsock->ipv6 = 0;
@@ -377,7 +377,7 @@ void async_sock_close(CAsyncSock *asyncsock)
 static int async_sock_try_connect(CAsyncSock *asyncsock)
 {
 	int event;
-	if (asyncsock->state != ASYNC_SOCK_STATE_CONNECTING) 
+	if (asyncsock->state != ASYNC_SOCK_STATE_CONNECTING)
 		return 0;
 	event = ISOCK_ERECV | ISOCK_ESEND | ISOCK_ERROR;
 	event = ipollfd(asyncsock->fd, event, 0);
@@ -386,7 +386,7 @@ static int async_sock_try_connect(CAsyncSock *asyncsock)
 	}	else
 	if (event & ISOCK_ESEND) {
 		int hr = 0, len = sizeof(int), error = 0;
-		hr = igetsockopt(asyncsock->fd, SOL_SOCKET, SO_ERROR, 
+		hr = igetsockopt(asyncsock->fd, SOL_SOCKET, SO_ERROR,
 				(char*)&error, &len);
 		if (hr < 0 || (hr == 0 && error != 0)) return -2;
 		asyncsock->state = ASYNC_SOCK_STATE_ESTAB;
@@ -435,11 +435,11 @@ static int async_sock_try_recv(CAsyncSock *asyncsock)
 		if (retval < 0) {
 			retval = ierrno();
 			if (retval == IEAGAIN || retval == 0) break;
-			else { 
+			else {
 				asyncsock->error = retval;
 				return -2;
 			}
-		}	else 
+		}	else
 		if (retval == 0) {
 			asyncsock->error = 0;
 			return -1;
@@ -541,11 +541,11 @@ long async_sock_remain(const CAsyncSock *asyncsock)
 
 
 /* header size */
-static const int async_sock_head_len[15] = 
+static const int async_sock_head_len[15] =
 	{ 2, 2, 4, 4, 1, 1, 2, 2, 4, 4, 1, 1, 4, 0, 4 };
 
 /* header increasement */
-static const int async_sock_head_inc[15] = 
+static const int async_sock_head_inc[15] =
 	{ 0, 0, 0, 0, 0, 0, 2, 2, 4, 4, 1, 1, 0, 0, 0 };
 
 /* peek size */
@@ -576,19 +576,19 @@ async_sock_read_size(const CAsyncSock *asyncsock)
 	if (len < (unsigned long)hdrlen) return 0;
 
 	if (asyncsock->header <= ITMH_EBYTEMSB) {
-		header = (asyncsock->header < 6)? 
+		header = (asyncsock->header < 6)?
 			asyncsock->header : asyncsock->header - 6;
 	}	else {
 		header = asyncsock->header;
 	}
 
 	switch (header) {
-	case ITMH_WORDLSB: 
-		idecode16u_lsb((char*)dsize, &len16); 
+	case ITMH_WORDLSB:
+		idecode16u_lsb((char*)dsize, &len16);
 		len = len16;
 		break;
 	case ITMH_WORDMSB:
-		idecode16u_msb((char*)dsize, &len16); 
+		idecode16u_msb((char*)dsize, &len16);
 		len = len16;
 		break;
 	case ITMH_DWORDLSB:
@@ -623,7 +623,7 @@ async_sock_read_size(const CAsyncSock *asyncsock)
 }
 
 /* write size */
-static inline int 
+static inline int
 async_sock_write_size(const CAsyncSock *asyncsock, long size,
 	long mask, char *out)
 {
@@ -640,7 +640,7 @@ async_sock_write_size(const CAsyncSock *asyncsock, long size,
 
 	if (asyncsock->header != ITMH_DWORDMASK) {
 		len = (IUINT32)size + hdrlen - hdrinc;
-		header = (asyncsock->header < 6)? asyncsock->header : 
+		header = (asyncsock->header < 6)? asyncsock->header :
 			asyncsock->header - 6;
 		switch (header) {
 		case ITMH_WORDLSB:
@@ -672,7 +672,7 @@ async_sock_write_size(const CAsyncSock *asyncsock, long size,
 }
 
 /* send vector */
-long async_sock_send_vector(CAsyncSock *asyncsock, 
+long async_sock_send_vector(CAsyncSock *asyncsock,
 	const void * const vecptr[],
 	const long veclen[], int count, int mask)
 {
@@ -704,9 +704,9 @@ long async_sock_send_vector(CAsyncSock *asyncsock,
 			long bufsize = asyncsock->bufsize;
 			for (; remain > 0; ) {
 				long canread = (size > bufsize)? bufsize : remain;
-				icrypt_rc4_crypt(asyncsock->rc4_send_box, 
-					&asyncsock->rc4_send_x, 
-					&asyncsock->rc4_send_y, 
+				icrypt_rc4_crypt(asyncsock->rc4_send_box,
+					&asyncsock->rc4_send_x,
+					&asyncsock->rc4_send_y,
 					lptr, buffer, canread);
 				ims_write(&asyncsock->sendmsg, buffer, canread);
 				remain -= canread;
@@ -719,11 +719,11 @@ long async_sock_send_vector(CAsyncSock *asyncsock,
 }
 
 /**
- * recv vector: returns packet size, -1 for not enough data, -2 for 
+ * recv vector: returns packet size, -1 for not enough data, -2 for
  * buffer size too small, -3 for packet size error, -4 for size over limit,
  * returns packet size if vecptr equals NULL.
  */
-long async_sock_recv_vector(CAsyncSock *asyncsock, void* const vecptr[], 
+long async_sock_recv_vector(CAsyncSock *asyncsock, void* const vecptr[],
 	const long veclen[], int count)
 {
 	long hdrlen, remain, size = 0;
@@ -761,7 +761,7 @@ long async_sock_recv_vector(CAsyncSock *asyncsock, void* const vecptr[],
 }
 
 /* send */
-long async_sock_send(CAsyncSock *asyncsock, const void *ptr, long size, 
+long async_sock_send(CAsyncSock *asyncsock, const void *ptr, long size,
 	int mask)
 {
 	const void *vecptr[1];
@@ -773,7 +773,7 @@ long async_sock_send(CAsyncSock *asyncsock, const void *ptr, long size,
 }
 
 /**
- * recv vector: returns packet size, -1 for not enough data, -2 for 
+ * recv vector: returns packet size, -1 for not enough data, -2 for
  * buffer size too small, -3 for packet size error, -4 for size over limit,
  * returns packet size if ptr equals NULL.
  */
@@ -793,19 +793,19 @@ long async_sock_recv(CAsyncSock *asyncsock, void *ptr, int size)
 }
 
 /* set send cryption key */
-void async_sock_rc4_set_skey(CAsyncSock *asyncsock, 
+void async_sock_rc4_set_skey(CAsyncSock *asyncsock,
 	const unsigned char *key, int keylen)
 {
-	icrypt_rc4_init(asyncsock->rc4_send_box, 
+	icrypt_rc4_init(asyncsock->rc4_send_box,
 			&asyncsock->rc4_send_x,
 			&asyncsock->rc4_send_y, key, keylen);
 }
 
 /* set recv cryption key */
-void async_sock_rc4_set_rkey(CAsyncSock *asyncsock, 
+void async_sock_rc4_set_rkey(CAsyncSock *asyncsock,
 	const unsigned char *key, int keylen)
 {
-	icrypt_rc4_init(asyncsock->rc4_recv_box, 
+	icrypt_rc4_init(asyncsock->rc4_recv_box,
 			&asyncsock->rc4_recv_x,
 			&asyncsock->rc4_recv_y, key, keylen);
 }
@@ -883,7 +883,7 @@ struct CAsyncCore
 #define ASYNC_CORE_FLAG_SENSITIVE	2
 
 /* used to monitor self-pipe trick */
-static unsigned int async_core_monitor = 0; 
+static unsigned int async_core_monitor = 0;
 
 #define ASYNC_CORE_CRITICAL_BEGIN(c)	\
     do { if ((c)->nolock == 0) IMUTEX_LOCK(&((c)->lock)); } while (0)
@@ -969,7 +969,7 @@ CAsyncCore* async_core_new(int flags)
 	IMUTEX_INIT(&core->lock);
 	IMUTEX_INIT(&core->xmtx);
 	IMUTEX_INIT(&core->xmsg);
-	
+
 	core->nolock = ((flags & 1) == 0)? 0 : 1;
 
 	/* self-pipe trick */
@@ -1265,7 +1265,7 @@ long async_core_node_prev(const CAsyncCore *core, long hid)
 /*-------------------------------------------------------------------*/
 /* post message                                                      */
 /*-------------------------------------------------------------------*/
-static int async_core_msg_push(CAsyncCore *core, int event, long wparam, 
+static int async_core_msg_push(CAsyncCore *core, int event, long wparam,
 	long lparam, const void *data, long size)
 {
 	char head[14];
@@ -1371,7 +1371,7 @@ static int async_core_buffer_resize(CAsyncCore *core, long newsize)
 /*-------------------------------------------------------------------*/
 /* change event mask                                                 */
 /*-------------------------------------------------------------------*/
-static int async_core_node_mask(CAsyncCore *core, CAsyncSock *sock, 
+static int async_core_node_mask(CAsyncCore *core, CAsyncSock *sock,
 	int enable, int disable)
 {
 	if (core == NULL || sock == NULL) return -1;
@@ -1406,7 +1406,7 @@ static long async_core_accept(CAsyncCore *core, long listen_hid)
 		addrlen = sizeof(remote4);
 		remote = (struct sockaddr*)&remote4;
 		fd = iaccept(sock->fd, remote, &addrlen);
-	}	
+	}
 	else if (sock->mode == ASYNC_CORE_NODE_LISTEN6) {
 		addrlen = sizeof(remote6);
 		remote = (struct sockaddr*)&remote6;
@@ -1455,7 +1455,7 @@ static long async_core_accept(CAsyncCore *core, long listen_hid)
 
 	sock->limited = limited;
 	sock->maxsize = maxsize;
-	
+
 	hr = ipoll_add(core->pfd, fd, IPOLL_IN | IPOLL_ERR, sock);
 	if (hr != 0) {
 		async_core_node_delete(core, hid);
@@ -1464,7 +1464,7 @@ static long async_core_accept(CAsyncCore *core, long listen_hid)
 
 	async_core_node_mask(core, sock, IPOLL_IN | IPOLL_ERR, 0);
 
-	async_core_msg_push(core, ASYNC_CORE_EVT_NEW, hid, 
+	async_core_msg_push(core, ASYNC_CORE_EVT_NEW, hid,
 		listen_hid, remote, addrlen);
 
 	return hid;
@@ -1474,7 +1474,7 @@ static long async_core_accept(CAsyncCore *core, long listen_hid)
 /*-------------------------------------------------------------------*/
 /* new connection to the target address, returns hid                 */
 /*-------------------------------------------------------------------*/
-static long _async_core_new_connect(CAsyncCore *core, 
+static long _async_core_new_connect(CAsyncCore *core,
 	const struct sockaddr *addr, int addrlen, int header)
 {
 	CAsyncSock *sock;
@@ -1507,7 +1507,7 @@ static long _async_core_new_connect(CAsyncCore *core,
 	sock->mode = ASYNC_CORE_NODE_OUT;
 	sock->flags = 0;
 
-	async_core_msg_push(core, ASYNC_CORE_EVT_NEW, hid, 
+	async_core_msg_push(core, ASYNC_CORE_EVT_NEW, hid,
 		0, addr, addrlen);
 
 	return hid;
@@ -1517,7 +1517,7 @@ static long _async_core_new_connect(CAsyncCore *core,
 /*-------------------------------------------------------------------*/
 /* new assign to a existing socket, returns hid                      */
 /*-------------------------------------------------------------------*/
-static long _async_core_new_assign(CAsyncCore *core, int fd, 
+static long _async_core_new_assign(CAsyncCore *core, int fd,
 	int header, int estab)
 {
 	CAsyncSock *sock;
@@ -1551,7 +1551,7 @@ static long _async_core_new_assign(CAsyncCore *core, int fd,
 		}	else
 		if (event & ISOCK_ESEND) {
 			int len = sizeof(int), error = 0;
-			hr = igetsockopt(fd, SOL_SOCKET, SO_ERROR, 
+			hr = igetsockopt(fd, SOL_SOCKET, SO_ERROR,
 					(char*)&error, &len);
 			if (hr < 0 || (hr == 0 && error != 0)) return -4;
 		}
@@ -1583,7 +1583,7 @@ static long _async_core_new_assign(CAsyncCore *core, int fd,
 		memcpy(name, name + 64, 64);
 	}
 
-	async_core_msg_push(core, ASYNC_CORE_EVT_NEW, hid, 
+	async_core_msg_push(core, ASYNC_CORE_EVT_NEW, hid,
 		0, name, size);
 
 	return hid;
@@ -1593,7 +1593,7 @@ static long _async_core_new_assign(CAsyncCore *core, int fd,
 /*-------------------------------------------------------------------*/
 /* new listener, returns hid                                         */
 /*-------------------------------------------------------------------*/
-static long _async_core_new_listen(CAsyncCore *core, 
+static long _async_core_new_listen(CAsyncCore *core,
 	const struct sockaddr *addr, int addrlen, int header)
 {
 	CAsyncSock *sock;
@@ -1618,10 +1618,10 @@ static long _async_core_new_listen(CAsyncCore *core,
 	if (fd < 0) return -1;
 
 	flag = (header >> 8) & 0xff;
-	
+
 	if (flag & 0x80) {
 		if (flag & ISOCK_REUSEADDR) {
-			ienable(fd, ISOCK_REUSEADDR);		
+			ienable(fd, ISOCK_REUSEADDR);
 		}	else {
 			idisable(fd, ISOCK_REUSEADDR);
 		}
@@ -1683,7 +1683,7 @@ static long _async_core_new_listen(CAsyncCore *core,
 
 	sock->header = header & 0xff;
 
-	async_core_msg_push(core, ASYNC_CORE_EVT_NEW, hid, 
+	async_core_msg_push(core, ASYNC_CORE_EVT_NEW, hid,
 		-1, addr, addrlen);
 
 	return hid;
@@ -1692,7 +1692,7 @@ static long _async_core_new_listen(CAsyncCore *core,
 /*-------------------------------------------------------------------*/
 /* thread safe                                                       */
 /*-------------------------------------------------------------------*/
-long async_core_new_connect(CAsyncCore *core, 
+long async_core_new_connect(CAsyncCore *core,
 	const struct sockaddr *addr, int addrlen, int header)
 {
 	long hr;
@@ -1705,7 +1705,7 @@ long async_core_new_connect(CAsyncCore *core,
 /*-------------------------------------------------------------------*/
 /* thread safe                                                       */
 /*-------------------------------------------------------------------*/
-long async_core_new_listen(CAsyncCore *core, 
+long async_core_new_listen(CAsyncCore *core,
 	const struct sockaddr *addr, int addrlen, int header)
 {
 	long hr;
@@ -1718,7 +1718,7 @@ long async_core_new_listen(CAsyncCore *core,
 /*-------------------------------------------------------------------*/
 /* thread safe                                                       */
 /*-------------------------------------------------------------------*/
-long async_core_new_assign(CAsyncCore *core, int fd, 
+long async_core_new_assign(CAsyncCore *core, int fd,
 	int header, int estab)
 {
 	long hr;
@@ -1731,7 +1731,7 @@ long async_core_new_assign(CAsyncCore *core, int fd,
 /*-------------------------------------------------------------------*/
 /* process close                                                     */
 /*-------------------------------------------------------------------*/
-static void async_core_event_close(CAsyncCore *core, 
+static void async_core_event_close(CAsyncCore *core,
 	CAsyncSock *sock, int code)
 {
 	IUINT32 data[2];
@@ -1796,7 +1796,7 @@ static void async_core_process_events(CAsyncCore *core, IUINT32 millisec)
 			if (sock->mode == ASYNC_CORE_NODE_LISTEN4 ||
 				sock->mode == ASYNC_CORE_NODE_LISTEN6) {
 				async_core_accept(core, sock->hid);
-			}	
+			}
 			else {
 				if (async_sock_update(sock, 1) != 0) {
 					needclose = 1;
@@ -1841,7 +1841,7 @@ static void async_core_process_events(CAsyncCore *core, IUINT32 millisec)
 				if (sock->state == ASYNC_SOCK_STATE_CONNECTING) {
 					int hr = 0, done = 0;
 					int error = 0, len = sizeof(int);
-					hr = igetsockopt(sock->fd, SOL_SOCKET, SO_ERROR, 
+					hr = igetsockopt(sock->fd, SOL_SOCKET, SO_ERROR,
 						(char*)&error, &len);
 					if (hr < 0 || (hr == 0 && error != 0)) {
 						done = 0;
@@ -1850,9 +1850,9 @@ static void async_core_process_events(CAsyncCore *core, IUINT32 millisec)
 					}
 					if (done) {
 						sock->state = ASYNC_SOCK_STATE_ESTAB;
-						async_core_msg_push(core, ASYNC_CORE_EVT_ESTAB, 
+						async_core_msg_push(core, ASYNC_CORE_EVT_ESTAB,
 							sock->hid, sock->tag, "", 0);
-						async_core_node_mask(core, sock, 
+						async_core_node_mask(core, sock,
 							IPOLL_IN | IPOLL_ERR, 0);
 					}	else {
 						needclose = 1;
@@ -1917,7 +1917,7 @@ static long _async_core_send_vector(CAsyncCore *core, long hid,
 	hr = async_sock_send_vector(sock, vecptr, veclen, count, mask);
 	if (sock->sendmsg.size > 0 && sock->fd >= 0) {
 		if ((sock->mask & IPOLL_OUT) == 0) {
-			async_core_node_mask(core, sock, 
+			async_core_node_mask(core, sock,
 				IPOLL_OUT, 0);
 		}
 	}
@@ -2047,7 +2047,7 @@ long async_core_read(CAsyncCore *core, int *event, long *wparam,
 /*-------------------------------------------------------------------*/
 /* push message to msg queue                                         */
 /*-------------------------------------------------------------------*/
-int async_core_push(CAsyncCore *core, int event, long wparam, long lparam, 
+int async_core_push(CAsyncCore *core, int event, long wparam, long lparam,
 	const char *data, long size)
 {
 	async_core_msg_push(core, event, wparam, lparam, data, size);
@@ -2058,7 +2058,7 @@ int async_core_push(CAsyncCore *core, int event, long wparam, long lparam,
 /*-------------------------------------------------------------------*/
 /* queue an ASYNC_CORE_EVT_PUSH event and wake async_core_wait up    */
 /*-------------------------------------------------------------------*/
-int async_core_post(CAsyncCore *core, long wparam, long lparam, 
+int async_core_post(CAsyncCore *core, long wparam, long lparam,
 	const char *data, long size)
 {
 	async_core_push(core, ASYNC_CORE_EVT_PUSH, wparam, lparam, data, size);
@@ -2120,7 +2120,7 @@ long async_core_remain(const CAsyncCore *core, long hid)
 
 
 /* set connection socket option */
-static int _async_core_option(CAsyncCore *core, long hid, 
+static int _async_core_option(CAsyncCore *core, long hid,
 	int opt, long value)
 {
 	int hr = -100;
@@ -2246,7 +2246,7 @@ long async_core_status(CAsyncCore *core, long hid, int opt)
 }
 
 /* set connection rc4 send key */
-int async_core_rc4_set_skey(CAsyncCore *core, long hid, 
+int async_core_rc4_set_skey(CAsyncCore *core, long hid,
 	const unsigned char *key, int keylen)
 {
 	CAsyncSock *sock;
@@ -2326,7 +2326,7 @@ void async_core_timeout(CAsyncCore *core, long seconds)
 }
 
 /* getsockname */
-int async_core_sockname(const CAsyncCore *core, long hid, 
+int async_core_sockname(const CAsyncCore *core, long hid,
 	struct sockaddr *addr, int *size)
 {
 	const CAsyncSock *sock;
@@ -2392,7 +2392,7 @@ iQueueSafe *queue_safe_new(iulong maxsize)
 }
 
 /* delete queue */
-void queue_safe_delete(iQueueSafe *q) 
+void queue_safe_delete(iQueueSafe *q)
 {
 	if (q) {
 		if (q->sem) iposix_sem_delete(q->sem);
@@ -2449,7 +2449,7 @@ void queue_safe_hook_peek(iulong count, void *p)
 }
 
 /* put many objs into queue, returns how many obj have entered the queue */
-int queue_safe_put_vec(iQueueSafe *q, const void * const vecptr[], 
+int queue_safe_put_vec(iQueueSafe *q, const void * const vecptr[],
 	int count, unsigned long millisec)
 {
 	struct iQueueSafeArg args;
@@ -2457,7 +2457,7 @@ int queue_safe_put_vec(iQueueSafe *q, const void * const vecptr[],
 	if (q->stop || count <= 0) return 0;
 	args.q = q;
 	args.in = (const void*)vecptr;
-	hr = (int)iposix_sem_post(q->sem, count, millisec, 
+	hr = (int)iposix_sem_post(q->sem, count, millisec,
 				queue_safe_hook_put, &args);
 	return hr;
 }
@@ -2471,13 +2471,13 @@ int queue_safe_get_vec(iQueueSafe *q, void *vecptr[], int count,
 	if (q->stop || count <= 0) return 0;
 	args.q = q;
 	args.out = (void*)vecptr;
-	hr = (int)iposix_sem_wait(q->sem, count, millisec, 
+	hr = (int)iposix_sem_wait(q->sem, count, millisec,
 				queue_safe_hook_get, &args);
 	return hr;
 }
 
 /* peek objs from queue, returns how many obj have been peeken */
-int queue_safe_peek_vec(iQueueSafe *q, void *vecptr[], int count, 
+int queue_safe_peek_vec(iQueueSafe *q, void *vecptr[], int count,
 	unsigned long millisec)
 {
 	struct iQueueSafeArg args;
@@ -2485,7 +2485,7 @@ int queue_safe_peek_vec(iQueueSafe *q, void *vecptr[], int count,
 	if (q->stop || count <= 0) return 0;
 	args.q = q;
 	args.out = (void*)vecptr;
-	hr = (int)iposix_sem_peek(q->sem, count, millisec, 
+	hr = (int)iposix_sem_peek(q->sem, count, millisec,
 				queue_safe_hook_peek, &args);
 	return hr;
 }
@@ -2583,7 +2583,7 @@ void *iposix_file_load_content(const char *filename, ilong *size)
 
 	ims_init(&ims, NULL, 0, 0);
 	fp = fopen(filename, "rb");
-	
+
 	ptr = (char*)ikmem_malloc(1024);
 	if (ptr == NULL) {
 		fclose(fp);
@@ -2599,7 +2599,7 @@ void *iposix_file_load_content(const char *filename, ilong *size)
 
 	ikmem_free(ptr);
 	fclose(fp);
-	
+
 	ptr = (char*)ikmem_malloc((size_t)length);
 
 	if (ptr) {
@@ -2742,9 +2742,9 @@ int iposix_get_proc_pathname(char *ptr, int size)
 /* iproxy_base64 */
 int iproxy_base64(const unsigned char *in, unsigned char *out, int size)
 {
-	const char base64[] = 
+	const char base64[] =
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-	unsigned char fragment; 
+	unsigned char fragment;
 	unsigned char*saveout = out;
 
 	for (; size >= 3; size -= 3) {
@@ -2772,9 +2772,9 @@ static int iproxy_poll(int sock, int event, long millisec)
 {
 	int retval = 0;
 
-	#if defined(__unix) && (!defined(__llvm__))
+#if defined(__unix) && (!defined(__llvm__))
 	struct pollfd pfd;
-	
+
 	pfd.fd = sock;
 	pfd.events = 0;
 	pfd.revents = 0;
@@ -2785,13 +2785,13 @@ static int iproxy_poll(int sock, int event, long millisec)
 
 	poll(&pfd, 1, millisec);
 
-	if ((event & ISOCKPROXY_IN) && (pfd.revents & POLLIN)) 
+	if ((event & ISOCKPROXY_IN) && (pfd.revents & POLLIN))
 		retval |= ISOCKPROXY_IN;
-	if ((event & ISOCKPROXY_OUT) && (pfd.revents & POLLOUT)) 
+	if ((event & ISOCKPROXY_OUT) && (pfd.revents & POLLOUT))
 		retval |= ISOCKPROXY_OUT;
-	if ((event & ISOCKPROXY_ERR) && (pfd.revents & POLLERR)) 
+	if ((event & ISOCKPROXY_ERR) && (pfd.revents & POLLERR))
 		retval |= ISOCKPROXY_ERR;
-	#elif defined(__llvm__) 
+#elif defined(__llvm__)
 	struct timeval tmx = { 0, 0 };
 	fd_set fdr, fdw, fde;
 	fd_set *pr = NULL, *pw = NULL, *pe = NULL;
@@ -2816,11 +2816,11 @@ static int iproxy_poll(int sock, int event, long millisec)
 	retval = 0;
 	if ((event & ISOCKPROXY_IN) && FD_ISSET(sock, &fdr))
 		retval |= ISOCKPROXY_IN;
-	if ((event & ISOCKPROXY_OUT) && FD_ISSET(sock, &fdw)) 
+	if ((event & ISOCKPROXY_OUT) && FD_ISSET(sock, &fdw))
 		retval |= ISOCKPROXY_OUT;
-	if ((event & ISOCKPROXY_ERR) && FD_ISSET(sock, &fde)) 
+	if ((event & ISOCKPROXY_ERR) && FD_ISSET(sock, &fde))
 		retval |= ISOCKPROXY_ERR;
-	#else
+#else
 	struct timeval tmx = { 0, 0 };
 	union { void *ptr; fd_set *fds; } p[3];
 	int fdr[2], fdw[2], fde[2];
@@ -2834,14 +2834,14 @@ static int iproxy_poll(int sock, int event, long millisec)
 	p[1].ptr = (event & ISOCKPROXY_OUT)? fdw : NULL;
 	p[2].ptr = (event & ISOCKPROXY_ERR)? fde : NULL;
 
-	retval = select( sock + 1, p[0].fds, p[1].fds, p[2].fds, 
+	retval = select( sock + 1, p[0].fds, p[1].fds, p[2].fds,
 					(millisec >= 0)? &tmx : 0);
 	retval = 0;
 
 	if ((event & ISOCKPROXY_IN) && fdr[0]) retval |= ISOCKPROXY_IN;
 	if ((event & ISOCKPROXY_OUT) && fdw[0]) retval |= ISOCKPROXY_OUT;
 	if ((event & ISOCKPROXY_ERR) && fde[0]) retval |= ISOCKPROXY_ERR;
-	#endif
+#endif
 
 	return retval;
 }
@@ -2850,11 +2850,11 @@ static int iproxy_poll(int sock, int event, long millisec)
 static int iproxy_errno(void)
 {
 	int retval;
-	#ifdef __unix
+#ifdef __unix
 	retval = errno;
-	#else
+#else
 	retval = (int)WSAGetLastError();
-	#endif
+#endif
 	return retval;
 }
 
@@ -2867,7 +2867,7 @@ static int iproxy_send(struct ISOCKPROXY *proxy)
 	if (iproxy_poll(proxy->socket, ISOCKPROXY_OUT | ISOCKPROXY_ERR, 0) == 0)
 		return 0;
 
-	retval = send(proxy->socket, proxy->data + proxy->offset, 
+	retval = send(proxy->socket, proxy->data + proxy->offset,
 		proxy->totald - proxy->offset, 0);
 	if (retval == 0) return -1;
 	if (retval == -1) {
@@ -2885,7 +2885,7 @@ static int iproxy_recv(struct ISOCKPROXY *proxy, int max)
 	int retval;
 	int msize;
 
-	if (iproxy_poll(proxy->socket, ISOCKPROXY_IN | ISOCKPROXY_ERR, 0) == 0) 
+	if (iproxy_poll(proxy->socket, ISOCKPROXY_IN | ISOCKPROXY_ERR, 0) == 0)
 		return 0;
 
 	max = (max <= 0)? 0x00400 : max;
@@ -2905,11 +2905,11 @@ static int iproxy_recv(struct ISOCKPROXY *proxy, int max)
 
 /**
  * initialize ISOCKPROXY
- * type is: ISOCKPROXY_TYPE_NONE, ISOCKPROXY_TYPE_HTTP, 
+ * type is: ISOCKPROXY_TYPE_NONE, ISOCKPROXY_TYPE_HTTP,
  * ISOCKPROXY_TYPE_SOCKS4, ISOCKPROXY_TYPE_SOCKS5
- */ 
-int iproxy_init(struct ISOCKPROXY *proxy, int sock, int type, 
-	const struct sockaddr *remote, const struct sockaddr *proxyd, 
+ */
+int iproxy_init(struct ISOCKPROXY *proxy, int sock, int type,
+	const struct sockaddr *remote, const struct sockaddr *proxyd,
 	const char *user, const char *pass, int mode)
 {
 	struct sockaddr_in *endpoint = (struct sockaddr_in*)remote;
@@ -2940,10 +2940,10 @@ int iproxy_init(struct ISOCKPROXY *proxy, int sock, int type,
 			sprintf(proxy->data, "CONNECT %s HTTP/1.0\r\n\r\n", addr);
 		}	else {
 			sprintf(auth, "%s:%s", user, pass);
-			iproxy_base64((unsigned char*)auth, (unsigned char*)auth64, 
+			iproxy_base64((unsigned char*)auth, (unsigned char*)auth64,
 				strlen(auth));
-			sprintf(proxy->data, 
-			"CONNECT %s HTTP/1.0\r\nProxy-Authorization: Basic %s\r\n\r\n", 
+			sprintf(proxy->data,
+			"CONNECT %s HTTP/1.0\r\nProxy-Authorization: Basic %s\r\n\r\n",
 			addr, auth64);
 		}
 		proxy->totald = strlen(proxy->data);
@@ -2980,7 +2980,7 @@ int iproxy_init(struct ISOCKPROXY *proxy, int sock, int type,
 		proxy->data[406] = strlen(addr);
 		memcpy(proxy->data + 407, addr, strlen(addr));
 		memcpy(proxy->data + 407 + strlen(addr), &(endpoint->sin_port), 2);
-		iencode16u_lsb((char*)(proxy->data + 400), 
+		iencode16u_lsb((char*)(proxy->data + 400),
 			(unsigned short)(7 + strlen(addr)));
 		if (authent) {
 			i = strlen(user);
@@ -2990,7 +2990,7 @@ int iproxy_init(struct ISOCKPROXY *proxy, int sock, int type,
 			memcpy(proxy->data + 704, user, i);
 			proxy->data[704 + i] = j;
 			memcpy(proxy->data + 704 + i + 1, pass, j);
-			iencode16u_lsb((char*)proxy->data + 700, 
+			iencode16u_lsb((char*)proxy->data + 700,
 				(unsigned short)(3 + i + j));
 		}
 		break;
@@ -3012,21 +3012,21 @@ int iproxy_process(struct ISOCKPROXY *proxy)
 	proxy->block = 0;
 
 	if (proxy->next == ISOCKPROXY_START) {
-		remote = (proxy->type == ISOCKPROXY_TYPE_NONE)? 
+		remote = (proxy->type == ISOCKPROXY_TYPE_NONE)?
 			&(proxy->remote) : &(proxy->proxyd);
 		retval = connect(proxy->socket, remote, sizeof(struct sockaddr));
 		if (retval == 0) proxy->next = ISOCKPROXY_CONNECTING;
 		else {
 			int error = iproxy_errno();
 			if (error == IEAGAIN) proxy->next = ISOCKPROXY_CONNECTING;
-		#ifdef EINPROGRESS
-			else if (error == EINPROGRESS) 
+#ifdef EINPROGRESS
+			else if (error == EINPROGRESS)
 				proxy->next = ISOCKPROXY_CONNECTING;
-		#endif
-		#ifdef WSAEINPROGRESS
-			else if (error == WSAEINPROGRESS) 
+#endif
+#ifdef WSAEINPROGRESS
+			else if (error == WSAEINPROGRESS)
 				proxy->next = ISOCKPROXY_CONNECTING;
-		#endif
+#endif
 			else proxy->next = ISOCKPROXY_FAILED;
 		}
 		if (proxy->next == ISOCKPROXY_FAILED) {
@@ -3041,7 +3041,7 @@ int iproxy_process(struct ISOCKPROXY *proxy)
 		if ((retval & ISOCKPROXY_ERR) || (retval & ISOCKPROXY_IN)) {
 			proxy->errorc = 2;
 			proxy->next = ISOCKPROXY_FAILED;
-		}	else 
+		}	else
 		if (retval & ISOCKPROXY_OUT) {
 			int hr, e = 0, len = sizeof(int);
 			hr = igetsockopt(fd, SOL_SOCKET, SO_ERROR, (char*)&e, &len);
@@ -3049,7 +3049,7 @@ int iproxy_process(struct ISOCKPROXY *proxy)
 				proxy->errorc = 2;
 				proxy->next = ISOCKPROXY_FAILED;
 			}	else {
-				if (proxy->type == ISOCKPROXY_TYPE_NONE) 
+				if (proxy->type == ISOCKPROXY_TYPE_NONE)
 					proxy->next = ISOCKPROXY_CONNECTED;
 				else proxy->next = ISOCKPROXY_SENDING1;
 			}
@@ -3081,12 +3081,12 @@ int iproxy_process(struct ISOCKPROXY *proxy)
 					proxy->next = ISOCKPROXY_FAILED;
 					proxy->errorc = 10;
 				}	else if (proxy->offset > 4) {
-					if (strcmp(proxy->data + proxy->offset - 4, 
+					if (strcmp(proxy->data + proxy->offset - 4,
 						"\r\n\r\n") == 0) {
 						retval = 0;
-						if (memcmp(proxy->data, "HTTP/1.0 200", 
+						if (memcmp(proxy->data, "HTTP/1.0 200",
 							strlen("HTTP/1.0 200")) == 0) retval = 1;
-						if (memcmp(proxy->data, "HTTP/1.1 200", 
+						if (memcmp(proxy->data, "HTTP/1.1 200",
 							strlen("HTTP/1.1 200")) == 0) retval = 1;
 						if (retval == 1) proxy->next = ISOCKPROXY_CONNECTED;
 						else {
@@ -3105,7 +3105,7 @@ int iproxy_process(struct ISOCKPROXY *proxy)
 				proxy->errorc = 20;
 			}
 			else if (proxy->offset >= 8) {
-				if (proxy->data[0] == 0 && proxy->data[1] == 90) 
+				if (proxy->data[0] == 0 && proxy->data[1] == 90)
 					proxy->next = ISOCKPROXY_CONNECTED;
 				else {
 					proxy->next = ISOCKPROXY_FAILED;
@@ -3130,7 +3130,7 @@ int iproxy_process(struct ISOCKPROXY *proxy)
 						proxy->totald = length;
 						proxy->next = ISOCKPROXY_SENDING3;
 					}	else {
-						proxy->next = ISOCKPROXY_FAILED; 
+						proxy->next = ISOCKPROXY_FAILED;
 						proxy->errorc = 32;
 					}
 				}	else {
@@ -3199,7 +3199,7 @@ int iproxy_process(struct ISOCKPROXY *proxy)
 				proxy->errorc = 51;
 			}
 			else if (proxy->offset >= 10) {
-				if (proxy->data[0] == 5 && proxy->data[1] == 0) 
+				if (proxy->data[0] == 5 && proxy->data[1] == 0)
 					proxy->next = ISOCKPROXY_CONNECTED;
 				else proxy->next = ISOCKPROXY_FAILED, proxy->errorc = 52;
 			}
@@ -3236,5 +3236,3 @@ void ifix_interval_running(IUINT32 *time, long interval)
 	}
 	*time += interval;
 }
-
-
