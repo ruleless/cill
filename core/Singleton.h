@@ -3,8 +3,6 @@
 
 #include "CoreBase.h"
 
-NAMESPACE_BEG(core)
-
 template <typename T>
 class Singleton
 {
@@ -34,8 +32,6 @@ class Singleton
 		return mSingleton;
 	}
 };
-
-NAMESPACE_END // namespace core
 
 #define SINGLETON_INIT(T) template<> T* Singleton<T>::mSingleton = 0;
 
