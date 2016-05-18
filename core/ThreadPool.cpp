@@ -2,9 +2,9 @@
 #include "CoreStd.h"
 #include "Trace.h"
 
+//--------------------------------------------------------------------------
 NAMESPACE_BEG(core)
 
-//--------------------------------------------------------------------------
 // TPThread
 THREAD_ID TPThread::createThread(void)
 {
@@ -228,11 +228,16 @@ __THREAD_END__:
 	return NULL;
 #endif
 }
+
+NAMESPACE_END // namespace core
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
-// ThreadPool
-SINGLETON_INIT(ThreadPool);
+SINGLETON_INIT(core::ThreadPool);
+
+NAMESPACE_BEG(core)
+		
+// ThreadPool		
 int ThreadPool::timeout = 300;
 
 ThreadPool::ThreadPool()
@@ -677,6 +682,6 @@ bool ThreadPool::addTask(TPTask* tptask)
 	THREAD_MUTEX_UNLOCK(mThreadStateListMutex);
 	return true;
 }
-//--------------------------------------------------------------------------
 
 NAMESPACE_END // namespace core
+//--------------------------------------------------------------------------
