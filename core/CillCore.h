@@ -2,6 +2,7 @@
 #define __CILLCORE_H__
 
 #include "CoreBase.h"
+#include "IteratorWrapper.h"
 
 #include "TimeStamp.h"
 #include "StrConvertor.h"
