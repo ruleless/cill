@@ -17,6 +17,6 @@ int main(int argc, char *argv[])
 	runner.run();
 
 	core::closeTrace();
-	getchar();
+	// getchar();
 	exit(0);
 }

@@ -230,6 +230,13 @@
 #define NAMESPACE_BEG(spaceName) namespace spaceName {
 #define NAMESPACE_END }
 
+#ifndef max
+#	define max(a, b) ((b) > (a) ? (b) : (a))
+#endif
+#ifndef min
+#	define min(a, b) ((b) < (a) ? (b) : (a))
+#endif
+
 // #define LIMIT_FREQUENCY
 
 // 导入导出定义
