@@ -1768,36 +1768,43 @@ static void async_core_process_events(CAsyncCore *core, IUINT32 millisec)
 	for (x = count * 2; x > 0; x--) {
 		CAsyncSock *sock;
 		int needclose = 0;
+
+		// get the ready fd
 		if (ipoll_event(core->pfd, &fd, &event, &udata) != 0) {
 			break;
 		}
+
+		// deal with the pipe
 		if (fd == xf && fd >= 0) {
 			if ((event & IPOLL_IN) || (event & IPOLL_ERR)) {
 				char dummy[10];
 				async_core_monitor++;
 				IMUTEX_LOCK(&core->xmtx);
-			#ifdef __unix
+#ifdef __unix
 				read(fd, dummy, 8);
-			#else
+#else
 				irecv(fd, dummy, 8, 0);
-			#endif
+#endif
 				core->xfd[ASYNC_CORE_PIPE_FLAG] = 0;
 				IMUTEX_UNLOCK(&core->xmtx);
 				async_core_monitor--;
 			}
 			continue;
 		}
+
 		sock = (CAsyncSock*)udata;
 		if (sock == NULL || fd != sock->fd) {
 			assert(sock && fd == sock->fd);
 			abort();
 		}
+
+		// deal with the net input
 		if ((event & IPOLL_IN) || (event & IPOLL_ERR)) {
 			if (sock->mode == ASYNC_CORE_NODE_LISTEN4 ||
-				sock->mode == ASYNC_CORE_NODE_LISTEN6) {
+				sock->mode == ASYNC_CORE_NODE_LISTEN6) { // new comming connection
 				async_core_accept(core, sock->hid);
 			}
-			else {
+			else { // recieve network message
 				if (async_sock_update(sock, 1) != 0) {
 					needclose = 1;
 					code = 0;
@@ -1836,6 +1843,8 @@ static void async_core_process_events(CAsyncCore *core, IUINT32 millisec)
 				}
 			}
 		}
+
+		// deal with the net output
 		if ((event & IPOLL_OUT) && needclose == 0) {
 			if (sock->mode == ASYNC_CORE_NODE_OUT) {
 				if (sock->state == ASYNC_SOCK_STATE_CONNECTING) {
@@ -1876,6 +1885,8 @@ static void async_core_process_events(CAsyncCore *core, IUINT32 millisec)
 				}
 			}
 		}
+
+		// close the closed socket
 		if (sock->state == ASYNC_SOCK_STATE_CLOSED || needclose) {
 			async_core_event_close(core, sock, code);
 		}
