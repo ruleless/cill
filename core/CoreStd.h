@@ -11,6 +11,13 @@ CORE_API char* coreStrError(int ierrorno = 0);
 CORE_API int coreLastError();
 
 //--------------------------------------------------------------------------
+// networking api
+CORE_API bool getSocketAddress(const char *straddr, sockaddr_in &sockaddr);
+
+CORE_API bool setNonblocking(int fd);
+//--------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------
 // console color set
 // font color
 #define CONSOLE_TEXT_BLACK			0

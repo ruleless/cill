@@ -1,4 +1,5 @@
 #include "CoreBase.h"
+#include "StrHelper.h"
 
 NAMESPACE_BEG(core)
 
@@ -39,6 +40,41 @@ CORE_API int coreLastError()
 	return errno;
 #endif
 }
+
+//--------------------------------------------------------------------------
+// networking api
+CORE_API bool getSocketAddress(const char *straddr, sockaddr_in &sockaddr)
+{
+	std::vector<std::string> v;
+	split<char>(straddr, ':', v);
+	if (v.size() != 2)
+		return false;
+
+	int port = atoi(v[1].c_str());
+	if (port < 0)
+		return false;
+
+	memset(&sockaddr, 0, sizeof(sockaddr));
+	sockaddr.sin_family = AF_INET;
+	sockaddr.sin_port = htons(port);
+	if (inet_pton(AF_INET, v[0].c_str(), &sockaddr.sin_addr) != 1)
+		return false;
+
+	return true;
+}
+
+CORE_API bool setNonblocking(int fd)
+{
+	int fstatus = fcntl(fd, F_GETFL);
+	if (fstatus < 0)
+		return false;
+	
+	if (fcntl(fd, F_SETFL, fstatus|O_NONBLOCK) < 0)
+		return false;
+
+	return true;
+}
+//--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
 // console color set
