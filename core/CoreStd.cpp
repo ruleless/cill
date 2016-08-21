@@ -63,6 +63,27 @@ CORE_API bool getSocketAddress(const char *straddr, sockaddr_in &sockaddr)
 	return true;
 }
 
+CORE_API char* sockaddr2Str(const sockaddr_in &sockaddr, char *addr, int len)
+{
+	char ipaddr[MAX_BUF] = {0};
+	if (NULL == inet_ntop(AF_INET, &sockaddr.sin_addr, ipaddr, MAX_BUF))
+	{
+		return NULL;
+	}
+
+	snprintf(addr, len, "%s:%d", ipaddr, ntohs((sockaddr.sin_port)));
+	return addr;
+}
+
+CORE_API char* sockaddr2IpStr(const sockaddr_in &sockaddr, char *addr, int len)
+{
+	if (NULL == inet_ntop(AF_INET, &sockaddr.sin_addr, addr, len))
+	{
+		return NULL;
+	}
+	return addr;
+}
+
 CORE_API bool setNonblocking(int fd)
 {
 	int fstatus = fcntl(fd, F_GETFL);

@@ -13,6 +13,8 @@ CORE_API int coreLastError();
 //--------------------------------------------------------------------------
 // networking api
 CORE_API bool getSocketAddress(const char *straddr, sockaddr_in &sockaddr);
+CORE_API char* sockaddr2Str(const sockaddr_in &sockaddr, char *addr, int len);
+CORE_API char* sockaddr2IpStr(const sockaddr_in &sockaddr, char *addr, int len);
 
 CORE_API bool setNonblocking(int fd);
 //--------------------------------------------------------------------------
