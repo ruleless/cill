@@ -30,4 +30,6 @@
 #include "ThreadGuard.h"
 #include "ThreadPool.h"
 
+#include "Ini.h"
+
 #endif // __CILLCORE_H__

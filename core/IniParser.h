@@ -186,10 +186,11 @@ class IniParser
 	void gotoState(EIniState stat, char c);
 
 	virtual void onParseError() = 0;
-  protected:
+	
 	std::string getString(const char* section, const char* key, const char* def = "") const;
 	void setString(const char* section, const char* key, const char* val);
-	
+
+  protected:
 	IniState* mCurState;
 	IniState* mStates[IniState_Max];
 

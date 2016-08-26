@@ -84,6 +84,22 @@ CORE_API char* sockaddr2IpStr(const sockaddr_in &sockaddr, char *addr, int len)
 	return addr;
 }
 
+CORE_API bool isValidIpv4(const char *ip)
+{
+	std::vector<std::string> dotList;
+	split<char>(ip, '.', dotList);
+	if (dotList.size() != 4)
+		return false;
+
+	for (int i = 0; i < 4; ++i)
+	{
+		int num = atoi(dotList[i].c_str());
+		if (num < 0 || num > 255)
+			return false;
+	}
+	return true;
+}
+
 CORE_API bool setNonblocking(int fd)
 {
 	int fstatus = fcntl(fd, F_GETFL);
