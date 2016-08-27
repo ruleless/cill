@@ -18,7 +18,7 @@ static char _toSymbol(char c)
 	case '#':
 		s = c;
 		break;
-	default:
+	default:		
 		if (c >= '0' && c <= '9')
 		{
 			s = 'w';
@@ -30,6 +30,18 @@ static char _toSymbol(char c)
 		else if (c >= 'A' && c <= 'Z')
 		{
 			s = 'w';
+		}
+		else
+		{
+			static char s_charSet[] = {':', '.'};
+			for (int i = 0; i < sizeof(s_charSet)/sizeof(char); ++i)
+			{
+				if (c == s_charSet[i])
+				{
+					s = 'w';
+					break;
+				}
+			}
 		}
 		break;
 	}

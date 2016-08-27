@@ -12,9 +12,7 @@ CORE_API int coreLastError();
 
 //--------------------------------------------------------------------------
 // networking api
-CORE_API bool getSocketAddress(const char *straddr, sockaddr_in &sockaddr);
-CORE_API char* sockaddr2Str(const sockaddr_in &sockaddr, char *addr, int len);
-CORE_API char* sockaddr2IpStr(const sockaddr_in &sockaddr, char *addr, int len);
+CORE_API bool str2Ipv4(const char *straddr, sockaddr_in &sockaddr);
 CORE_API bool isValidIpv4(const char *ip);
 
 CORE_API bool setNonblocking(int fd);

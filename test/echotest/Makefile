@@ -1,5 +1,5 @@
-CC=clang
-CXX=clang++
+CC=gcc
+CXX=g++
 MAKE=make
 
 CFLAGS+=-g -Wall
