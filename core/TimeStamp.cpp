@@ -142,15 +142,30 @@ CORE_API double stampsPerSecondD()
 	return stampsPerSecondCacheD;
 }
 
+CORE_API uint64 coreClock64()
+{
+#if defined (__WIN32__) || defined(_WIN32) || defined(WIN32)
+	return ::GetTickCount();
+#elif defined(unix)
+	struct timeval time;
+    gettimeofday(&time, NULL);
+	
+    uint64 value = ((uint64) time.tv_sec) * 1000 + (time.tv_usec / 1000);	
+    return value;
+#endif
+}
+
+CORE_API uint32 coreClock()
+{
+	return (uint32) (coreClock64() & 0xfffffffful);
+}
+
 CORE_API ulong getTickCount()
 {
 #if defined (__WIN32__) || defined(_WIN32) || defined(WIN32)
 	return ::GetTickCount();
 #elif defined(unix)
-	struct timeval tv;
-	struct timezone tz;
-	gettimeofday(&tv , &tz);
-	return (ulong)((tv.tv_sec & 0xfffff) * 1000 + tv.tv_usec / 1000);
+	return (ulong)(coreClock64());
 #endif
 }
 //--------------------------------------------------------------------------
