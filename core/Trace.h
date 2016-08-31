@@ -139,6 +139,7 @@ CORE_API void unregisterTrace(STrace::Listener* sink);
 // Set Output Target
 CORE_API STrace::Listener* output2Console(int level = levelAll, bool hasTime = true);
 CORE_API STrace::Listener* output2Html(const char* filename, int level = levelAll, bool hasTime = true);
+CORE_API STrace::Listener* output2File(const tchar* filename, int level = levelAll, bool hasTime = true);
 
 #if PLATFORM == PLATFORM_WIN32
 CORE_API void addTraceToRichEdit(void* hWndRichEdit, const char* msg, TraceLevel level);

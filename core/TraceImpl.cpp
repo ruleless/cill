@@ -247,6 +247,81 @@ CORE_API STrace::Listener* output2Html(const tchar* filename, int level, bool ha
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
+// 输出到文本文件
+class TraceFile : public STrace::Listener
+{
+	FILE* mFile;
+  public:
+	TraceFile() : mFile(0) {}
+
+	~TraceFile()
+	{
+		if (mFile)
+		{
+			fclose(mFile);
+		}
+	}
+
+	bool create(const char* filename, bool bWrite)
+	{
+		if(bWrite)
+			mFile = fopen(filename, "wt");
+		else
+			mFile = fopen(filename, "at");
+
+		if (!mFile)
+			return false;
+		assert(mFile != 0);
+		
+		return true;
+	}
+
+	virtual void onTrace(const char* msg, const char* time, TraceLevel level)
+	{
+		assert(msg != NULL);
+
+		static const char* s_headline[] =
+		{
+			0,
+			"[INFO]", // Info
+			"[TRACE]", // Trace
+			0,
+			"WARNING",	// Warning
+			0,0,0,
+			"ERROR",	// Error
+			0,0,0,0,0,0,0,
+			"EMPHASIS", // Emphasis
+		};
+
+		if (time && hasTime())
+		{
+			fprintf(mFile, "%s%s %s", s_headline[(int)level], time, msg);
+		}
+		else
+		{
+			fprintf(mFile, "%s %s", s_headline[(int)level], msg);
+		}
+
+		fflush(mFile);
+	}
+};
+
+CORE_API STrace::Listener* output2File(const tchar* filename, int level, bool hasTime)
+{
+	TraceFile* sink = new TraceFile();
+	if (!sink->create(filename, true))
+	{
+		delete sink;
+		return 0;
+	}
+	sink->setTraceLevel(level);
+	sink->hasTime(hasTime);
+	registerTrace(sink);
+	return sink;
+}
+//--------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------
 // windows RichEdit
 #if PLATFORM == PLATFORM_WIN32
 #ifdef _DEBUG
