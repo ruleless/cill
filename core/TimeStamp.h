@@ -27,6 +27,7 @@ extern const char* getTimingMethodName();
 //--------------------------------------------------------------------------
 // timestamp()
 #ifdef unix
+
 inline uint64 timestamp_rdtsc()
 {
 	uint32 rethi, retlo;
@@ -46,32 +47,34 @@ inline uint64 timestamp_gettimeofday()
 {
 	timeval tv;
 	gettimeofday(&tv, NULL);
-	return 1000000ULL * uint64( tv.tv_sec ) + uint64( tv.tv_usec );
+	return 1000000ULL * uint64(tv.tv_sec) + uint64(tv.tv_usec);
 }
 
 inline uint64 timestamp()
 {
-#ifdef USE_RDTSC
+# ifdef USE_RDTSC
 	return timestamp_rdtsc();
-#else // #ifdef USE_RDTSC
+# else // #ifdef USE_RDTSC
 	if (gTimingMethod == RDTSC_TIMING_METHOD)
 		return timestamp_rdtsc();
 	else if (gTimingMethod == GET_TIME_OF_DAY_TIMING_METHOD)
 		return timestamp_gettimeofday();
 	else
 		return 0;
-#endif // #ifdef USE_RDTSC
+# endif // #ifdef USE_RDTSC
 }
+
 #elif defined(_WIN32) // #ifdef unix
-#ifdef USE_RDTSC
-#pragma warning (push)
-#pragma warning (disable: 4035)
+
+# ifdef USE_RDTSC
+# pragma warning (push)
+# pragma warning (disable: 4035)
 inline uint64 timestamp()
 {
 	__asm rdtsc
 }
-#pragma warning (pop)
-#else // #ifdef USE_RDTSC
+# pragma warning (pop)
+# else // #ifdef USE_RDTSC
 #include <windows.h>
 
 inline uint64 timestamp()
@@ -80,10 +83,10 @@ inline uint64 timestamp()
 	QueryPerformanceCounter(&counter);
 	return counter.QuadPart;
 }
-#endif // #ifdef USE_RDTSC
+# endif // #ifdef USE_RDTSC
 
 #else // #ifdef unix
-#    error Unsupported platform!
+# error Unsupported platform!
 #endif // #ifdef unix
 //--------------------------------------------------------------------------
 
@@ -91,25 +94,26 @@ inline uint64 timestamp()
 // getTimeStamp()
 #if defined (unix)
 
-#if defined (__i386__)
+# if defined (__i386__)
 inline uint64 getTimeStamp()
 {
 	uint64 x;
 	__asm__ volatile("rdtsc":"=A"(x));
 	return x;
 }
-#elif defined (__x86_64__) // #if defined (__i386__)
+# elif defined (__x86_64__) // #if defined (__i386__)
 inline uint64 getTimeStamp()
 {
 	unsigned hi,lo;
 	__asm__ volatile("rdtsc":"=a"(lo),"=d"(hi));
 	return ((uint64_t)lo)|(((uint64_t)hi)<<32);
 }
-#else
-#    error Unsupported platform!
+# else
+#  error Unsupported platform!
 #endif // #if defined (__i386__)
 
 #elif defined (__WIN32__) || defined(_WIN32) || defined(WIN32) // #if defined (unix)
+
 inline uint64 getTimeStamp()
 {
 	__asm
@@ -118,8 +122,9 @@ inline uint64 getTimeStamp()
 		_emit 0x31;
 	}
 }
+
 #else // #if defined (unix)
-#    error Unsupported platform!
+# error Unsupported platform!
 #endif // #if defined (unix)
 //--------------------------------------------------------------------------
 
