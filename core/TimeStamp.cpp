@@ -7,8 +7,7 @@ NAMESPACE_BEG(core)
 #ifdef USE_RDTSC
 TimingMethod gTimingMethod = RDTSC_TIMING_METHOD;
 #else // USE_RDTSC
-static const TimingMethod DEFAULT_TIMING_METHOD = GET_TIME_OF_DAY_TIMING_METHOD;
-TimingMethod gTimingMethod = DEFAULT_TIMING_METHOD;
+TimingMethod gTimingMethod = GET_TIME_OF_DAY_TIMING_METHOD;
 #endif // USE_RDTSC
 
 const char* getTimingMethodName()
@@ -30,9 +29,9 @@ const char* getTimingMethodName()
 //--------------------------------------------------------------------------
 // calcStampsPerSecond()
 #ifdef unix
-#include <sys/time.h>
-#include <sys/types.h>
-#include <unistd.h>
+# include <sys/time.h>
+# include <sys/types.h>
+# include <unistd.h>
 
 static uint64 calcStampsPerSecond_rdtsc()
 {
@@ -66,9 +65,9 @@ static uint64 calcStampsPerSecond_gettimeofday()
 
 static uint64 calcStampsPerSecond()
 {
-#ifdef USE_RDTSC
+# ifdef USE_RDTSC
 	return calcStampsPerSecond_rdtsc();
-#else // USE_RDTSC
+# else // USE_RDTSC
 	if (gTimingMethod == RDTSC_TIMING_METHOD)
 		return calcStampsPerSecond_rdtsc();
 	else if (gTimingMethod == GET_TIME_OF_DAY_TIMING_METHOD)
@@ -78,14 +77,14 @@ static uint64 calcStampsPerSecond()
 		ErrorLn("calcStampsPerSecond:Unknown timing method: "<<getTimingMethodName());
 		return 0;
 	}
-#endif // USE_RDTSC
+# endif // USE_RDTSC
 }
 
 #elif defined(_WIN32) // #ifdef unix
 
-#include <windows.h>
+# include <windows.h>
 
-#ifdef USE_RDTSC
+# ifdef USE_RDTSC
 static uint64 calcStampsPerSecond()
 {	
 	LARGE_INTEGER tvBefore, tvAfter;
@@ -116,14 +115,14 @@ static uint64 calcStampsPerSecond()
 
 	return (uint64)((stampDelta * uint64(frequency.QuadPart) ) / countDelta);
 }
-#else // USE_RDTSC
+# else // USE_RDTSC
 static uint64 calcStampsPerSecond()
 {
 	LARGE_INTEGER rate;
 	QueryPerformanceFrequency(&rate);
 	return rate.QuadPart;
 }
-#endif // USE_RDTSC
+# endif // USE_RDTSC
 #endif // #ifdef unix
 //--------------------------------------------------------------------------
 
@@ -142,7 +141,7 @@ CORE_API double stampsPerSecondD()
 	return stampsPerSecondCacheD;
 }
 
-CORE_API uint64 coreClock64()
+CORE_API uint64 getClock64()
 {
 #if defined (__WIN32__) || defined(_WIN32) || defined(WIN32)
 	return ::GetTickCount();
@@ -150,14 +149,16 @@ CORE_API uint64 coreClock64()
 	struct timeval time;
     gettimeofday(&time, NULL);
 	
-    uint64 value = ((uint64) time.tv_sec) * 1000 + (time.tv_usec / 1000);	
+    uint64 value = ((uint64)time.tv_sec) * 1000 + (time.tv_usec/1000);	
     return value;
+#else
+# error Unsupported platform!
 #endif
 }
 
-CORE_API uint32 coreClock()
+CORE_API uint32 getClock()
 {
-	return (uint32) (coreClock64() & 0xfffffffful);
+	return (uint32) (getClock64() & 0xfffffffful);
 }
 
 CORE_API ulong getTickCount()
@@ -165,7 +166,7 @@ CORE_API ulong getTickCount()
 #if defined (__WIN32__) || defined(_WIN32) || defined(WIN32)
 	return ::GetTickCount();
 #elif defined(unix)
-	return (ulong)(coreClock64());
+	return (ulong)(getClock64());
 #endif
 }
 //--------------------------------------------------------------------------

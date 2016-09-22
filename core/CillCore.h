@@ -5,6 +5,7 @@
 #include "IteratorWrapper.h"
 
 #include "TimeStamp.h"
+#include "Timer.h"
 #include "StrConvertor.h"
 #include "StrHelper.h"
 

@@ -132,11 +132,11 @@ inline uint64 getTimeStamp()
 CORE_API uint64 stampsPerSecond();
 CORE_API double stampsPerSecondD();
 
-CORE_API uint64 coreClock64();
-CORE_API uint32 coreClock();
+CORE_API uint64 getClock64();
+CORE_API uint32 getClock();
 CORE_API ulong getTickCount();
 
-inline double stampsToSeconds( uint64 stamps )
+inline double stampsToSeconds(uint64 stamps)
 {
 	return double(stamps)/stampsPerSecondD();
 }
