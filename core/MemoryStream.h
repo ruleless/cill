@@ -455,7 +455,7 @@ class CORE_CLASS MemoryStream : public PoolObject
         memcpy(&data_[pos], src, cnt);
     }
 
-	// Êä³öÁ÷Êı¾İ
+	// è¾“å‡ºæµæ•°æ®
     void print_storage() const
     {
 		char buf[1024];
@@ -477,7 +477,7 @@ class CORE_CLASS MemoryStream : public PoolObject
 		rpos_ = trpos;
     }
 
-	// Êä³öÁ÷Êı¾İ×Ö·û´®
+	// è¾“å‡ºæµæ•°æ®å­—ç¬¦ä¸²
     void textlike() const
     {
 		char buf[1024];

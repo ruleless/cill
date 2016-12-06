@@ -79,7 +79,7 @@ CORE_API void unregisterTrace(STrace::Listener* sink)
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
-// Êä³öµ½¿ØÖÆÌ¨
+// è¾“å‡ºåˆ°æ§åˆ¶å°
 class TraceConsole : public STrace::Listener
 {
 public:
@@ -121,7 +121,7 @@ CORE_API STrace::Listener* output2Console(int level, bool hasTime)
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
-// Êä³öµ½HtmlÎÄ¼ş
+// è¾“å‡ºåˆ°Htmlæ–‡ä»¶
 class TraceHtmlFile : public STrace::Listener
 {
 	FILE* mFile;
@@ -206,7 +206,7 @@ public:
 
 		while (pPos <= pEnd)
 		{
-			if (*pPos == '\n') // »»ĞĞ
+			if (*pPos == '\n') // æ¢è¡Œ
 			{
 				if (pStart < pPos)
 				{
@@ -247,7 +247,7 @@ CORE_API STrace::Listener* output2Html(const tchar* filename, int level, bool ha
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
-// Êä³öµ½ÎÄ±¾ÎÄ¼ş
+// è¾“å‡ºåˆ°æ–‡æœ¬æ–‡ä»¶
 class TraceFile : public STrace::Listener
 {
 	FILE* mFile;
@@ -325,7 +325,7 @@ CORE_API STrace::Listener* output2File(const tchar* filename, int level, bool ha
 // windows RichEdit
 #if PLATFORM == PLATFORM_WIN32
 #ifdef _DEBUG
-#	define MAX_RICHEDIT_MESSAGE_LEN	(256 * 1024) // RichEditÖĞ×î´óÈİÄÉ³¤¶È
+#	define MAX_RICHEDIT_MESSAGE_LEN	(256 * 1024) // RichEditä¸­æœ€å¤§å®¹çº³é•¿åº¦
 #else
 #	define MAX_RICHEDIT_MESSAGE_LEN	(128 * 1024)
 #endif

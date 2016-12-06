@@ -7,11 +7,11 @@
 
 NAMESPACE_BEG(core)
 
-// Ïß³Ì³Ø»î¶¯Ïß³Ì´óÓÚÕâ¸öÊıÄ¿Ôò´¦ÓÚ·±Ã¦×´Ì¬
+// çº¿ç¨‹æ± æ´»åŠ¨çº¿ç¨‹å¤§äºè¿™ä¸ªæ•°ç›®åˆ™å¤„äºç¹å¿™çŠ¶æ€
 #define THREAD_BUSY_SIZE 32
 
 //--------------------------------------------------------------------------
-// Ïß³Ì¶ÔÏó£¬¸ºÔğ´¦Àí TPTask ÈÎÎñ
+// çº¿ç¨‹å¯¹è±¡ï¼Œè´Ÿè´£å¤„ç† TPTask ä»»åŠ¡
 class ThreadPool;
 class CORE_CLASS TPThread
 {
@@ -48,7 +48,7 @@ class CORE_CLASS TPThread
 	void onTaskCompleted(void);
 	int sendCondSignal(void) { return THREAD_SINGNAL_SET(mCond); }
 
-	// Ïß³ÌÍ¨Öª µÈ´ıÌõ¼şĞÅºÅ
+	// çº¿ç¨‹é€šçŸ¥ ç­‰å¾…æ¡ä»¶ä¿¡å·
 	bool onWaitCondSignal(void);
 
 	virtual TPTask* tryGetTask(void);
@@ -97,20 +97,20 @@ class CORE_CLASS TPThread
 	void resetDoneTasks() { mDoneTasks = 0; }
 	void incDoneTasks() { ++mDoneTasks; }
   protected:
-	THREAD_ID mTid; // ±¾Ïß³ÌµÄID
+	THREAD_ID mTid; // æœ¬çº¿ç¨‹çš„ID
 	THREAD_SINGNAL mCond;
 	THREAD_MUTEX mMutex;
 
-	int mThreadWaitSecond; // Ïß³Ì¿ÕÏĞ×´Ì¬³¬¹ıÕâ¸öÃëÊıÔòÏß³ÌÍË³ö, Ğ¡ÓÚ0ÎªÓÀ¾ÃÏß³Ì(Ãëµ¥Î»)
-	TPTask *mpCurrTask; // ¸ÃÏß³ÌµÄµ±Ç°Ö´ĞĞµÄÈÎÎñ
-	ThreadPool *mpThreadPool; // Ïß³Ì³ØÖ¸Õë
-	EThreadState mState; // Ïß³Ì×´Ì¬
-	uint32 mDoneTasks; // Ïß³ÌÆô¶¯Ò»´ÎÔÚÎ´¸Ä±äµ½ÏĞÖÃ×´Ì¬ÏÂÁ¬ĞøÖ´ĞĞµÄÈÎÎñ¼ÆÊı
+	int mThreadWaitSecond; // çº¿ç¨‹ç©ºé—²çŠ¶æ€è¶…è¿‡è¿™ä¸ªç§’æ•°åˆ™çº¿ç¨‹é€€å‡º, å°äº0ä¸ºæ°¸ä¹…çº¿ç¨‹(ç§’å•ä½)
+	TPTask *mpCurrTask; // è¯¥çº¿ç¨‹çš„å½“å‰æ‰§è¡Œçš„ä»»åŠ¡
+	ThreadPool *mpThreadPool; // çº¿ç¨‹æ± æŒ‡é’ˆ
+	EThreadState mState; // çº¿ç¨‹çŠ¶æ€
+	uint32 mDoneTasks; // çº¿ç¨‹å¯åŠ¨ä¸€æ¬¡åœ¨æœªæ”¹å˜åˆ°é—²ç½®çŠ¶æ€ä¸‹è¿ç»­æ‰§è¡Œçš„ä»»åŠ¡è®¡æ•°
 };
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
-// Ïß³Ì³Ø
+// çº¿ç¨‹æ± 
 class CORE_CLASS ThreadPool : public Singleton<ThreadPool>
 {
   public:
@@ -120,10 +120,10 @@ class CORE_CLASS ThreadPool : public Singleton<ThreadPool>
 	void finalise();
 	void destroy();	
 
-	/* ´´½¨Ïß³Ì³Ø
-	 * @param inewThreadCount: µ±ÏµÍ³·±Ã¦Ê±Ïß³Ì³Ø»áĞÂÔö¼ÓÕâÃ´¶àÏß³Ì£¨ÁÙÊ±£©
-	 * @param inormalMaxThreadCount: Ïß³Ì³Ø»áÒ»Ö±±£³ÖÕâÃ´¶à¸öÊıµÄÏß³Ì
-	 * @param imaxThreadCount: Ïß³Ì³Ø×î¶àÖ»ÄÜÓĞÕâÃ´¶à¸öÏß³Ì
+	/* åˆ›å»ºçº¿ç¨‹æ± 
+	 * @param inewThreadCount: å½“ç³»ç»Ÿç¹å¿™æ—¶çº¿ç¨‹æ± ä¼šæ–°å¢åŠ è¿™ä¹ˆå¤šçº¿ç¨‹ï¼ˆä¸´æ—¶ï¼‰
+	 * @param inormalMaxThreadCount: çº¿ç¨‹æ± ä¼šä¸€ç›´ä¿æŒè¿™ä¹ˆå¤šä¸ªæ•°çš„çº¿ç¨‹
+	 * @param imaxThreadCount: çº¿ç¨‹æ± æœ€å¤šåªèƒ½æœ‰è¿™ä¹ˆå¤šä¸ªçº¿ç¨‹
 	 */
 	bool createThreadPool(uint32 inewThreadCount, uint32 inormalMaxThreadCount, uint32 imaxThreadCount);
 
@@ -173,23 +173,23 @@ class CORE_CLASS ThreadPool : public Singleton<ThreadPool>
 	bool mIsInitialize;
 	bool mIsDestroyed;
 
-	std::queue<TPTask *> mBufferedTaskList; // ÏµÍ³´¦ÓÚ·±Ã¦Ê±»¹Î´´¦ÀíµÄÈÎÎñÁĞ±í
-	std::list<TPTask *> mFinishedTaskList; // ÒÑ¾­Íê³ÉµÄÈÎÎñÁĞ±í
+	std::queue<TPTask *> mBufferedTaskList; // ç³»ç»Ÿå¤„äºç¹å¿™æ—¶è¿˜æœªå¤„ç†çš„ä»»åŠ¡åˆ—è¡¨
+	std::list<TPTask *> mFinishedTaskList; // å·²ç»å®Œæˆçš„ä»»åŠ¡åˆ—è¡¨
 	size_t mFiniTaskListCount;
 
-	THREAD_MUTEX mBufferedTaskListMutex; // ´¦ÀímBufferedTaskList»¥³âËø
-	THREAD_MUTEX mThreadStateListMutex; // ´¦ÀímBufferedTaskList and mFreeThreadList»¥³âËø
-	THREAD_MUTEX mFinishedTaskListMutex; // ´¦ÀímFinishedTaskList»¥³âËø
+	THREAD_MUTEX mBufferedTaskListMutex; // å¤„ç†mBufferedTaskListäº’æ–¥é”
+	THREAD_MUTEX mThreadStateListMutex; // å¤„ç†mBufferedTaskList and mFreeThreadListäº’æ–¥é”
+	THREAD_MUTEX mFinishedTaskListMutex; // å¤„ç†mFinishedTaskListäº’æ–¥é”
 
-	std::list<TPThread *> mBusyThreadList; // ·±Ã¦µÄÏß³ÌÁĞ±í
-	std::list<TPThread *> mFreeThreadList; // ÏĞÖÃµÄÏß³ÌÁĞ±í
-	std::list<TPThread *> mAllThreadList; // ËùÓĞµÄÏß³ÌÁĞ±í
+	std::list<TPThread *> mBusyThreadList; // ç¹å¿™çš„çº¿ç¨‹åˆ—è¡¨
+	std::list<TPThread *> mFreeThreadList; // é—²ç½®çš„çº¿ç¨‹åˆ—è¡¨
+	std::list<TPThread *> mAllThreadList; // æ‰€æœ‰çš„çº¿ç¨‹åˆ—è¡¨
 
-	uint32 mMaxThreadCount; // ×î´óÏß³Ì×ÜÊı
-	uint32 mExtraNewAddThreadCount; // Èç¹ûmNormalThreadCount²»×ã¹»Ê¹ÓÃÔò»áĞÂ´´½¨ÕâÃ´¶àÏß³Ì
-	uint32 mCurrentThreadCount; // µ±Ç°Ïß³ÌÊı
-	uint32 mCurrentFreeThreadCount; // µ±Ç°ÏĞÖÃµÄÏß³ÌÊı
-	uint32 mNormalThreadCount; // ±ê×¼×´Ì¬ÏÂµÄÏß³Ì×ÜÊı ¼´£ºÄ¬ÈÏÇé¿öÏÂÒ»Æô¶¯·şÎñÆ÷¾Í¿ªÆôÕâÃ´¶àÏß³Ì£¬Èç¹ûÏß³Ì²»×ã¹»£¬Ôò»áĞÂ´´½¨Ò»Ğ©Ïß³Ì£¬ ×î´óÄÜ¹»µ½mMaxThreadCount
+	uint32 mMaxThreadCount; // æœ€å¤§çº¿ç¨‹æ€»æ•°
+	uint32 mExtraNewAddThreadCount; // å¦‚æœmNormalThreadCountä¸è¶³å¤Ÿä½¿ç”¨åˆ™ä¼šæ–°åˆ›å»ºè¿™ä¹ˆå¤šçº¿ç¨‹
+	uint32 mCurrentThreadCount; // å½“å‰çº¿ç¨‹æ•°
+	uint32 mCurrentFreeThreadCount; // å½“å‰é—²ç½®çš„çº¿ç¨‹æ•°
+	uint32 mNormalThreadCount; // æ ‡å‡†çŠ¶æ€ä¸‹çš„çº¿ç¨‹æ€»æ•° å³ï¼šé»˜è®¤æƒ…å†µä¸‹ä¸€å¯åŠ¨æœåŠ¡å™¨å°±å¼€å¯è¿™ä¹ˆå¤šçº¿ç¨‹ï¼Œå¦‚æœçº¿ç¨‹ä¸è¶³å¤Ÿï¼Œåˆ™ä¼šæ–°åˆ›å»ºä¸€äº›çº¿ç¨‹ï¼Œ æœ€å¤§èƒ½å¤Ÿåˆ°mMaxThreadCount
 };
 //--------------------------------------------------------------------------
 

@@ -9,7 +9,7 @@
 
 NAMESPACE_BEG(core)
 
-// ¶ÔÏó³Ø¹ÜÀíÈİÆ÷
+// å¯¹è±¡æ± ç®¡ç†å®¹å™¨
 template<typename T>
 class ObjectPool
 {
@@ -121,7 +121,7 @@ class ObjectPool
 		return NULL;
 	}
 
-	// »ØÊÕÒ»¸ö¶ÔÏó
+	// å›æ”¶ä¸€ä¸ªå¯¹è±¡
 	void reclaimObject(T *obj)
 	{
 		mMutex.lockMutex();
@@ -129,7 +129,7 @@ class ObjectPool
 		mMutex.unlockMutex();
 	}
 
-	// »ØÊÕÒ»¸ö¶ÔÏóÈİÆ÷
+	// å›æ”¶ä¸€ä¸ªå¯¹è±¡å®¹å™¨
 	void reclaimObject(std::list<T *> &objs)
 	{
 		mMutex.lockMutex();
@@ -238,7 +238,7 @@ class ObjectPool
 	size_t mMaxSize;
 };
 
-// ³Ø¶ÔÏó
+// æ± å¯¹è±¡
 class CORE_CLASS PoolObject
 {
   public:
@@ -257,7 +257,7 @@ class CORE_CLASS PoolObject
 	}
 };
 
-// ÖÇÄÜ³Ø¶ÔÏó
+// æ™ºèƒ½æ± å¯¹è±¡
 template<typename T>
 class SmartPoolObject
 {

@@ -10,7 +10,7 @@ class TimeBase;
 class TimersBase;
 
 //--------------------------------------------------------------------------
-// ´´½¨¶¨Ê±Æ÷³É¹¦Ê±£¬·µ»Ø´Ë¶ÔÏó£¬¿ÉÓÃÓÚÈ¡Ïû¶¨Ê±Æ÷
+// åˆ›å»ºå®šæ—¶å™¨æˆåŠŸæ—¶ï¼Œè¿”å›æ­¤å¯¹è±¡ï¼Œå¯ç”¨äºå–æ¶ˆå®šæ—¶å™¨
 class TimerHandle
 {
   public:
@@ -46,7 +46,7 @@ inline bool operator==(TimerHandle h1, TimerHandle h2)
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
-// ÓÃµ½¶¨Ê±Æ÷µÄ¶ÔÏóĞè¼Ì³Ğ´ËÀà
+// ç”¨åˆ°å®šæ—¶å™¨çš„å¯¹è±¡éœ€ç»§æ‰¿æ­¤ç±»
 class TimerHandler
 {
   public:
@@ -77,7 +77,7 @@ class TimerHandler
 	int mNumTimesRegistered;
 };
 
-// ¶¨Ê±Æ÷¶ÔÏó¡£¹ØÁªÒ»¸öTimerHandler
+// å®šæ—¶å™¨å¯¹è±¡ã€‚å…³è”ä¸€ä¸ªTimerHandler
 class TimeBase
 {
   public:
@@ -112,7 +112,7 @@ class TimeBase
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
-// ¶¨Ê±Æ÷¹ÜÀíÀà
+// å®šæ—¶å™¨ç®¡ç†ç±»
 class TimersBase
 {
   public:
@@ -147,7 +147,7 @@ class TimersT : public TimersBase
 	virtual void onCancel();
 	void purgeCancelledTimes();
 
-	// ¶¨Ê±Æ÷¶ÔÏó
+	// å®šæ—¶å™¨å¯¹è±¡
 	class Time : public TimeBase
 	{
 	  public:
@@ -175,7 +175,7 @@ class TimersT : public TimersBase
 		}
 	};
 
-	// ¶¨Ê±Æ÷¶ÔÏóµÄÓÅÏÈ¶ÓÁĞ
+	// å®šæ—¶å™¨å¯¹è±¡çš„ä¼˜å…ˆé˜Ÿåˆ—
 	class PriorityQueue
 	{
 	  public:

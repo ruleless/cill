@@ -11,9 +11,9 @@ class CORE_CLASS TPTask : public Task
   public:
 	enum TPTaskState
 	{
-		TPTask_Completed			 = 0, // Ò»¸öÈÎÎñÒÑ¾­Íê³É
-		TPTask_ContinueMainThread	 = 1, // ¼ÌĞøÔÚÖ÷Ïß³ÌÖ´ĞĞ
-		TPTask_ContinueChildThread	 = 2, // ¼ÌĞøÔÚ×ÓÏß³ÌÖ´ĞĞ
+		TPTask_Completed			 = 0, // ä¸€ä¸ªä»»åŠ¡å·²ç»å®Œæˆ
+		TPTask_ContinueMainThread	 = 1, // ç»§ç»­åœ¨ä¸»çº¿ç¨‹æ‰§è¡Œ
+		TPTask_ContinueChildThread	 = 2, // ç»§ç»­åœ¨å­çº¿ç¨‹æ‰§è¡Œ
 	};
 
 	virtual TPTask::TPTaskState presentMainThread() { return TPTask::TPTask_Completed; }

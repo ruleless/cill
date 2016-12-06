@@ -15,7 +15,7 @@ NAMESPACE_BEG(core)
 // TimeMethod
 enum TimingMethod
 {
-	RDTSC_TIMING_METHOD, // ×ÔCPUÉÏµçÒÔÀ´Ëù¾­¹ıµÄÊ±ÖÓÖÜÆÚÊı,ÄÉÃë¼¶µÄ¼ÆÊ±¾«¶È
+	RDTSC_TIMING_METHOD, // è‡ªCPUä¸Šç”µä»¥æ¥æ‰€ç»è¿‡çš„æ—¶é’Ÿå‘¨æœŸæ•°,çº³ç§’çº§çš„è®¡æ—¶ç²¾åº¦
 	GET_TIME_OF_DAY_TIMING_METHOD,
 	NO_TIMING_METHOD,
 };
@@ -39,8 +39,8 @@ inline uint64 timestamp_rdtsc()
 	return uint64(rethi) << 32 | retlo; 
 }
 
-// Ê¹ÓÃ gettimeofday. ²âÊÔ´ó¸Å±ÈÂıRDTSC20±¶-600±¶¡£
-// ´ËÍâ£¬ÓĞÒ»¸öÎÊÌâ£º2.4ÄÚºËÏÂ£¬Á¬ĞøÁ½´Îµ÷ÓÃgettimeofdayµÄ¿ÉÄÜ·µ»ØÒ»¸ö½á¹ûÊÇµ¹×Å×ß¡£
+// ä½¿ç”¨ gettimeofday. æµ‹è¯•å¤§æ¦‚æ¯”æ…¢RDTSC20å€-600å€ã€‚
+// æ­¤å¤–ï¼Œæœ‰ä¸€ä¸ªé—®é¢˜ï¼š2.4å†…æ ¸ä¸‹ï¼Œè¿ç»­ä¸¤æ¬¡è°ƒç”¨gettimeofdayçš„å¯èƒ½è¿”å›ä¸€ä¸ªç»“æœæ˜¯å€’ç€èµ°ã€‚
 #include <sys/time.h>
 
 inline uint64 timestamp_gettimeofday()

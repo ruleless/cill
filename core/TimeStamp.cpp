@@ -127,14 +127,14 @@ static uint64 calcStampsPerSecond()
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
-// Ã¿ÃëcpuËùºÄÊ±¼ä
+// æ¯ç§’cpuæ‰€è€—æ—¶é—´
 CORE_API uint64 stampsPerSecond()
 {
 	static uint64 _stampsPerSecondCache = calcStampsPerSecond();
 	return _stampsPerSecondCache;
 }
 
-// Ã¿ÃëcpuËùºÄÊ±¼ä double°æ±¾
+// æ¯ç§’cpuæ‰€è€—æ—¶é—´ doubleç‰ˆæœ¬
 CORE_API double stampsPerSecondD()
 {
 	static double stampsPerSecondCacheD = double(stampsPerSecond());
