@@ -9,14 +9,14 @@ NAMESPACE_BEG(core)
 class CORE_CLASS TPTask : public Task
 {
   public:
-	enum TPTaskState
-	{
-		TPTask_Completed			 = 0, // 一个任务已经完成
-		TPTask_ContinueMainThread	 = 1, // 继续在主线程执行
-		TPTask_ContinueChildThread	 = 2, // 继续在子线程执行
-	};
+    enum TPTaskState
+    {
+        TPTask_Completed             = 0, // 一个任务已经完成
+        TPTask_ContinueMainThread    = 1, // 继续在主线程执行
+        TPTask_ContinueChildThread   = 2, // 继续在子线程执行
+    };
 
-	virtual TPTask::TPTaskState presentMainThread() { return TPTask::TPTask_Completed; }
+    virtual TPTask::TPTaskState presentMainThread() { return TPTask::TPTask_Completed; }
 };
 
 NAMESPACE_END // namespace core

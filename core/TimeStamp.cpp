@@ -12,17 +12,17 @@ TimingMethod gTimingMethod = GET_TIME_OF_DAY_TIMING_METHOD;
 
 const char* getTimingMethodName()
 {
-	switch (gTimingMethod)
-	{
-		case NO_TIMING_METHOD:
-			return "none";
-		case RDTSC_TIMING_METHOD:
-			return "rdtsc";
-		case GET_TIME_OF_DAY_TIMING_METHOD:
-			return "gettimeofday";
-		default:
-			return "Unknown";
-	}
+    switch (gTimingMethod)
+    {
+    case NO_TIMING_METHOD:
+        return "none";
+    case RDTSC_TIMING_METHOD:
+        return "rdtsc";
+    case GET_TIME_OF_DAY_TIMING_METHOD:
+        return "gettimeofday";
+    default:
+        return "Unknown";
+    }
 }
 //--------------------------------------------------------------------------
 
@@ -35,48 +35,48 @@ const char* getTimingMethodName()
 
 static uint64 calcStampsPerSecond_rdtsc()
 {
-	struct timeval tvBefore, tvSleep = {0, 500000},	tvAfter;
-	uint64 stampBefore,	stampAfter;
+    struct timeval tvBefore, tvSleep = {0, 500000}, tvAfter;
+    uint64 stampBefore, stampAfter;
 
-	gettimeofday(&tvBefore, NULL);
-	gettimeofday(&tvBefore, NULL);
+    gettimeofday(&tvBefore, NULL);
+    gettimeofday(&tvBefore, NULL);
 
-	gettimeofday(&tvBefore, NULL);
-	stampBefore = timestamp();
+    gettimeofday(&tvBefore, NULL);
+    stampBefore = timestamp();
 
-	select(0, NULL, NULL, NULL, &tvSleep);
+    select(0, NULL, NULL, NULL, &tvSleep);
 
-	gettimeofday(&tvAfter, NULL);
-	gettimeofday(&tvAfter, NULL);
+    gettimeofday(&tvAfter, NULL);
+    gettimeofday(&tvAfter, NULL);
 
-	gettimeofday(&tvAfter, NULL);
-	stampAfter = timestamp();
+    gettimeofday(&tvAfter, NULL);
+    stampAfter = timestamp();
 
-	uint64 microDelta = (tvAfter.tv_usec + 1000000 - tvBefore.tv_usec) % 1000000;
-	uint64 stampDelta = stampAfter - stampBefore;
+    uint64 microDelta = (tvAfter.tv_usec + 1000000 - tvBefore.tv_usec) % 1000000;
+    uint64 stampDelta = stampAfter - stampBefore;
 
-	return (stampDelta * 1000000ULL) / microDelta;
+    return (stampDelta * 1000000ULL) / microDelta;
 }
 
 static uint64 calcStampsPerSecond_gettimeofday()
 {
-	return 1000000ULL;
+    return 1000000ULL;
 }
 
 static uint64 calcStampsPerSecond()
 {
 # ifdef USE_RDTSC
-	return calcStampsPerSecond_rdtsc();
+    return calcStampsPerSecond_rdtsc();
 # else // USE_RDTSC
-	if (gTimingMethod == RDTSC_TIMING_METHOD)
-		return calcStampsPerSecond_rdtsc();
-	else if (gTimingMethod == GET_TIME_OF_DAY_TIMING_METHOD)
-		return calcStampsPerSecond_gettimeofday();
-	else
-	{
-		ErrorLn("calcStampsPerSecond:Unknown timing method: "<<getTimingMethodName());
-		return 0;
-	}
+    if (gTimingMethod == RDTSC_TIMING_METHOD)
+        return calcStampsPerSecond_rdtsc();
+    else if (gTimingMethod == GET_TIME_OF_DAY_TIMING_METHOD)
+        return calcStampsPerSecond_gettimeofday();
+    else
+    {
+        ErrorLn("calcStampsPerSecond:Unknown timing method: "<<getTimingMethodName());
+        return 0;
+    }
 # endif // USE_RDTSC
 }
 
@@ -86,41 +86,41 @@ static uint64 calcStampsPerSecond()
 
 # ifdef USE_RDTSC
 static uint64 calcStampsPerSecond()
-{	
-	LARGE_INTEGER tvBefore, tvAfter;
-	DWORD tvSleep = 500;
-	uint64 stampBefore,	stampAfter;
-	
-	Sleep(100);
-	
-	QueryPerformanceCounter(&tvBefore);
-	QueryPerformanceCounter(&tvBefore);
+{   
+    LARGE_INTEGER tvBefore, tvAfter;
+    DWORD tvSleep = 500;
+    uint64 stampBefore, stampAfter;
+    
+    Sleep(100);
+    
+    QueryPerformanceCounter(&tvBefore);
+    QueryPerformanceCounter(&tvBefore);
 
-	QueryPerformanceCounter(&tvBefore);
-	stampBefore = timestamp();
+    QueryPerformanceCounter(&tvBefore);
+    stampBefore = timestamp();
 
-	Sleep(tvSleep);
+    Sleep(tvSleep);
 
-	QueryPerformanceCounter(&tvAfter);
-	QueryPerformanceCounter(&tvAfter);
+    QueryPerformanceCounter(&tvAfter);
+    QueryPerformanceCounter(&tvAfter);
 
-	QueryPerformanceCounter(&tvAfter);
-	stampAfter = timestamp();
+    QueryPerformanceCounter(&tvAfter);
+    stampAfter = timestamp();
 
-	uint64 countDelta = tvAfter.QuadPart - tvBefore.QuadPart;
-	uint64 stampDelta = stampAfter - stampBefore;
+    uint64 countDelta = tvAfter.QuadPart - tvBefore.QuadPart;
+    uint64 stampDelta = stampAfter - stampBefore;
 
-	LARGE_INTEGER	frequency;
-	QueryPerformanceFrequency(&frequency);
+    LARGE_INTEGER   frequency;
+    QueryPerformanceFrequency(&frequency);
 
-	return (uint64)((stampDelta * uint64(frequency.QuadPart) ) / countDelta);
+    return (uint64)((stampDelta * uint64(frequency.QuadPart) ) / countDelta);
 }
 # else // USE_RDTSC
 static uint64 calcStampsPerSecond()
 {
-	LARGE_INTEGER rate;
-	QueryPerformanceFrequency(&rate);
-	return rate.QuadPart;
+    LARGE_INTEGER rate;
+    QueryPerformanceFrequency(&rate);
+    return rate.QuadPart;
 }
 # endif // USE_RDTSC
 #endif // #ifdef unix
@@ -130,26 +130,26 @@ static uint64 calcStampsPerSecond()
 // 每秒cpu所耗时间
 CORE_API uint64 stampsPerSecond()
 {
-	static uint64 _stampsPerSecondCache = calcStampsPerSecond();
-	return _stampsPerSecondCache;
+    static uint64 _stampsPerSecondCache = calcStampsPerSecond();
+    return _stampsPerSecondCache;
 }
 
 // 每秒cpu所耗时间 double版本
 CORE_API double stampsPerSecondD()
 {
-	static double stampsPerSecondCacheD = double(stampsPerSecond());
-	return stampsPerSecondCacheD;
+    static double stampsPerSecondCacheD = double(stampsPerSecond());
+    return stampsPerSecondCacheD;
 }
 
 CORE_API uint64 getClock64()
 {
 #if defined (__WIN32__) || defined(_WIN32) || defined(WIN32)
-	return ::GetTickCount();
+    return ::GetTickCount();
 #elif defined(unix)
-	struct timeval time;
+    struct timeval time;
     gettimeofday(&time, NULL);
-	
-    uint64 value = ((uint64)time.tv_sec) * 1000 + (time.tv_usec/1000);	
+    
+    uint64 value = ((uint64)time.tv_sec) * 1000 + (time.tv_usec/1000);  
     return value;
 #else
 # error Unsupported platform!
@@ -158,15 +158,15 @@ CORE_API uint64 getClock64()
 
 CORE_API uint32 getClock()
 {
-	return (uint32) (getClock64() & 0xfffffffful);
+    return (uint32) (getClock64() & 0xfffffffful);
 }
 
 CORE_API ulong getTickCount()
 {
 #if defined (__WIN32__) || defined(_WIN32) || defined(WIN32)
-	return ::GetTickCount();
+    return ::GetTickCount();
 #elif defined(unix)
-	return (ulong)(getClock64());
+    return (ulong)(getClock64());
 #endif
 }
 //--------------------------------------------------------------------------
@@ -174,32 +174,32 @@ CORE_API ulong getTickCount()
 //--------------------------------------------------------------------------
 double TimeStamp::toSeconds(uint64 stamps)
 {
-	return double(stamps) / stampsPerSecondD();
+    return double(stamps) / stampsPerSecondD();
 }
 
 TimeStamp TimeStamp::fromSeconds(double seconds)
 {
-	return uint64(seconds * stampsPerSecondD());
+    return uint64(seconds * stampsPerSecondD());
 }
 
 double TimeStamp::inSeconds() const
 {
-	return toSeconds(stamp_);
+    return toSeconds(stamp_);
 }
 
 void TimeStamp::setInSeconds(double seconds)
 {
-	stamp_ = fromSeconds(seconds);
+    stamp_ = fromSeconds(seconds);
 }
 
 TimeStamp TimeStamp::ageInStamps() const
 {
-	return timestamp() - stamp_;
+    return timestamp() - stamp_;
 }
 
 double TimeStamp::ageInSeconds() const
 {
-	return toSeconds(this->ageInStamps());
+    return toSeconds(this->ageInStamps());
 }
 //--------------------------------------------------------------------------
 

@@ -12,8 +12,8 @@
 #include "StrBuffer.h"
 
 #if PLATFORM == PLATFORM_WIN32
-#	include <windows.h>
-#	include <process.h>
+#   include <windows.h>
+#   include <process.h>
 #endif
 
 NAMESPACE_BEG(core)
@@ -21,101 +21,101 @@ NAMESPACE_BEG(core)
 //--------------------------------------------------------------------------
 enum TraceLevel // 消息级别
 {
-	levelInfo		= 0x01,
-	levelTrace		= 0x02,
-	levelWarning	= 0x04,
-	levelError		= 0x08,
-	levelEmphasis	= 0x10,
+    levelInfo       = 0x01,
+    levelTrace      = 0x02,
+    levelWarning    = 0x04,
+    levelError      = 0x08,
+    levelEmphasis   = 0x10,
 
-	levelAll = levelInfo|levelTrace|levelWarning|levelError|levelEmphasis,
+    levelAll = levelInfo|levelTrace|levelWarning|levelError|levelEmphasis,
 };
 
 class CORE_CLASS STrace
 {
   public:
-	class CORE_CLASS Listener
-	{
-	  protected:
-		int mLevel;
-		bool mHasTime;
-	  public:
-		Listener() : mLevel(levelAll), mHasTime(true) {}
+    class CORE_CLASS Listener
+    {
+      protected:
+        int mLevel;
+        bool mHasTime;
+      public:
+        Listener() : mLevel(levelAll), mHasTime(true) {}
 
-		virtual ~Listener() {}
+        virtual ~Listener() {}
 
-		bool hasTime() const
-		{
-			return mHasTime;
-		}
+        bool hasTime() const
+        {
+            return mHasTime;
+        }
 
-		void hasTime(bool b)
-		{
-			mHasTime = b;
-		}
+        void hasTime(bool b)
+        {
+            mHasTime = b;
+        }
 
-		void setTraceLevel(int lvl)
-		{
-			mLevel = lvl;
-		}
+        void setTraceLevel(int lvl)
+        {
+            mLevel = lvl;
+        }
 
-		int getTraceLevel() const
-		{
-			return mLevel;
-		}
+        int getTraceLevel() const
+        {
+            return mLevel;
+        }
 
-		virtual void onTrace(const char* msg, const char* time, TraceLevel level) {}
-	};
+        virtual void onTrace(const char* msg, const char* time, TraceLevel level) {}
+    };
   protected:
-	struct _MSG
-	{
-		std::string msg;
-		time_t time;
-		TraceLevel level;
-	};
+    struct _MSG
+    {
+        std::string msg;
+        time_t time;
+        TraceLevel level;
+    };
 
-	typedef std::list<_MSG> MsgList;
-	typedef std::list<Listener *> ListenerList;
+    typedef std::list<_MSG> MsgList;
+    typedef std::list<Listener *> ListenerList;
 
-	ListenerList mSinks;
-	int	mLevel;
-	bool mHasTime;
-	bool mLimitFrequency;
+    ListenerList mSinks;
+    int mLevel;
+    bool mHasTime;
+    bool mLimitFrequency;
 
-	volatile bool mbExit;
-	bool mInited;
-	THREAD_ID mTid;
-	THREAD_MUTEX mMutex;
-	THREAD_SINGNAL mCond;
-	MsgList	mMsgs1;
-	MsgList	mMsgs2;
-	MsgList *mInlist;
-	MsgList *mOutlist;
+    volatile bool mbExit;
+    bool mInited;
+    THREAD_ID mTid;
+    THREAD_MUTEX mMutex;
+    THREAD_SINGNAL mCond;
+    MsgList mMsgs1;
+    MsgList mMsgs2;
+    MsgList *mInlist;
+    MsgList *mOutlist;
   public:
-	STrace();
-	~STrace();
+    STrace();
+    ~STrace();
 
-	bool initialise(int level, bool hasTime);
-	void finalise();
+    bool initialise(int level, bool hasTime);
+    void finalise();
 
-	void _flushOutlist();
+    void _flushOutlist();
 
-	int getTraceLevel() const;
-	int setTraceLevel(int level);
+    int getTraceLevel() const;
+    int setTraceLevel(int level);
 
-	bool hasTime(bool b);
+    bool hasTime(bool b);
 
-	bool setTraceLimitFrequency(bool limitFrequency);
-	bool hasLimitFrequency() const;
+    bool setTraceLimitFrequency(bool limitFrequency);
+    bool hasLimitFrequency() const;
 
-	void registerTrace(Listener* sink);
-	void unregisterTrace(Listener* sink);
+    void registerTrace(Listener* sink);
+    void unregisterTrace(Listener* sink);
 
-	void output(const char* msg, TraceLevel level);
+    void output(const char* msg, TraceLevel level);
 
 #if PLATFORM == PLATFORM_WIN32
-	static unsigned __stdcall _traceProc(void *arg);
+    static unsigned __stdcall _traceProc(void *arg);
 #else
-	static void* _traceProc(void* arg);
+    static void* _traceProc(void* arg);
 #endif
 };
 
@@ -159,11 +159,11 @@ NAMESPACE_END // namespace core
 // Macro Define
 #ifdef LIMIT_FREQUENCY // 控制每个输出点的最快频率是1秒
 #define LIM_FREQ(e) \
-	static core::ulong s_lastTraceTime = core::getTickCount();				\
-	if (!core::hasLimitFrequency() || (core::getTickCount() - s_lastTraceTime) > 1000) \
-	{ s_lastTraceTime = core::getTickCount(); e}
+    static core::ulong s_lastTraceTime = core::getTickCount();              \
+    if (!core::hasLimitFrequency() || (core::getTickCount() - s_lastTraceTime) > 1000) \
+    { s_lastTraceTime = core::getTickCount(); e}
 #else // #ifdef LIMIT_FREQUENCY
-#define LIM_FREQ(e)	e
+#define LIM_FREQ(e) e
 #endif
 
 #define logInfo(x) { if(core::getTraceLevel() & core::levelInfo) { LIM_FREQ(core::ostrbuf __osb; __osb<<x; core::output(__osb.c_str(), core::levelInfo);) }}
@@ -221,7 +221,7 @@ NAMESPACE_END // namespace core
 #define logErrorOnceLn(x)
 #define logEmphasisOnceLn(x)
 
-#define logVerify(x)		(x)
+#define logVerify(x)        (x)
 //--------------------------------------------------------------------------
 
 #endif // #ifndef DISABLE_TRACE

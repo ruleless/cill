@@ -8,15 +8,15 @@ NAMESPACE_BEG(core)
 class CORE_CLASS TaskManager
 {
   public:
-	TaskManager();
-	~TaskManager();
+    TaskManager();
+    ~TaskManager();
 
-	void add(Task *pTask);
-	bool cancel(Task *pTask);
-	void process();
+    void add(Task *pTask);
+    bool cancel(Task *pTask);
+    void process();
   private:
-	typedef std::vector<Task *> Container;
-	Container mTasks;
+    typedef std::vector<Task *> Container;
+    Container mTasks;
 };
 
 NAMESPACE_END // namespace core

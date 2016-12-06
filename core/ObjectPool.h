@@ -4,8 +4,8 @@
 #include "CoreBase.h"
 #include "ThreadMutex.h"
 
-#define OBJECT_POOL_INIT_SIZE		16
-#define OBJECT_POOL_INIT_MAX_SIZE	OBJECT_POOL_INIT_SIZE*16
+#define OBJECT_POOL_INIT_SIZE       16
+#define OBJECT_POOL_INIT_MAX_SIZE   OBJECT_POOL_INIT_SIZE*16
 
 NAMESPACE_BEG(core)
 
@@ -14,247 +14,247 @@ template<typename T>
 class ObjectPool
 {
   public:
-	typedef std::list<T *> OBJECTS;
+    typedef std::list<T *> OBJECTS;
 
-	ObjectPool(std::string name)
-			:mName(name)
-			,mMutex()
-			,mIsDestroyed(false)
-			,mObjects()
-			,mTotalAllocs(0)
-			,mObjCount(0)
-			,mMaxSize(OBJECT_POOL_INIT_MAX_SIZE)
-	{
-	}	
+    ObjectPool(std::string name)
+            :mName(name)
+            ,mMutex()
+            ,mIsDestroyed(false)
+            ,mObjects()
+            ,mTotalAllocs(0)
+            ,mObjCount(0)
+            ,mMaxSize(OBJECT_POOL_INIT_MAX_SIZE)
+    {
+    }   
 
-	~ObjectPool()
-	{
-		destroy();
-	}
-	
-	void destroy()
-	{
-		mMutex.lockMutex();
+    ~ObjectPool()
+    {
+        destroy();
+    }
+    
+    void destroy()
+    {
+        mMutex.lockMutex();
 
-		mIsDestroyed = true;
+        mIsDestroyed = true;
 
-		typename OBJECTS::iterator iter = mObjects.begin();
-		for(; iter != mObjects.end(); ++iter)
-		{
-			if(!(*iter)->destructorPoolObject())
-			{
-				delete (*iter);
-			}
-		}
-				
-		mObjects.clear();
-		mObjCount = 0;
+        typename OBJECTS::iterator iter = mObjects.begin();
+        for(; iter != mObjects.end(); ++iter)
+        {
+            if(!(*iter)->destructorPoolObject())
+            {
+                delete (*iter);
+            }
+        }
+                
+        mObjects.clear();
+        mObjCount = 0;
 
-		mMutex.unlockMutex();
-	}
+        mMutex.unlockMutex();
+    }
 
-	const OBJECTS& objects() const
-	{
-		return mObjects; 
-	}
+    const OBJECTS& objects() const
+    {
+        return mObjects; 
+    }
 
-	void assignObjs(int preAssignVal = OBJECT_POOL_INIT_SIZE)
-	{
-		for(int i = 0; i < preAssignVal; ++i)
-		{
-			mObjects.push_back(new T);
-			++mTotalAllocs;
-			++mObjCount;
-		}
-	}
+    void assignObjs(int preAssignVal = OBJECT_POOL_INIT_SIZE)
+    {
+        for(int i = 0; i < preAssignVal; ++i)
+        {
+            mObjects.push_back(new T);
+            ++mTotalAllocs;
+            ++mObjCount;
+        }
+    }
 
-	template<typename T1>
-	T* createObject()
-	{
-		mMutex.lockMutex();
+    template<typename T1>
+    T* createObject()
+    {
+        mMutex.lockMutex();
 
-		while(true)
-		{
-			if(mObjCount > 0)
-			{
-				T* t = static_cast<T1 *>(*mObjects.begin());
-				mObjects.pop_front();
+        while(true)
+        {
+            if(mObjCount > 0)
+            {
+                T* t = static_cast<T1 *>(*mObjects.begin());
+                mObjects.pop_front();
 
-				--mObjCount;
-				t->onEabledPoolObject();
+                --mObjCount;
+                t->onEabledPoolObject();
 
-				mMutex.unlockMutex();
-				return t;
-			}
+                mMutex.unlockMutex();
+                return t;
+            }
 
-			assignObjs();
-		}
+            assignObjs();
+        }
 
-		mMutex.unlockMutex();
+        mMutex.unlockMutex();
 
-		return NULL;
-	}
+        return NULL;
+    }
 
-	T* createObject()
-	{
-		mMutex.lockMutex();
+    T* createObject()
+    {
+        mMutex.lockMutex();
 
-		while(true)
-		{
-			if(mObjCount > 0)
-			{
-				T* t = static_cast<T *>(*mObjects.begin());
-				mObjects.pop_front();
+        while(true)
+        {
+            if(mObjCount > 0)
+            {
+                T* t = static_cast<T *>(*mObjects.begin());
+                mObjects.pop_front();
 
-				--mObjCount;
-				t->onEabledPoolObject();
+                --mObjCount;
+                t->onEabledPoolObject();
 
-				mMutex.unlockMutex();
-				return t;
-			}
+                mMutex.unlockMutex();
+                return t;
+            }
 
-			assignObjs();
-		}
+            assignObjs();
+        }
 
-		mMutex.unlockMutex();
+        mMutex.unlockMutex();
 
-		return NULL;
-	}
+        return NULL;
+    }
 
-	// 回收一个对象
-	void reclaimObject(T *obj)
-	{
-		mMutex.lockMutex();
-		_reclaimObject(obj);
-		mMutex.unlockMutex();
-	}
+    // 回收一个对象
+    void reclaimObject(T *obj)
+    {
+        mMutex.lockMutex();
+        _reclaimObject(obj);
+        mMutex.unlockMutex();
+    }
 
-	// 回收一个对象容器
-	void reclaimObject(std::list<T *> &objs)
-	{
-		mMutex.lockMutex();
+    // 回收一个对象容器
+    void reclaimObject(std::list<T *> &objs)
+    {
+        mMutex.lockMutex();
 
-		typename std::list<T *>::iterator iter = objs.begin();
-		for(; iter != objs.end(); ++iter)
-		{
-			_reclaimObject((*iter));
-		}
-		
-		objs.clear();
+        typename std::list<T *>::iterator iter = objs.begin();
+        for(; iter != objs.end(); ++iter)
+        {
+            _reclaimObject((*iter));
+        }
+        
+        objs.clear();
 
-		mMutex.unlockMutex();
-	}
+        mMutex.unlockMutex();
+    }
 
-	void reclaimObject(std::vector<T *> &objs)
-	{
-		mMutex.lockMutex();
+    void reclaimObject(std::vector<T *> &objs)
+    {
+        mMutex.lockMutex();
 
-		typename std::vector<T *>::iterator iter = objs.begin();
-		for(; iter != objs.end(); ++iter)
-		{
-			_reclaimObject((*iter));
-		}
-		
-		objs.clear();
+        typename std::vector<T *>::iterator iter = objs.begin();
+        for(; iter != objs.end(); ++iter)
+        {
+            _reclaimObject((*iter));
+        }
+        
+        objs.clear();
 
-		mMutex.unlockMutex();
-	}
+        mMutex.unlockMutex();
+    }
 
-	void reclaimObject(std::queue<T *> &objs)
-	{
-		mMutex.lockMutex();
+    void reclaimObject(std::queue<T *> &objs)
+    {
+        mMutex.lockMutex();
 
-		while(!objs.empty())
-		{
-			T* t = objs.front();
-			objs.pop();
-			_reclaimObject(t);
-		}
+        while(!objs.empty())
+        {
+            T* t = objs.front();
+            objs.pop();
+            _reclaimObject(t);
+        }
 
-		mMutex.unlockMutex();
-	}
+        mMutex.unlockMutex();
+    }
 
-	size_t size(void) const
-	{
-		return mObjCount; 
-	}
-	
-	std::string c_str()
-	{
-		char buf[1024];
+    size_t size(void) const
+    {
+        return mObjCount; 
+    }
+    
+    std::string c_str()
+    {
+        char buf[1024];
 
-		mMutex.lockMutex();
+        mMutex.lockMutex();
 
-		sprintf(buf, "ObjectPool::c_str(): name=%s, objs=%d/%d, isDestroyed=%s.\n", 
-				mName.c_str(), (int)mObjCount, (int)mMaxSize, (isDestroyed ? "true" : "false"));
+        sprintf(buf, "ObjectPool::c_str(): name=%s, objs=%d/%d, isDestroyed=%s.\n", 
+                mName.c_str(), (int)mObjCount, (int)mMaxSize, (isDestroyed ? "true" : "false"));
 
-		mMutex.unlockMutex();
+        mMutex.unlockMutex();
 
-		return buf;
-	}
+        return buf;
+    }
 
-	size_t maxSize() const
-	{
-		return mMaxSize; 
-	}
-	
-	size_t totalAllocs() const
-	{
-		return mTotalAllocs;
-	}
-	
-	bool isDestroyed() const
-	{
-		return mIsDestroyed; 
-	}
+    size_t maxSize() const
+    {
+        return mMaxSize; 
+    }
+    
+    size_t totalAllocs() const
+    {
+        return mTotalAllocs;
+    }
+    
+    bool isDestroyed() const
+    {
+        return mIsDestroyed; 
+    }
   protected:
-	void _reclaimObject(T* obj)
-	{
-		if(obj != NULL)
-		{
-			obj->onReclaimObject();
+    void _reclaimObject(T* obj)
+    {
+        if(obj != NULL)
+        {
+            obj->onReclaimObject();
 
-			if(size() >= mMaxSize || mIsDestroyed)
-			{
-				delete obj;
-				--mTotalAllocs;
-			}
-			else
-			{
-				mObjects.push_back(obj);
-				++mObjCount;
-			}
-		}
-	}
+            if(size() >= mMaxSize || mIsDestroyed)
+            {
+                delete obj;
+                --mTotalAllocs;
+            }
+            else
+            {
+                mObjects.push_back(obj);
+                ++mObjCount;
+            }
+        }
+    }
   protected:
-	std::string mName;
-	ThreadMutex mMutex;
-	bool mIsDestroyed;
+    std::string mName;
+    ThreadMutex mMutex;
+    bool mIsDestroyed;
 
-	OBJECTS mObjects;
-	size_t mTotalAllocs;
-	size_t mObjCount;
+    OBJECTS mObjects;
+    size_t mTotalAllocs;
+    size_t mObjCount;
 
-	size_t mMaxSize;
+    size_t mMaxSize;
 };
 
 // 池对象
 class CORE_CLASS PoolObject
 {
   public:
-	virtual ~PoolObject() {}
-	virtual void onReclaimObject() = 0;
-	virtual void onEabledPoolObject() {}
+    virtual ~PoolObject() {}
+    virtual void onReclaimObject() = 0;
+    virtual void onEabledPoolObject() {}
 
-	virtual size_t getPoolObjectBytes()
-	{
-		return 0;
-	}
+    virtual size_t getPoolObjectBytes()
+    {
+        return 0;
+    }
 
-	virtual bool destructorPoolObject()
-	{
-		return false;
-	}
+    virtual bool destructorPoolObject()
+    {
+        return false;
+    }
 };
 
 // 智能池对象
@@ -262,43 +262,43 @@ template<typename T>
 class SmartPoolObject
 {
   public:
-	SmartPoolObject(T *pPoolObject, ObjectPool<T> &objectPool)
-			:mPoolObject(pPoolObject)
-			,mObjectPool(objectPool)
-	{
-	}
+    SmartPoolObject(T *pPoolObject, ObjectPool<T> &objectPool)
+            :mPoolObject(pPoolObject)
+            ,mObjectPool(objectPool)
+    {
+    }
 
-	~SmartPoolObject()
-	{
-		onReclaimObject();
-	}
+    ~SmartPoolObject()
+    {
+        onReclaimObject();
+    }
 
-	void onReclaimObject()
-	{
-		if(mPoolObject != NULL)
-		{
-			mObjectPool.reclaimObject(mPoolObject);
-			mPoolObject = NULL;
-		}
-	}
+    void onReclaimObject()
+    {
+        if(mPoolObject != NULL)
+        {
+            mObjectPool.reclaimObject(mPoolObject);
+            mPoolObject = NULL;
+        }
+    }
 
-	T* get()
-	{
-		return mPoolObject;
-	}
+    T* get()
+    {
+        return mPoolObject;
+    }
 
-	T* operator->()
-	{
-		return mPoolObject;
-	}
+    T* operator->()
+    {
+        return mPoolObject;
+    }
 
-	T& operator*()
-	{
-		return *mPoolObject;
-	}
+    T& operator*()
+    {
+        return *mPoolObject;
+    }
   private:
-	T* mPoolObject;
-	ObjectPool<T> &mObjectPool;
+    T* mPoolObject;
+    ObjectPool<T> &mObjectPool;
 };
 
 NAMESPACE_END // namespace core

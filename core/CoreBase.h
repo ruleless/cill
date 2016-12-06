@@ -2,7 +2,7 @@
 #define __CORE_BASE_H__
 
 //--------------------------------------------------------------------------
-// common include	
+// common include   
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h> 
@@ -29,17 +29,17 @@
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
-// windows include	
+// windows include  
 #if defined( __WIN32__ ) || defined( WIN32 ) || defined( _WIN32 )
 
 #ifndef WINVER
-#	define WINVER 0x0501
+#   define WINVER 0x0501
 #endif
 #ifndef _WIN32_WINNT
-#	define _WIN32_WINNT 0x0501
+#   define _WIN32_WINNT 0x0501
 #endif
 #ifndef _WIN32_WINDOWS
-#	define _WIN32_WINDOWS 0x0410
+#   define _WIN32_WINDOWS 0x0410
 #endif
 
 #pragma warning(disable:4996)
@@ -51,16 +51,16 @@
 #include <time.h> 
 // # define FD_SETSIZE 1024
 #ifndef WIN32_LEAN_AND_MEAN 
-#	include <winsock2.h> // 必须在windows.h之前包含， 否则网络模块编译会出错
-#	include <mswsock.h> 
-#	define WIN32_LEAN_AND_MEAN
+#   include <winsock2.h> // 必须在windows.h之前包含， 否则网络模块编译会出错
+#   include <mswsock.h> 
+#   define WIN32_LEAN_AND_MEAN
 #endif
 
 #include <windows.h>
 #include <process.h>
 
 #if _MSC_VER >= 1500
-#	include <unordered_map>
+#   include <unordered_map>
 #endif
 
 #include <functional>
@@ -72,7 +72,7 @@
 // linux include
 #include <errno.h>
 #include <float.h>
-#include <pthread.h>	
+#include <pthread.h>    
 #include <fcntl.h>
 #include <unistd.h>
 #include <signal.h>
@@ -108,22 +108,22 @@
 #if !defined( _WIN32 )
 # include <pwd.h>
 #else
-# define SIGHUP	1
-# define SIGINT	2
+# define SIGHUP 1
+# define SIGINT 2
 # define SIGQUIT 3
 # define SIGUSR1 10
 # define SIGPIPE 13
-# define SIGSYS	32
+# define SIGSYS 32
 #endif
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
 // 字节序
 #ifndef LITTLE_ENDIAN
-# define LITTLE_ENDIAN	0
+# define LITTLE_ENDIAN  0
 #endif
 #ifndef BIG_ENDIAN
-# define BIG_ENDIAN		1
+# define BIG_ENDIAN     1
 #endif
 #if !defined(ENDIAN)
 # if defined (USE_BIG_ENDIAN)
@@ -141,10 +141,10 @@
 #define PLATFORM_APPLE 2
 #define PLATFORM_INTEL 3
 
-#define UNIX_FLAVOUR_LINUX	1
-#define UNIX_FLAVOUR_BSD	2
-#define UNIX_FLAVOUR_OTHER	3
-#define UNIX_FLAVOUR_OSX	4
+#define UNIX_FLAVOUR_LINUX  1
+#define UNIX_FLAVOUR_BSD    2
+#define UNIX_FLAVOUR_OTHER  3
+#define UNIX_FLAVOUR_OSX    4
 
 #if defined( __WIN32__ ) || defined( WIN32 ) || defined( _WIN32 )
 # define PLATFORM PLATFORM_WIN32
@@ -182,7 +182,7 @@
 //--------------------------------------------------------------------------
 // 编译器定义
 #define COMPILER_MICROSOFT 0
-#define COMPILER_GNU	   1
+#define COMPILER_GNU       1
 #define COMPILER_BORLAND   2
 #define COMPILER_INTEL     3
 #define COMPILER_CLANG     4
@@ -250,12 +250,12 @@
 #  define VAR_EXPORT
 #  define VAR_IMPORT
 # else
-#  define CLASS_EXPORT		__declspec(dllexport)
-#  define CLASS_IMPORT		__declspec(dllimport)
-#  define API_EXPORT		__declspec(dllexport)
-#  define API_IMPORT		__declspec(dllimport)
-#  define VAR_EXPORT		__declspec(dllexport)
-#  define VAR_IMPORT		__declspec(dllimport)
+#  define CLASS_EXPORT      __declspec(dllexport)
+#  define CLASS_IMPORT      __declspec(dllimport)
+#  define API_EXPORT        __declspec(dllexport)
+#  define API_IMPORT        __declspec(dllimport)
+#  define VAR_EXPORT        __declspec(dllexport)
+#  define VAR_IMPORT        __declspec(dllimport)
 # endif
 #else
 # define CLASS_EXPORT
@@ -267,13 +267,13 @@
 #endif
 
 #ifdef _CORE_DLL_EXPORT
-# define CORE_CLASS		CLASS_EXPORT
-# define CORE_API		API_EXPORT
-# define CORE_VAR		VAR_EXPORT
+# define CORE_CLASS     CLASS_EXPORT
+# define CORE_API       API_EXPORT
+# define CORE_VAR       VAR_EXPORT
 #else
-# define CORE_CLASS		CLASS_IMPORT
-# define CORE_API		API_IMPORT
-# define CORE_VAR		VAR_IMPORT
+# define CORE_CLASS     CLASS_IMPORT
+# define CORE_API       API_IMPORT
+# define CORE_VAR       VAR_IMPORT
 #endif
 //--------------------------------------------------------------------------
 
@@ -281,53 +281,53 @@
 // 类型定义
 NAMESPACE_BEG(core)
 
-typedef char					mchar;
-typedef wchar_t					wchar;
-typedef std::string				mstring;
-typedef std::wstring			wstring;
+typedef char                    mchar;
+typedef wchar_t                 wchar;
+typedef std::string             mstring;
+typedef std::wstring            wstring;
 
 #ifdef _UNICODE
-typedef wchar					tchar;
-typedef wstring					tstring;
+typedef wchar                   tchar;
+typedef wstring                 tstring;
 #else
-typedef mchar					tchar;
-typedef mstring					tstring;
+typedef mchar                   tchar;
+typedef mstring                 tstring;
 #endif
 
-typedef unsigned char			uchar;
-typedef unsigned short			ushort;
-typedef unsigned int			uint;
-typedef unsigned long			ulong;
+typedef unsigned char           uchar;
+typedef unsigned short          ushort;
+typedef unsigned int            uint;
+typedef unsigned long           ulong;
 
 #if COMPILER != COMPILER_GNU
-typedef signed __int64			int64;
-typedef signed __int32			int32;
-typedef signed __int16			int16;
-typedef signed __int8			int8;
-typedef unsigned __int64		uint64;
-typedef unsigned __int32		uint32;
-typedef unsigned __int16		uint16;
-typedef unsigned __int8			uint8;
-typedef INT_PTR					intptr;
-typedef UINT_PTR        		uintptr;
+typedef signed __int64          int64;
+typedef signed __int32          int32;
+typedef signed __int16          int16;
+typedef signed __int8           int8;
+typedef unsigned __int64        uint64;
+typedef unsigned __int32        uint32;
+typedef unsigned __int16        uint16;
+typedef unsigned __int8         uint8;
+typedef INT_PTR                 intptr;
+typedef UINT_PTR                uintptr;
 #else // #if COMPILER != COMPILER_GNU
-typedef int64_t					int64;
-typedef int32_t					int32;
-typedef int16_t					int16;
-typedef int8_t					int8;
-typedef uint64_t				uint64;
-typedef uint32_t				uint32;
-typedef uint16_t				uint16;
-typedef uint8_t					uint8;
-typedef uint16_t				WORD;
-typedef uint32_t				DWORD;
+typedef int64_t                 int64;
+typedef int32_t                 int32;
+typedef int16_t                 int16;
+typedef int8_t                  int8;
+typedef uint64_t                uint64;
+typedef uint32_t                uint32;
+typedef uint16_t                uint16;
+typedef uint8_t                 uint8;
+typedef uint16_t                WORD;
+typedef uint32_t                DWORD;
 
 #ifdef _LP64
-typedef int64					intptr;
-typedef uint64					uintptr;
+typedef int64                   intptr;
+typedef uint64                  uintptr;
 #else // #ifdef LP64
-typedef int32					intptr;
-typedef uint32					uintptr;
+typedef int32                   intptr;
+typedef uint32                  uintptr;
 #endif // #ifdef LP64
 
 #endif // #if COMPILER != COMPILER_GNU
@@ -335,87 +335,87 @@ typedef uint32					uintptr;
 NAMESPACE_END // namespace core
 
 #if _MSC_VER >= 1500
-#define UnorderedMap			std::tr1::unordered_map
+#define UnorderedMap            std::tr1::unordered_map
 #else
-#define UnorderedMap			std::map
+#define UnorderedMap            std::map
 #endif
 
 #if PLATFORM == PLATFORM_WIN32
-#define IFNAMSIZ				16
-typedef UINT_PTR				SOCKET;
+#define IFNAMSIZ                16
+typedef UINT_PTR                SOCKET;
 #ifndef socklen_t
-typedef	int						socklen_t;
+typedef int                     socklen_t;
 #endif
-typedef unsigned short			u_int16_t;
-typedef unsigned long			u_int32_t;
+typedef unsigned short          u_int16_t;
+typedef unsigned long           u_int32_t;
 
 #ifndef IFF_UP
 enum
 {
-	IFF_UP					= 0x1,
-	IFF_BROADCAST			= 0x2,
-	IFF_DEBUG				= 0x4,
-	IFF_LOOPBACK			= 0x8,
-	IFF_POINTOPOINT			= 0x10,
-	IFF_NOTRAILERS			= 0x20,
-	IFF_RUNNING				= 0x40,
-	IFF_NOARP				= 0x80,
-	IFF_PROMISC				= 0x100,
-	IFF_MULTICAST			= 0x1000
+    IFF_UP                  = 0x1,
+    IFF_BROADCAST           = 0x2,
+    IFF_DEBUG               = 0x4,
+    IFF_LOOPBACK            = 0x8,
+    IFF_POINTOPOINT         = 0x10,
+    IFF_NOTRAILERS          = 0x20,
+    IFF_RUNNING             = 0x40,
+    IFF_NOARP               = 0x80,
+    IFF_PROMISC             = 0x100,
+    IFF_MULTICAST           = 0x1000
 };
 #endif // #ifndef IFF_UP
 #else // #if PLATFORM == PLATFORM_WIN32
-typedef int					SOCKET;
+typedef int                 SOCKET;
 #endif // #if PLATFORM == PLATFORM_WIN32
 
 // 输出格式宏定义
 #if COMPILER != COMPILER_GNU
-# define PRI64			"lld"
-# define PRIu64			"llu"
-# define PRIx64			"llx"
-# define PRIX64			"llX"
-# define PRTime			PRI64
-# define PRIzu			"lu"
-# define PRIzd			"ld"
+# define PRI64          "lld"
+# define PRIu64         "llu"
+# define PRIx64         "llx"
+# define PRIX64         "llX"
+# define PRTime         PRI64
+# define PRIzu          "lu"
+# define PRIzd          "ld"
 #else // #if COMPILER != COMPILER_GNU
 # ifdef _LP64
 #  ifndef PRI64
-#   define PRI64		"ld"
+#   define PRI64        "ld"
 #  endif
 #  ifndef PRIu64
-#   define PRIu64		"lu"
+#   define PRIu64       "lu"
 #  endif
 #  ifndef PRIx64
-#   define PRIx64		"lx"
+#   define PRIx64       "lx"
 #  endif
 #  ifndef PRIX64
-#   define PRIX64		"lX"
+#   define PRIX64       "lX"
 #  endif
 #  ifndef PRTime
-#   define PRTime		PRI64
+#   define PRTime       PRI64
 #  endif
 # else // #ifdef _LP64
 #  ifndef PRI64
-#   define PRI64		"lld"
+#   define PRI64        "lld"
 #  endif
 #  ifndef PRIu64
-#   define PRIu64		"llu"
+#   define PRIu64       "llu"
 #  endif
 #  ifndef PRIx64
-#   define PRIx64		"llx"
+#   define PRIx64       "llx"
 #  endif
 #  ifndef PRIX64
-#   define PRIX64		"llX"
+#   define PRIX64       "llX"
 #  endif
 #  ifndef PRTime
-#   define PRTime		"ld"
+#   define PRTime       "ld"
 #  endif
 # endif // #ifdef _LP64
 # ifndef PRIzd
-#  define PRIzd			"zd"
+#  define PRIzd         "zd"
 # endif
 # ifndef PRIzu
-#  define PRIzu			"zu"
+#  define PRIzu         "zu"
 # endif
 #endif // #if COMPILER != COMPILER_GNU
 //--------------------------------------------------------------------------
@@ -464,27 +464,27 @@ typedef int					SOCKET;
 //--------------------------------------------------------------------------
 // 线程定义
 #if PLATFORM == PLATFORM_WIN32
-# define THREAD_ID							HANDLE
-# define THREAD_SINGNAL						HANDLE
-# define THREAD_SINGNAL_INIT(x)				x = CreateEvent(NULL, TRUE, FALSE, NULL)
-# define THREAD_SINGNAL_DELETE(x)			CloseHandle(x)
-# define THREAD_SINGNAL_SET(x)				SetEvent(x)
-# define THREAD_MUTEX						CRITICAL_SECTION
-# define THREAD_MUTEX_INIT(x)				InitializeCriticalSection(&x)
-# define THREAD_MUTEX_DELETE(x)				DeleteCriticalSection(&x)
-# define THREAD_MUTEX_LOCK(x)				EnterCriticalSection(&x)
-# define THREAD_MUTEX_UNLOCK(x)				LeaveCriticalSection(&x)	
+# define THREAD_ID                          HANDLE
+# define THREAD_SINGNAL                     HANDLE
+# define THREAD_SINGNAL_INIT(x)             x = CreateEvent(NULL, TRUE, FALSE, NULL)
+# define THREAD_SINGNAL_DELETE(x)           CloseHandle(x)
+# define THREAD_SINGNAL_SET(x)              SetEvent(x)
+# define THREAD_MUTEX                       CRITICAL_SECTION
+# define THREAD_MUTEX_INIT(x)               InitializeCriticalSection(&x)
+# define THREAD_MUTEX_DELETE(x)             DeleteCriticalSection(&x)
+# define THREAD_MUTEX_LOCK(x)               EnterCriticalSection(&x)
+# define THREAD_MUTEX_UNLOCK(x)             LeaveCriticalSection(&x)    
 #else
-# define THREAD_ID							pthread_t
-# define THREAD_SINGNAL						pthread_cond_t
-# define THREAD_SINGNAL_INIT(x)				pthread_cond_init(&x, NULL)
-# define THREAD_SINGNAL_DELETE(x)			pthread_cond_destroy(&x)
-# define THREAD_SINGNAL_SET(x)				pthread_cond_signal(&x);
-# define THREAD_MUTEX						pthread_mutex_t
-# define THREAD_MUTEX_INIT(x)				pthread_mutex_init (&x, NULL)
-# define THREAD_MUTEX_DELETE(x)				pthread_mutex_destroy(&x)
-# define THREAD_MUTEX_LOCK(x)				pthread_mutex_lock(&x)
-# define THREAD_MUTEX_UNLOCK(x)				pthread_mutex_unlock(&x)		
+# define THREAD_ID                          pthread_t
+# define THREAD_SINGNAL                     pthread_cond_t
+# define THREAD_SINGNAL_INIT(x)             pthread_cond_init(&x, NULL)
+# define THREAD_SINGNAL_DELETE(x)           pthread_cond_destroy(&x)
+# define THREAD_SINGNAL_SET(x)              pthread_cond_signal(&x);
+# define THREAD_MUTEX                       pthread_mutex_t
+# define THREAD_MUTEX_INIT(x)               pthread_mutex_init (&x, NULL)
+# define THREAD_MUTEX_DELETE(x)             pthread_mutex_destroy(&x)
+# define THREAD_MUTEX_LOCK(x)               pthread_mutex_lock(&x)
+# define THREAD_MUTEX_UNLOCK(x)             pthread_mutex_unlock(&x)        
 #endif
 //--------------------------------------------------------------------------
 

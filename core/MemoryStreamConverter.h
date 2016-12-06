@@ -8,8 +8,8 @@ NAMESPACE_BEG(core)
 template<size_t T>
 inline void convert(char *val)
 {
-	std::swap(*val, *(val + T - 1));
-	convert<T - 2>(val + 1);
+    std::swap(*val, *(val + T - 1));
+    convert<T - 2>(val + 1);
 }
 
 template<> inline void convert<0>(char *) {}
@@ -17,16 +17,16 @@ template<> inline void convert<1>(char *) {}
 
 template<typename T> inline void apply(T *val)
 {
-	convert<sizeof(T)>((char *)(val));
+    convert<sizeof(T)>((char *)(val));
 }
 
 inline void convert(char *val, size_t size)
 {
-	if(size < 2)
-		return;
+    if(size < 2)
+        return;
 
-	std::swap(*val, *(val + size - 1));
-	convert(val + 1, size - 2);
+    std::swap(*val, *(val + size - 1));
+    convert(val + 1, size - 2);
 }
 
 #if ENDIAN == BIG_ENDIAN

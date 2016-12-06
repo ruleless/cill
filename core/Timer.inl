@@ -3,12 +3,12 @@ NAMESPACE_BEG(core)
 //--------------------------------------------------------------------------
 inline void TimerHandle::cancel()
 {
-	if (mpTime != NULL)
-	{
-		TimeBase* pTime = mpTime;
-		mpTime = NULL;
-		pTime->cancel();
-	}
+    if (mpTime != NULL)
+    {
+        TimeBase* pTime = mpTime;
+        mpTime = NULL;
+        pTime->cancel();
+    }
 }
 //--------------------------------------------------------------------------
 
@@ -16,21 +16,21 @@ inline void TimerHandle::cancel()
 // 定时器对象
 inline void TimeBase::cancel()
 {
-	if (this->isCancelled())
-	{
-		return;
-	}
+    if (this->isCancelled())
+    {
+        return;
+    }
 
-	assert((mState == Time_Pending) || (mState == Time_Executing));
-	mState = Time_Cancelled;
+    assert((mState == Time_Pending) || (mState == Time_Executing));
+    mState = Time_Cancelled;
 
-	if (mpHandler)
-	{
-		mpHandler->release(TimerHandle(this), mpUserData);
-		mpHandler = NULL;
-	}
+    if (mpHandler)
+    {
+        mpHandler->release(TimerHandle(this), mpUserData);
+        mpHandler = NULL;
+    }
 
-	mOwner.onCancel();
+    mOwner.onCancel();
 }
 //--------------------------------------------------------------------------
 
@@ -38,217 +38,217 @@ inline void TimeBase::cancel()
 // 定时器管理类
 template<class TIME_STAMP>
 TimersT<TIME_STAMP>::TimersT()
-		:mTimeQueue()
-		,mpProcessingNode(NULL)
-		,mLastProcessTime(0)
-		,mNumCancelled(0)
+        :mTimeQueue()
+        ,mpProcessingNode(NULL)
+        ,mLastProcessTime(0)
+        ,mNumCancelled(0)
 {
 }
 
 template<class TIME_STAMP>
 TimersT<TIME_STAMP>::~TimersT()
 {
-	this->clear();
+    this->clear();
 }
 
 template <class TIME_STAMP>
 void TimersT<TIME_STAMP>::clear(bool shouldCallCancel)
 {
-	int maxLoopCount = mTimeQueue.size();
+    int maxLoopCount = mTimeQueue.size();
 
-	while (!mTimeQueue.empty())
-	{
-		Time *pTime = mTimeQueue.unsafePopBack();
-		if (!pTime->isCancelled() && shouldCallCancel)
-		{
-			--mNumCancelled;
-			pTime->cancel();
+    while (!mTimeQueue.empty())
+    {
+        Time *pTime = mTimeQueue.unsafePopBack();
+        if (!pTime->isCancelled() && shouldCallCancel)
+        {
+            --mNumCancelled;
+            pTime->cancel();
 
-			if (--maxLoopCount == 0)
-			{
-				shouldCallCancel = false;
-			}
-		}
-		else if (pTime->isCancelled())
-		{
-			--mNumCancelled;
-		}
+            if (--maxLoopCount == 0)
+            {
+                shouldCallCancel = false;
+            }
+        }
+        else if (pTime->isCancelled())
+        {
+            --mNumCancelled;
+        }
 
-		delete pTime;
-	}
+        delete pTime;
+    }
 
-	mNumCancelled = 0;
-	mTimeQueue = PriorityQueue();
+    mNumCancelled = 0;
+    mTimeQueue = PriorityQueue();
 }
 
 template <class TIME_STAMP> 
 TimerHandle TimersT<TIME_STAMP>::add(TimeStamp startTime, TimeStamp interval, TimerHandler *pHandler, void *pUser)
 {
-	Time *pTime = new Time(*this, startTime, interval, pHandler, pUser);
-	mTimeQueue.push(pTime);
-	return TimerHandle(pTime);
+    Time *pTime = new Time(*this, startTime, interval, pHandler, pUser);
+    mTimeQueue.push(pTime);
+    return TimerHandle(pTime);
 }
 
 template <class TIME_STAMP>
 int TimersT<TIME_STAMP>::process(TimeStamp now)
 {
-	int numFired = 0;
+    int numFired = 0;
 
-	while ((!mTimeQueue.empty()) && (mTimeQueue.top()->time() <= now ||	mTimeQueue.top()->isCancelled()))
-	{
-		Time *pTime = mpProcessingNode = mTimeQueue.top();
-		mTimeQueue.pop();
+    while ((!mTimeQueue.empty()) && (mTimeQueue.top()->time() <= now || mTimeQueue.top()->isCancelled()))
+    {
+        Time *pTime = mpProcessingNode = mTimeQueue.top();
+        mTimeQueue.pop();
 
-		if (!pTime->isCancelled())
-		{
-			++numFired;
-			pTime->triggerTimer();
-		}
+        if (!pTime->isCancelled())
+        {
+            ++numFired;
+            pTime->triggerTimer();
+        }
 
-		if (!pTime->isCancelled())
-		{
-			mTimeQueue.push( pTime );
-		}
-		else
-		{
-			delete pTime;
+        if (!pTime->isCancelled())
+        {
+            mTimeQueue.push( pTime );
+        }
+        else
+        {
+            delete pTime;
 
-			assert( mNumCancelled > 0 );
-			--mNumCancelled;
-		}
-	}
+            assert( mNumCancelled > 0 );
+            --mNumCancelled;
+        }
+    }
 
-	mpProcessingNode = NULL;
-	mLastProcessTime = now;
-	return numFired;
+    mpProcessingNode = NULL;
+    mLastProcessTime = now;
+    return numFired;
 }
 
 template <class TIME_STAMP>
 bool TimersT<TIME_STAMP>::legal(TimerHandle handle) const
 {
-	typedef const Time** TimeIter;
-	Time *pTime = static_cast<Time *>(handle.time());
+    typedef const Time** TimeIter;
+    Time *pTime = static_cast<Time *>(handle.time());
 
-	if (pTime == NULL)
-	{
-		return false;
-	}
+    if (pTime == NULL)
+    {
+        return false;
+    }
 
-	if (pTime == mpProcessingNode)
-	{
-		return true;
-	}
+    if (pTime == mpProcessingNode)
+    {
+        return true;
+    }
 
-	TimeIter begin = &mTimeQueue.top();
-	TimeIter end = begin + mTimeQueue.size();
+    TimeIter begin = &mTimeQueue.top();
+    TimeIter end = begin + mTimeQueue.size();
 
-	for (TimeIter it = begin; it != end; ++it)
-	{
-		if (*it == pTime)
-		{
-			return true;
-		}
-	}
+    for (TimeIter it = begin; it != end; ++it)
+    {
+        if (*it == pTime)
+        {
+            return true;
+        }
+    }
 
-	return false;
+    return false;
 }
 
 template <class TIME_STAMP>
 TIME_STAMP TimersT<TIME_STAMP>::nextExp(TimeStamp now) const
 {
-	if (mTimeQueue.empty() || now > mTimeQueue.top()->time())
-	{
-		return 0;
-	}
+    if (mTimeQueue.empty() || now > mTimeQueue.top()->time())
+    {
+        return 0;
+    }
 
-	return mTimeQueue.top()->time() - now;
+    return mTimeQueue.top()->time() - now;
 }
 
 template <class TIME_STAMP>
 bool TimersT<TIME_STAMP>::getTimerInfo(TimerHandle handle, TimeStamp &time, TimeStamp &interval, void *&pUser) const
 {
-	Time *pTime = static_cast< Time * >(handle.time());
+    Time *pTime = static_cast< Time * >(handle.time());
 
-	if (!pTime->isCancelled())
-	{
-		time = pTime->time();
-		interval = pTime->interval();
-		pUser = pTime->getUserData();
+    if (!pTime->isCancelled())
+    {
+        time = pTime->time();
+        interval = pTime->interval();
+        pUser = pTime->getUserData();
 
-		return true;
-	}
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 template <class TIME_STAMP>
 void TimersT<TIME_STAMP>::onCancel()
 {
-	++mNumCancelled;
+    ++mNumCancelled;
 
-	// If there are too many cancelled timers in the queue (more than half),
-	// these are flushed from the queue immediately.
-	if (mNumCancelled * 2 > int(mTimeQueue.size()))
-	{
-		this->purgeCancelledTimes();
-	}
+    // If there are too many cancelled timers in the queue (more than half),
+    // these are flushed from the queue immediately.
+    if (mNumCancelled * 2 > int(mTimeQueue.size()))
+    {
+        this->purgeCancelledTimes();
+    }
 }
 
 template <class TIME>
 class IsNotCancelled
 {
   public:
-	bool operator()(const TIME *pTime)
-	{
-		return !pTime->isCancelled();
-	}
+    bool operator()(const TIME *pTime)
+    {
+        return !pTime->isCancelled();
+    }
 };
 
 template <class TIME_STAMP>
 void TimersT<TIME_STAMP>::purgeCancelledTimes()
 {
-	typename PriorityQueue::Container & container = mTimeQueue.container();
-	typename PriorityQueue::Container::iterator newEnd = std::partition(container.begin(), container.end(), IsNotCancelled<Time>());
+    typename PriorityQueue::Container & container = mTimeQueue.container();
+    typename PriorityQueue::Container::iterator newEnd = std::partition(container.begin(), container.end(), IsNotCancelled<Time>());
 
-	for (typename PriorityQueue::Container::iterator iter = newEnd; iter != container.end(); ++iter)
-	{
-		delete *iter;
-	}
+    for (typename PriorityQueue::Container::iterator iter = newEnd; iter != container.end(); ++iter)
+    {
+        delete *iter;
+    }
 
-	const int numPurged = (container.end() - newEnd);
-	mNumCancelled -= numPurged;
-	assert((mNumCancelled == 0) || (mNumCancelled == 1));
-	
-	container.erase(newEnd, container.end());
-	mTimeQueue.make_heap();
+    const int numPurged = (container.end() - newEnd);
+    mNumCancelled -= numPurged;
+    assert((mNumCancelled == 0) || (mNumCancelled == 1));
+    
+    container.erase(newEnd, container.end());
+    mTimeQueue.make_heap();
 }
 
 template <class TIME_STAMP>
 TimersT<TIME_STAMP>::Time::Time(TimersBase &owner, TimeStamp startTime, TimeStamp interval, TimerHandler *_pHandler, void *_pUser) 
-		:TimeBase(owner, _pHandler, _pUser), mTime(startTime), mInterval(interval)
+        :TimeBase(owner, _pHandler, _pUser), mTime(startTime), mInterval(interval)
 {
 }
 
 template <class TIME_STAMP>
 void TimersT<TIME_STAMP>::Time::triggerTimer()
 {
-	if (!this->isCancelled())
-	{
-		mState = Time_Executing;
+    if (!this->isCancelled())
+    {
+        mState = Time_Executing;
 
-		mpHandler->onTimeout(TimerHandle(this), mpUserData);
+        mpHandler->onTimeout(TimerHandle(this), mpUserData);
 
-		if ((mInterval == 0) && !this->isCancelled())
-		{
-			this->cancel();
-		}
-	}
+        if ((mInterval == 0) && !this->isCancelled())
+        {
+            this->cancel();
+        }
+    }
 
-	if (!this->isCancelled())
-	{
-		mTime += mInterval;
-		mState = Time_Pending;
-	}
+    if (!this->isCancelled())
+    {
+        mTime += mInterval;
+        mState = Time_Pending;
+    }
 }
 //--------------------------------------------------------------------------
 

@@ -29,28 +29,28 @@ CORE_API int string2bytes(unsigned char *szSrc, unsigned char *pDst, int nDstMax
 template<typename T>
 inline void split(const std::basic_string< T >& s, T c, std::vector< std::basic_string< T > > &v)
 {
-	if(s.size() == 0)
-		return;
+    if(s.size() == 0)
+        return;
 
-	typename std::basic_string< T >::size_type i = 0;
-	typename std::basic_string< T >::size_type j = s.find(c);
+    typename std::basic_string< T >::size_type i = 0;
+    typename std::basic_string< T >::size_type j = s.find(c);
 
-	while(j != std::basic_string<T>::npos)
-	{
-		std::basic_string<T> buf = s.substr(i, j - i);
+    while(j != std::basic_string<T>::npos)
+    {
+        std::basic_string<T> buf = s.substr(i, j - i);
 
-		if(buf.size() > 0)
-			v.push_back(buf);
+        if(buf.size() > 0)
+            v.push_back(buf);
 
-		i = ++j; j = s.find(c, j);
-	}
+        i = ++j; j = s.find(c, j);
+    }
 
-	if(j == std::basic_string<T>::npos)
-	{
-		std::basic_string<T> buf = s.substr(i, s.length() - i);
-		if(buf.size() > 0)
-			v.push_back(buf);
-	}
+    if(j == std::basic_string<T>::npos)
+    {
+        std::basic_string<T> buf = s.substr(i, s.length() - i);
+        if(buf.size() > 0)
+            v.push_back(buf);
+    }
 }
 
 CORE_API std::vector< std::string >

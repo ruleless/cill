@@ -11,37 +11,37 @@ NAMESPACE_BEG(core)
 class CORE_CLASS MemoryStreamException
 {
   public:
-	MemoryStreamException(bool _add, size_t _pos, size_t _esize, size_t _size)
-			: _m_add(_add), _m_pos(_pos), _m_esize(_esize), _m_size(_size)
-	{
-		PrintPosError();
-	}
+    MemoryStreamException(bool _add, size_t _pos, size_t _esize, size_t _size)
+            : _m_add(_add), _m_pos(_pos), _m_esize(_esize), _m_size(_size)
+    {
+        PrintPosError();
+    }
 
-	void PrintPosError() const
-	{
-		logErrorLn("Attempted to "<<(_m_add ? "put" : "get")<<" in MemoryStream (pos:"<<_m_pos<<"  size: "<<_m_size<<").");
-	}
+    void PrintPosError() const
+    {
+        logErrorLn("Attempted to "<<(_m_add ? "put" : "get")<<" in MemoryStream (pos:"<<_m_pos<<"  size: "<<_m_size<<").");
+    }
   private:
-	bool _m_add;
-	size_t _m_pos;
-	size_t _m_esize;
-	size_t _m_size;
+    bool _m_add;
+    size_t _m_pos;
+    size_t _m_esize;
+    size_t _m_size;
 };
 
 class CORE_CLASS MemoryStream : public PoolObject
 {
-	union PackFloatXType
-	{
-		float	fv;
-		uint32	uv;
-		int		iv;
-	};
+    union PackFloatXType
+    {
+        float   fv;
+        uint32  uv;
+        int     iv;
+    };
   public:
-	static ObjectPool<MemoryStream>& ObjPool();
-	static void destroyObjPool();
+    static ObjectPool<MemoryStream>& ObjPool();
+    static void destroyObjPool();
 
-	virtual size_t getPoolObjectBytes();
-	virtual void onReclaimObject();
+    virtual size_t getPoolObjectBytes();
+    virtual void onReclaimObject();
 
     const static size_t DEFAULT_SIZE = 0x100;
 
@@ -52,34 +52,34 @@ class CORE_CLASS MemoryStream : public PoolObject
 
     MemoryStream(size_t res): rpos_(0), wpos_(0)
     {
-		if(res > 0)
-			data_.reserve(res);
+        if(res > 0)
+            data_.reserve(res);
     }
 
     MemoryStream(const MemoryStream &buf): rpos_(buf.rpos_), wpos_(buf.wpos_), data_(buf.data_) { }
-	
-	virtual ~MemoryStream()
-	{
-		clear(true);
-	}
-	
+    
+    virtual ~MemoryStream()
+    {
+        clear(true);
+    }
+    
     void clear(bool clearData)
     {
-    	if(clearData)
-			data_.clear();
+        if(clearData)
+            data_.clear();
 
         rpos_ = wpos_ = 0;
     }
-	
-	void swap(MemoryStream & s)
-	{
-		size_t rpos = s.rpos(), wpos = s.wpos();
-		std::swap(data_, s.data_);
-		s.rpos(rpos_);
-		s.wpos(wpos_);
-		rpos_ = rpos;
-		wpos_ = wpos;
-	}
+    
+    void swap(MemoryStream & s)
+    {
+        size_t rpos = s.rpos(), wpos = s.wpos();
+        std::swap(data_, s.data_);
+        s.rpos(rpos_);
+        s.wpos(wpos_);
+        rpos_ = rpos;
+        wpos_ = wpos;
+    }
 
     MemoryStream& operator<<(uint8 value)
     {
@@ -253,7 +253,7 @@ class CORE_CLASS MemoryStream : public PoolObject
             *(value++) = c;
         }
 
-		*value = '\0';
+        *value = '\0';
         return *this;
     }
 
@@ -266,8 +266,8 @@ class CORE_CLASS MemoryStream : public PoolObject
 
     size_t rpos(int rpos)
     {
-		if(rpos < 0)
-			rpos = 0;
+        if(rpos < 0)
+            rpos = 0;
 
         rpos_ = rpos;
         return rpos_;
@@ -277,41 +277,41 @@ class CORE_CLASS MemoryStream : public PoolObject
 
     size_t wpos(int wpos)
     {
-		if(wpos < 0)
-			wpos = 0;
+        if(wpos < 0)
+            wpos = 0;
 
         wpos_ = wpos;
         return wpos_;
     }
 
-	uint8* data() { return &data_[0]; }
-	const uint8* data() const { return &data_[0]; }
+    uint8* data() { return &data_[0]; }
+    const uint8* data() const { return &data_[0]; }
 
-	virtual size_t size() const { return data_.size(); }
-	virtual bool empty() const { return data_.empty(); }
+    virtual size_t size() const { return data_.size(); }
+    virtual bool empty() const { return data_.empty(); }
 
-	virtual size_t length() const { return rpos() >= wpos() ? 0 : wpos() - rpos(); }
-	virtual size_t space() const { return wpos() >= size() ? 0 : size() - wpos(); }
+    virtual size_t length() const { return rpos() >= wpos() ? 0 : wpos() - rpos(); }
+    virtual size_t space() const { return wpos() >= size() ? 0 : size() - wpos(); }
 
-	void done() { read_skip(length()); }
+    void done() { read_skip(length()); }
 
-	void resize(size_t newsize)
-	{
-		data_.resize(newsize);
-		rpos_ = 0;
-		wpos_ = size();
-	}
+    void resize(size_t newsize)
+    {
+        data_.resize(newsize);
+        rpos_ = 0;
+        wpos_ = size();
+    }
 
-	void data_resize(size_t newsize)
-	{
-		data_.resize(newsize);
-	}
+    void data_resize(size_t newsize)
+    {
+        data_.resize(newsize);
+    }
 
-	void reserve(size_t ressize)
-	{
-		if (ressize > size())
-			data_.reserve(ressize);
-	}
+    void reserve(size_t ressize)
+    {
+        if (ressize > size())
+            data_.reserve(ressize);
+    }
 
     template<typename T>
     void read_skip() { read_skip(sizeof(T)); }
@@ -325,7 +325,7 @@ class CORE_CLASS MemoryStream : public PoolObject
     }
 
     template <typename T>
-	T read()
+    T read()
     {
         T r = read<T>(rpos_);
         rpos_ += sizeof(T);
@@ -333,7 +333,7 @@ class CORE_CLASS MemoryStream : public PoolObject
     }
 
     template <typename T>
-	T read(size_t pos) const
+    T read(size_t pos) const
     {
         if(sizeof(T) > length())
             throw MemoryStreamException(false, pos, sizeof(T), length());
@@ -346,54 +346,54 @@ class CORE_CLASS MemoryStream : public PoolObject
     void read(uint8 *dest, size_t len)
     {
         if(len > length())
-			throw MemoryStreamException(false, rpos_, len, length());
+            throw MemoryStreamException(false, rpos_, len, length());
 
         memcpy(dest, &data_[rpos_], len);
         rpos_ += len;
     }
 
-	int readBlob(std::string& datas)
-	{
-		if(length() <= 0)
-			return 0;
+    int readBlob(std::string& datas)
+    {
+        if(length() <= 0)
+            return 0;
 
-		int rsize = 0;
-		(*this) >> rsize;
-		if((size_t)rsize > length())
-			return 0;
+        int rsize = 0;
+        (*this) >> rsize;
+        if((size_t)rsize > length())
+            return 0;
 
-		if(rsize > 0)
-		{
-			datas.assign((char *)(data() + rpos()), rsize);
-			read_skip(rsize);
-		}
+        if(rsize > 0)
+        {
+            datas.assign((char *)(data() + rpos()), rsize);
+            read_skip(rsize);
+        }
 
-		return rsize;
-	}
+        return rsize;
+    }
 
     void appendBlob(const char *src, int cnt)
     {
         (*this) << cnt;
 
-		if(cnt > 0)
-			append(src, cnt);
+        if(cnt > 0)
+            append(src, cnt);
     }
 
-	void appendBlob(const std::string& datas)
+    void appendBlob(const std::string& datas)
     {
-		int len = datas.size();
-		(*this) << len;
+        int len = datas.size();
+        (*this) << len;
 
-		if(len > 0)
-			append(datas.data(), len);
+        if(len > 0)
+            append(datas.data(), len);
     }
 
-	template <typename T>
-	void append(T value)
-	{
-		EndianConvert(value);
-		append((uint8 *)&value, sizeof(value));
-	}
+    template <typename T>
+    void append(T value)
+    {
+        EndianConvert(value);
+        append((uint8 *)&value, sizeof(value));
+    }
 
     void append(const std::string& str)
     {
@@ -406,7 +406,7 @@ class CORE_CLASS MemoryStream : public PoolObject
     }
 
     template<class T>
-	void append(const T *src, size_t cnt)
+    void append(const T *src, size_t cnt)
     {
         return append((const uint8 *)src, cnt * sizeof(T));
     }
@@ -428,102 +428,102 @@ class CORE_CLASS MemoryStream : public PoolObject
     void append(const MemoryStream& buffer)
     {
         if(buffer.wpos())
-		{
-			append(buffer.data() + buffer.rpos(), buffer.length());
+        {
+            append(buffer.data() + buffer.rpos(), buffer.length());
         }
     }
 
-	void insert(size_t pos, const uint8 *src, size_t cnt)
-	{
-		data_.insert(data_.begin() + pos, cnt, 0);
-		memcpy(&data_[pos], src, cnt);
-		wpos_ += cnt;
-	}
+    void insert(size_t pos, const uint8 *src, size_t cnt)
+    {
+        data_.insert(data_.begin() + pos, cnt, 0);
+        memcpy(&data_[pos], src, cnt);
+        wpos_ += cnt;
+    }
 
-	template <typename T>
-	void put(size_t pos,T value)
-	{
-		EndianConvert(value);
-		put(pos,(uint8 *)&value,sizeof(value));
-	}
+    template <typename T>
+    void put(size_t pos,T value)
+    {
+        EndianConvert(value);
+        put(pos,(uint8 *)&value,sizeof(value));
+    }
 
     void put(size_t pos, const uint8 *src, size_t cnt)
     {
         if(pos + cnt > size())
-			throw MemoryStreamException(true, pos, cnt, size());
+            throw MemoryStreamException(true, pos, cnt, size());
 
         memcpy(&data_[pos], src, cnt);
     }
 
-	// 输出流数据
+    // 输出流数据
     void print_storage() const
     {
-		char buf[1024];
-		std::string fbuffer;
-		size_t trpos = rpos_;
+        char buf[1024];
+        std::string fbuffer;
+        size_t trpos = rpos_;
 
-		__snprintf(buf, 1024, "wpos: %lu, rpos=%lu.\n", (unsigned long)wpos(), (unsigned long)rpos());
-		fbuffer += buf;
+        __snprintf(buf, 1024, "wpos: %lu, rpos=%lu.\n", (unsigned long)wpos(), (unsigned long)rpos());
+        fbuffer += buf;
 
         for(uint32 i = rpos(); i < wpos(); ++i)
-		{
-			__snprintf(buf, 1024, "%u ", read<uint8>(i));
-			fbuffer += buf;
-		}
+        {
+            __snprintf(buf, 1024, "%u ", read<uint8>(i));
+            fbuffer += buf;
+        }
 
-		fbuffer += " \n";
-		logTrace(fbuffer.c_str());
+        fbuffer += " \n";
+        logTrace(fbuffer.c_str());
 
-		rpos_ = trpos;
+        rpos_ = trpos;
     }
 
-	// 输出流数据字符串
+    // 输出流数据字符串
     void textlike() const
     {
-		char buf[1024];
-		std::string fbuffer;
-		size_t trpos = rpos_;
+        char buf[1024];
+        std::string fbuffer;
+        size_t trpos = rpos_;
 
-		__snprintf(buf, 1024, "wpos: %lu, rpos=%lu.\n", (unsigned long)wpos(), (unsigned long)rpos());
-		fbuffer += buf;
+        __snprintf(buf, 1024, "wpos: %lu, rpos=%lu.\n", (unsigned long)wpos(), (unsigned long)rpos());
+        fbuffer += buf;
 
         for(uint32 i = rpos(); i < wpos(); ++i)
-		{
-			__snprintf(buf, 1024, "%c", read<uint8>(i));
-			fbuffer += buf;
-		}
+        {
+            __snprintf(buf, 1024, "%c", read<uint8>(i));
+            fbuffer += buf;
+        }
 
-		fbuffer += " \n";
-		logTrace(fbuffer.c_str());
+        fbuffer += " \n";
+        logTrace(fbuffer.c_str());
 
-		rpos_ = trpos;
+        rpos_ = trpos;
     }
 
     void hexlike() const
     {
         uint32 j = 1, k = 1;
-		char buf[1024];
-		std::string fbuffer;
-		size_t trpos = rpos_;
+        char buf[1024];
+        std::string fbuffer;
+        size_t trpos = rpos_;
 
-		__snprintf(buf, 1024, "wpos: %lu, rpos=%lu.\n", (unsigned long)wpos(), (unsigned long)rpos());
-		fbuffer += buf;
-		
-		uint32 i = 0;
+        __snprintf(buf, 1024, "wpos: %lu, rpos=%lu.\n", (unsigned long)wpos(), (unsigned long)rpos());
+        fbuffer += buf;
+        
+        uint32 i = 0;
         for(uint32 idx = rpos(); idx < wpos(); ++idx)
         {
-			++i;
+            ++i;
             if ((i == (j * 8)) && ((i != (k * 16))))
             {
                 if (read<uint8>(idx) < 0x10)
                 {
-					__snprintf(buf, 1024, "| 0%X ", read<uint8>(idx));
-					fbuffer += buf;
+                    __snprintf(buf, 1024, "| 0%X ", read<uint8>(idx));
+                    fbuffer += buf;
                 }
                 else
                 {
-					__snprintf(buf, 1024, "| %X ", read<uint8>(idx));
-					fbuffer += buf;
+                    __snprintf(buf, 1024, "| %X ", read<uint8>(idx));
+                    fbuffer += buf;
                 }
                 ++j;
             }
@@ -531,13 +531,13 @@ class CORE_CLASS MemoryStream : public PoolObject
             {
                 if (read<uint8>(idx) < 0x10)
                 {
-					__snprintf(buf, 1024, "\n0%X ", read<uint8>(idx));
-					fbuffer += buf;
+                    __snprintf(buf, 1024, "\n0%X ", read<uint8>(idx));
+                    fbuffer += buf;
                 }
                 else
                 {
-					__snprintf(buf, 1024, "\n%X ", read<uint8>(idx));
-					fbuffer += buf;
+                    __snprintf(buf, 1024, "\n%X ", read<uint8>(idx));
+                    fbuffer += buf;
                 }
 
                 ++k;
@@ -547,34 +547,34 @@ class CORE_CLASS MemoryStream : public PoolObject
             {
                 if (read<uint8>(idx) < 0x10)
                 {
-					__snprintf(buf, 1024, "0%X ", read<uint8>(idx));
-					fbuffer += buf;
+                    __snprintf(buf, 1024, "0%X ", read<uint8>(idx));
+                    fbuffer += buf;
                 }
                 else
                 {
-					__snprintf(buf, 1024, "%X ", read<uint8>(idx));
-					fbuffer += buf;
+                    __snprintf(buf, 1024, "%X ", read<uint8>(idx));
+                    fbuffer += buf;
                 }
             }
         }
 
-		fbuffer += "\n";
+        fbuffer += "\n";
 
-		logTrace(fbuffer.c_str());
+        logTrace(fbuffer.c_str());
 
-		rpos_ = trpos;
+        rpos_ = trpos;
     }
 
   protected:
-	mutable size_t rpos_, wpos_;
-	std::vector<uint8> data_;
+    mutable size_t rpos_, wpos_;
+    std::vector<uint8> data_;
 };
 
 
 template <typename T>
 inline MemoryStream& operator<<(MemoryStream &b, std::vector<T> v)
 {
-	uint32 vsize = v.size();
+    uint32 vsize = v.size();
     b << vsize;
     for (typename std::vector<T>::iterator i = v.begin(); i != v.end(); ++i)
     {
@@ -601,7 +601,7 @@ inline MemoryStream& operator>>(MemoryStream &b, std::vector<T> &v)
 template <typename T>
 inline MemoryStream& operator<<(MemoryStream &b, std::list<T> v)
 {
-	int vsize = v.size();
+    int vsize = v.size();
     b << vsize;
     for (typename std::list<T>::iterator i = v.begin(); i != v.end(); ++i)
     {
@@ -628,7 +628,7 @@ inline MemoryStream& operator>>(MemoryStream &b, std::list<T> &v)
 template <typename K, typename V>
 inline MemoryStream& operator<<(MemoryStream &b, std::map<K, V> &m)
 {
-	int vsize = m.size();
+    int vsize = m.size();
     b << vsize;
     for (typename std::map<K, V>::iterator i = m.begin(); i != m.end(); ++i)
     {

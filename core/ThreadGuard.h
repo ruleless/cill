@@ -9,17 +9,17 @@ NAMESPACE_BEG(core)
 class CORE_CLASS ThreadGuard
 {
 public:
-	explicit ThreadGuard(ThreadMutex* mutexPtr) : mpMutex(mutexPtr)
-	{
-		mpMutex->lockMutex();
-	}
+    explicit ThreadGuard(ThreadMutex* mutexPtr) : mpMutex(mutexPtr)
+    {
+        mpMutex->lockMutex();
+    }
 
-	virtual ~ThreadGuard(void) 
-	{ 
-		mpMutex->unlockMutex();
-	}	
+    virtual ~ThreadGuard(void) 
+    {
+        mpMutex->unlockMutex();
+    }   
 protected:
-	ThreadMutex* mpMutex;
+    ThreadMutex* mpMutex;
 };
 
 NAMESPACE_END // namespace core

@@ -9,33 +9,33 @@ NAMESPACE_BEG(core)
 class Ini : public IniParser
 {
   public:
-	Ini(const char *pathname)
-			:IniParser()
-			,mbDirty(false)
-	{
-		memset(mPath, 0, sizeof(mPath));
-		strncpy(mPath, pathname, sizeof(mPath)-1);
-		_parse();
-	}
-	
-	virtual ~Ini();
+    Ini(const char *pathname)
+            :IniParser()
+            ,mbDirty(false)
+    {
+        memset(mPath, 0, sizeof(mPath));
+        strncpy(mPath, pathname, sizeof(mPath)-1);
+        _parse();
+    }
+    
+    virtual ~Ini();
 
-	void _parse();
+    void _parse();
 
-	virtual void onParseError();
+    virtual void onParseError();
 
-	int getInt(const char* section, const char* key, int def = 0) const;
-	bool setInt(const char* section, const char* key, int val);   	
+    int getInt(const char* section, const char* key, int def = 0) const;
+    bool setInt(const char* section, const char* key, int val);     
 
-	void save();
+    void save();
 
-	inline void setDirty(bool bDirty = true)
-	{
-		mbDirty = bDirty;
-	}	
-  private:	
-	char mPath[MAX_PATH];
-	bool mbDirty;
+    inline void setDirty(bool bDirty = true)
+    {
+        mbDirty = bDirty;
+    }   
+  private:  
+    char mPath[MAX_PATH];
+    bool mbDirty;
 };
 
 NAMESPACE_END // namespace core
