@@ -1,18 +1,11 @@
-#include "trace.h"
+#include "log.h"
 
-#ifndef DISABLE_TRACE
+NAMESPACE_BEG(cill)
 
-#if PLATFORM == PLATFORM_WIN32
-#   include <windows.h>
-#   include <process.h>
-#endif
+Log *gLogger = NULL;
 
-NAMESPACE_BEG(core)
-
-STrace* gTrace = NULL;
-
-STrace::STrace()        
-        :mSinks()
+Log::Log()
+        :mLogWriter()
         ,mLevel(levelAll)
         ,mHasTime(true)
         ,mLimitFrequency(false)
@@ -25,12 +18,12 @@ STrace::STrace()
 {
 }
 
-STrace::~STrace()
+Log::~Log()
 {
     finalise();
 }
 
-bool STrace::initialise(int level, bool hasTime)
+bool Log::initialise(int level, bool hasTime)
 {
     mLevel = level;
     mHasTime = hasTime;
@@ -38,7 +31,7 @@ bool STrace::initialise(int level, bool hasTime)
     mOutlist = &mMsgs2;
 
 #if PLATFORM == PLATFORM_WIN32
-    if ((mTid = (THREAD_ID)_beginthreadex(NULL, 0, &STrace::_traceProc, (void *)this, NULL, 0)) == NULL)
+    if ((mTid = (THREAD_ID)_beginthreadex(NULL, 0, &Log::_logProc, (void *)this, NULL, 0)) == NULL)
     {
         return false;
     }
@@ -50,7 +43,7 @@ bool STrace::initialise(int level, bool hasTime)
         return false;
     }
 #else
-    if(pthread_create(&mTid, NULL, STrace::_traceProc, (void *)this) != 0)
+    if(pthread_create(&mTid, NULL, Log::_logProc, (void *)this) != 0)
     {
         return false;
     }
@@ -68,7 +61,7 @@ bool STrace::initialise(int level, bool hasTime)
     return true;
 }
 
-void STrace::finalise()
+void Log::finalise()
 {
     if (mInited)
     {
@@ -87,22 +80,22 @@ void STrace::finalise()
         THREAD_SINGNAL_DELETE(mCond);
         THREAD_MUTEX_DELETE(mMutex);
 
-        for (STrace::ListenerList::iterator it = mSinks.begin(); it != mSinks.end(); ++it)
+        for (Log::WriterList::iterator it = mLogWriter.begin(); it != mLogWriter.end(); ++it)
             delete *it;
 
-        mSinks.clear();
+        mLogWriter.clear();
 
         mInited = false;
     }
 }
 
 #if PLATFORM == PLATFORM_WIN32
-unsigned __stdcall STrace::_traceProc(void *arg)
+unsigned __stdcall Log::_logProc(void *arg)
 #else
-        void* STrace::_traceProc(void* arg)
+        void* Log::_logProc(void* arg)
 #endif
 {
-    STrace *pLog = (STrace *)arg;
+    Log *pLog = (Log *)arg;
     while (!pLog->mbExit)
     {
         THREAD_MUTEX_LOCK(pLog->mMutex);
@@ -117,7 +110,7 @@ unsigned __stdcall STrace::_traceProc(void *arg)
 #endif
         }
 
-        STrace::MsgList *tmpList = pLog->mOutlist;
+        Log::MsgList *tmpList = pLog->mOutlist;
         pLog->mOutlist = pLog->mInlist;
         pLog->mInlist = tmpList;
         THREAD_MUTEX_UNLOCK(pLog->mMutex);
@@ -128,7 +121,7 @@ unsigned __stdcall STrace::_traceProc(void *arg)
     return 0;
 }
 
-void STrace::_flushOutlist()
+void Log::_flushOutlist()
 {
     MsgList* outlist = mOutlist;
     if (!outlist->empty())
@@ -151,12 +144,12 @@ void STrace::_flushOutlist()
                 pTimeStr = 0;
             }
 
-            for (ListenerList::iterator it = mSinks.begin(); it != mSinks.end(); ++it)
+            for (WriterList::iterator it = mLogWriter.begin(); it != mLogWriter.end(); ++it)
             {
-                Listener* obj = *it;
-                if (obj->getTraceLevel() & msgnode.level)
+                ILogWriter* obj = *it;
+                if (obj->getLevel() & msgnode.level)
                 {
-                    obj->onTrace(msgnode.msg.c_str(), pTimeStr, msgnode.level);
+                    obj->onLog(msgnode.msg.c_str(), pTimeStr, msgnode.level);
                 }
             }
         }
@@ -165,12 +158,12 @@ void STrace::_flushOutlist()
     }
 }
 
-int STrace::getTraceLevel() const
+int Log::getLogLevel() const
 {
     return mLevel;
 }
 
-int STrace::setTraceLevel(int level)
+int Log::setLogLevel(int level)
 {
     THREAD_MUTEX_LOCK(mMutex);
     int old = mLevel;
@@ -180,7 +173,7 @@ int STrace::setTraceLevel(int level)
     return old;
 }
 
-bool STrace::hasTime(bool b)
+bool Log::hasTime(bool b)
 {
     THREAD_MUTEX_LOCK(mMutex);
     bool old = mHasTime;
@@ -190,7 +183,7 @@ bool STrace::hasTime(bool b)
     return old;
 }
 
-bool STrace::setTraceLimitFrequency(bool limitFrequency)
+bool Log::setLimitFrequency(bool limitFrequency)
 {
     THREAD_MUTEX_LOCK(mMutex);
     bool old = mLimitFrequency;
@@ -200,36 +193,36 @@ bool STrace::setTraceLimitFrequency(bool limitFrequency)
     return old;
 }
 
-bool STrace::hasLimitFrequency() const
+bool Log::hasLimitFrequency() const
 {
     return mLimitFrequency;
 }
 
-void STrace::registerTrace(Listener* sink)
+void Log::registerLog(ILogWriter *w)
 {
-    if (NULL == sink)
+    if (NULL == w)
         return;
 
-    mSinks.remove(sink);
-    mSinks.push_back(sink);
+    mLogWriter.remove(w);
+    mLogWriter.push_back(w);
 }
 
-void STrace::unregisterTrace(Listener* sink)
+void Log::unregisterLog(ILogWriter *w)
 {
-    if (NULL == sink)
+    if (NULL == w)
         return;
 
-    for (ListenerList::iterator it = mSinks.begin(); it != mSinks.end(); ++it)
+    for (WriterList::iterator it = mLogWriter.begin(); it != mLogWriter.end(); ++it)
     {
-        if (*it == sink)
+        if (*it == w)
         {
-            mSinks.erase(it);
+            mLogWriter.erase(it);
             break;
         }
     }
 }
 
-void STrace::output(const char* msg, TraceLevel level)
+void Log::output(const char* msg, LogLevel level)
 {
     if (NULL == msg)
         return;
@@ -260,5 +253,3 @@ void STrace::output(const char* msg, TraceLevel level)
 }
 
 NAMESPACE_END // namespace core
-
-#endif // #ifndef DISABLE_TRACE

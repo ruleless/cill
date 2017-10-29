@@ -1,70 +1,128 @@
-﻿#ifndef __CORE_TRACE_H__
-#define __CORE_TRACE_H__
-
-#ifndef DISABLE_TRACE
+﻿#ifndef __CILL_LOG_H__
+#define __CILL_LOG_H__
 
 #include <iostream>
 #include <string>
 #include <list>
 
-#include "corebase.h"
-#include "time_stamp.h"
-#include "str_buffer.h"
-
 #if PLATFORM == PLATFORM_WIN32
-#   include <windows.h>
-#   include <process.h>
+# include <windows.h>
+# include <process.h>
 #endif
 
-NAMESPACE_BEG(core)
-
 //--------------------------------------------------------------------------
-enum TraceLevel // 消息级别
-{
-    levelInfo       = 0x01,
-    levelTrace      = 0x02,
-    levelWarning    = 0x04,
-    levelError      = 0x08,
-    levelEmphasis   = 0x10,
+// 线程定义
+#if PLATFORM == PLATFORM_WIN32
+# ifndef THREAD_ID
+#  define THREAD_ID                          HANDLE
+#  define THREAD_SINGNAL                     HANDLE
+#  define THREAD_SINGNAL_INIT(x)             x = CreateEvent(NULL, TRUE, FALSE, NULL)
+#  define THREAD_SINGNAL_DELETE(x)           CloseHandle(x)
+#  define THREAD_SINGNAL_SET(x)              SetEvent(x)
+#  define THREAD_MUTEX                       CRITICAL_SECTION
+#  define THREAD_MUTEX_INIT(x)               InitializeCriticalSection(&x)
+#  define THREAD_MUTEX_DELETE(x)             DeleteCriticalSection(&x)
+#  define THREAD_MUTEX_LOCK(x)               EnterCriticalSection(&x)
+#  define THREAD_MUTEX_UNLOCK(x)             LeaveCriticalSection(&x)
+# endif
+#else
+# ifndef THREAD_ID
+#  define THREAD_ID                          pthread_t
+#  define THREAD_SINGNAL                     pthread_cond_t
+#  define THREAD_SINGNAL_INIT(x)             pthread_cond_init(&x, NULL)
+#  define THREAD_SINGNAL_DELETE(x)           pthread_cond_destroy(&x)
+#  define THREAD_SINGNAL_SET(x)              pthread_cond_signal(&x);
+#  define THREAD_MUTEX                       pthread_mutex_t
+#  define THREAD_MUTEX_INIT(x)               pthread_mutex_init (&x, NULL)
+#  define THREAD_MUTEX_DELETE(x)             pthread_mutex_destroy(&x)
+#  define THREAD_MUTEX_LOCK(x)               pthread_mutex_lock(&x)
+#  define THREAD_MUTEX_UNLOCK(x)             pthread_mutex_unlock(&x)
+# endif
+#endif
+//--------------------------------------------------------------------------
 
-    levelAll = levelInfo|levelTrace|levelWarning|levelError|levelEmphasis,
+enum LogLevel // 消息级别
+{
+    DebugLog      = 0x01,
+    InfoLog       = 0x02,
+    WarningLog    = 0x04,
+    ErrorLog      = 0x08,
+    EmphasisLog   = 0x10,
+
+    AllLog = DebugLog|InfoLog|WarningLog|ErrorLog|EmphasisLog,
 };
 
-class CORE_CLASS STrace
+NAMESPACE_BEG(cill)
+
+//--------------------------------------------------------------------------
+// 日志输出需继承该口
+class ILogWriter
 {
   public:
-    class CORE_CLASS Listener
+    ILogWriter() : mLevel(AllLog), mHasTime(true) {}
+
+    virtual ~ILogWriter() {}
+
+    bool hasTime() const
     {
-      protected:
-        int mLevel;
-        bool mHasTime;
-      public:
-        Listener() : mLevel(levelAll), mHasTime(true) {}
+        return mHasTime;
+    }
 
-        virtual ~Listener() {}
+    void hasTime(bool b)
+    {
+        mHasTime = b;
+    }
 
-        bool hasTime() const
-        {
-            return mHasTime;
-        }
+    void setLevel(int lvl)
+    {
+        mLevel = lvl;
+    }
 
-        void hasTime(bool b)
-        {
-            mHasTime = b;
-        }
+    int getLevel() const
+    {
+        return mLevel;
+    }
 
-        void setTraceLevel(int lvl)
-        {
-            mLevel = lvl;
-        }
+    virtual void onLog(const char* msg, const char* time, LogLevel level) {}
 
-        int getTraceLevel() const
-        {
-            return mLevel;
-        }
+  protected:
+    int mLevel;
+    bool mHasTime;
+};
+//--------------------------------------------------------------------------
 
-        virtual void onTrace(const char* msg, const char* time, TraceLevel level) {}
-    };
+//--------------------------------------------------------------------------
+// Log
+class Log
+{
+  public:
+    Log();
+    ~Log();
+
+    bool initialise(int level, bool hasTime);
+    void finalise();
+
+    void _flushOutlist();
+
+    int getLogLevel() const;
+    int setLogLevel(int level);
+
+    bool hasTime(bool b);
+
+    bool setLimitFrequency(bool limitFrequency);
+    bool hasLimitFrequency() const;
+
+    void registerLog(Listener* sink);
+    void unregisterLog(Listener* sink);
+
+    void output(const char *msg, LogLevel level);
+
+#if PLATFORM == PLATFORM_WIN32
+    static unsigned __stdcall _logProc(void *arg);
+#else
+    static void* _logProc(void* arg);
+#endif
+
   protected:
     struct _MSG
     {
@@ -74,9 +132,9 @@ class CORE_CLASS STrace
     };
 
     typedef std::list<_MSG> MsgList;
-    typedef std::list<Listener *> ListenerList;
+    typedef std::list<ILogWriter *> WriterList;
 
-    ListenerList mSinks;
+    WriterList mLogWriter;
     int mLevel;
     bool mHasTime;
     bool mLimitFrequency;
@@ -90,36 +148,9 @@ class CORE_CLASS STrace
     MsgList mMsgs2;
     MsgList *mInlist;
     MsgList *mOutlist;
-  public:
-    STrace();
-    ~STrace();
-
-    bool initialise(int level, bool hasTime);
-    void finalise();
-
-    void _flushOutlist();
-
-    int getTraceLevel() const;
-    int setTraceLevel(int level);
-
-    bool hasTime(bool b);
-
-    bool setTraceLimitFrequency(bool limitFrequency);
-    bool hasLimitFrequency() const;
-
-    void registerTrace(Listener* sink);
-    void unregisterTrace(Listener* sink);
-
-    void output(const char* msg, TraceLevel level);
-
-#if PLATFORM == PLATFORM_WIN32
-    static unsigned __stdcall _traceProc(void *arg);
-#else
-    static void* _traceProc(void* arg);
-#endif
 };
 
-extern STrace* gTrace;
+extern Log *gLogger;
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
@@ -224,6 +255,4 @@ NAMESPACE_END // namespace core
 #define logVerify(x)        (x)
 //--------------------------------------------------------------------------
 
-#endif // #ifndef DISABLE_TRACE
-
-#endif // __CORE_TRACE_H__
+#endif // __CILL_LOG_H__
