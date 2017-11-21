@@ -1,14 +1,15 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "log.h"
 
-NAMESPACE_BEG(cill)
-
-Log *gLogger = NULL;
+NAMESPACE_BEG(core)
 
 Log::Log()
-        :mLogWriter()
-        ,mLevel(levelAll)
+        :mLogPrinter()
+        ,mLevel(AllLog)
         ,mHasTime(true)
-        ,mLimitFrequency(false)
         ,mbExit(false)
         ,mInited(false)
         ,mMsgs1()
@@ -25,6 +26,9 @@ Log::~Log()
 
 bool Log::initialise(int level, bool hasTime)
 {
+    if (mInited)
+        return true;
+    
     mLevel = level;
     mHasTime = hasTime;
     mInlist = &mMsgs1;
@@ -63,30 +67,28 @@ bool Log::initialise(int level, bool hasTime)
 
 void Log::finalise()
 {
-    if (mInited)
-    {
-        mbExit = true;
-        THREAD_SINGNAL_SET(mCond);
+    if (!mInited)
+        return;
+    
+    mbExit = true;
+    THREAD_SINGNAL_SET(mCond);
 #if PLATFORM == PLATFORM_WIN32
-        ::WaitForSingleObject(mTid, INFINITE);
-        ::CloseHandle(mTid);
+    ::WaitForSingleObject(mTid, INFINITE);
+    ::CloseHandle(mTid);
 #else
-        pthread_join(mTid, NULL);
-#endif
+    pthread_join(mTid, NULL);
+#endif    
 
-        mOutlist = mInlist;
-        _flushOutlist();
+    _flushOutlist();
+    mOutlist = mInlist;
+    _flushOutlist();    
 
-        THREAD_SINGNAL_DELETE(mCond);
-        THREAD_MUTEX_DELETE(mMutex);
+    THREAD_SINGNAL_DELETE(mCond);
+    THREAD_MUTEX_DELETE(mMutex);        
 
-        for (Log::WriterList::iterator it = mLogWriter.begin(); it != mLogWriter.end(); ++it)
-            delete *it;
+    mLogPrinter.clear();
 
-        mLogWriter.clear();
-
-        mInited = false;
-    }
+    mInited = false;
 }
 
 #if PLATFORM == PLATFORM_WIN32
@@ -123,20 +125,20 @@ unsigned __stdcall Log::_logProc(void *arg)
 
 void Log::_flushOutlist()
 {
-    MsgList* outlist = mOutlist;
+    MsgList *outlist = mOutlist;
     if (!outlist->empty())
     {
         char timeStr[32] = {0};
-        const char* pTimeStr = 0;
+        const char *pTimeStr = 0;
         for (MsgList::iterator i = outlist->begin(); i != outlist->end(); ++i)
         {
-            _MSG& msgnode = *i;
+            _MSG &msgnode = *i;
 
             if (msgnode.time)
             {
                 struct tm *timeinfo = localtime(&msgnode.time);
-                __snprintf(timeStr, sizeof(timeStr), "[%04d/%02d/%d %02d:%02d:%02d]",
-                           timeinfo->tm_year + 1900, timeinfo->tm_mon + 1, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+                snprintf(timeStr, sizeof(timeStr), "[%04d/%02d/%d %02d:%02d:%02d]",
+                         timeinfo->tm_year + 1900, timeinfo->tm_mon + 1, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
                 pTimeStr = timeStr;
             }
             else
@@ -144,12 +146,12 @@ void Log::_flushOutlist()
                 pTimeStr = 0;
             }
 
-            for (WriterList::iterator it = mLogWriter.begin(); it != mLogWriter.end(); ++it)
+            for (PrinterList::iterator it = mLogPrinter.begin(); it != mLogPrinter.end(); ++it)
             {
-                ILogWriter* obj = *it;
+                ILogPrinter *obj = *it;
                 if (obj->getLevel() & msgnode.level)
                 {
-                    obj->onLog(msgnode.msg.c_str(), pTimeStr, msgnode.level);
+                    obj->onPrint(msgnode.msg.c_str(), pTimeStr, msgnode.level);
                 }
             }
         }
@@ -183,46 +185,31 @@ bool Log::hasTime(bool b)
     return old;
 }
 
-bool Log::setLimitFrequency(bool limitFrequency)
+void Log::regPrinter(ILogPrinter *p)
 {
-    THREAD_MUTEX_LOCK(mMutex);
-    bool old = mLimitFrequency;
-    mLimitFrequency = limitFrequency;
-    THREAD_MUTEX_UNLOCK(mMutex);
-
-    return old;
-}
-
-bool Log::hasLimitFrequency() const
-{
-    return mLimitFrequency;
-}
-
-void Log::registerLog(ILogWriter *w)
-{
-    if (NULL == w)
+    if (NULL == p)
         return;
 
-    mLogWriter.remove(w);
-    mLogWriter.push_back(w);
+    mLogPrinter.remove(p);
+    mLogPrinter.push_back(p);
 }
 
-void Log::unregisterLog(ILogWriter *w)
+void Log::unregPrinter(ILogPrinter *p)
 {
-    if (NULL == w)
+    if (NULL == p)
         return;
 
-    for (WriterList::iterator it = mLogWriter.begin(); it != mLogWriter.end(); ++it)
+    for (PrinterList::iterator it = mLogPrinter.begin(); it != mLogPrinter.end(); ++it)
     {
-        if (*it == w)
+        if (*it == p)
         {
-            mLogWriter.erase(it);
+            mLogPrinter.erase(it);
             break;
         }
     }
 }
 
-void Log::output(const char* msg, LogLevel level)
+void Log::printLog(ELogLevel level, const char *msg)
 {
     if (NULL == msg)
         return;
@@ -231,18 +218,18 @@ void Log::output(const char* msg, LogLevel level)
         return;
 
 #if PLATFORM == PLATFORM_WIN32
-#ifdef _DEBUG
+# ifdef _DEBUG
     if (::IsDebuggerPresent())
     {
         ::OutputDebugString(msg);
     }
-#endif
+# endif
 #endif
 
     THREAD_MUTEX_LOCK(mMutex);
 
     mInlist->push_back(_MSG());
-    _MSG& msgnode = mInlist->back();
+    _MSG &msgnode = mInlist->back();
     msgnode.level = level;
     msgnode.time = mHasTime ? time(0) : 0;
     msgnode.msg = msg;

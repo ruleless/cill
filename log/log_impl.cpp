@@ -1,97 +1,92 @@
-#include "trace.h"
-#include "corestd.h"
-
-#ifndef DISABLE_TRACE
-
-#include <list>
-#include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
 #include <time.h>
+#include <stdarg.h>
 #include <iostream>
+#include <list>
 
-#if PLATFORM == PLATFORM_WIN32
-#   include <richedit.h>
-#   include <tchar.h>
-#endif
+#include "log_inc.h"
+#include "log.h"
 
 NAMESPACE_BEG(core)
 
 //--------------------------------------------------------------------------
-// Trace CORE_API
-CORE_API void createTrace(int level, bool hasTime)
-{
-    if (gTrace)
-    {
-        delete gTrace;
-    }
-
-    gTrace = new STrace();
-    if (!gTrace->initialise(level, hasTime))
-    {
-        delete gTrace;
-        gTrace = 0;
-    }
-}
-
-CORE_API void closeTrace()
-{
-    if (gTrace)
-    {
-        delete gTrace;
-        gTrace = 0;
-    }
-}
-
-CORE_API int setTraceLevel(int level)
-{
-    return gTrace->setTraceLevel(level);
-}
-
-CORE_API int getTraceLevel()
-{
-    return gTrace->getTraceLevel();
-}
-
-CORE_API void setTraceHasTime(bool b)
-{
-    gTrace->hasTime(b);
-}
-
-CORE_API bool setTraceHasLimitFrequency(bool limitFrequency)
-{
-    return gTrace->setTraceLimitFrequency(limitFrequency);
-}
-
-CORE_API bool hasLimitFrequency()
-{
-    return gTrace->hasLimitFrequency();
-}
-
-CORE_API void registerTrace(STrace::Listener* sink)
-{
-    gTrace->registerTrace(sink);
-}
-
-CORE_API void unregisterTrace(STrace::Listener* sink)
-{
-    gTrace->unregisterTrace(sink);
-}
-//--------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------
 // 输出到控制台
-class TraceConsole : public STrace::Listener
+#ifndef CONSOLE_TEXT_BLACK
+// font color
+# define CONSOLE_TEXT_BLACK          0
+# define CONSOLE_TEXT_RED            1
+# define CONSOLE_TEXT_GREEN          2
+# define CONSOLE_TEXT_YELLOW         3
+# define CONSOLE_TEXT_BLUE           4
+# define CONSOLE_TEXT_MAGENTA        5
+# define CONSOLE_TEXT_CYAN           6
+# define CONSOLE_TEXT_WHITE          7
+# define CONSOLE_TEXT_BOLD           8
+# define CONSOLE_TEXT_BOLD_RED       9
+# define CONSOLE_TEXT_BOLD_GREEN     10
+# define CONSOLE_TEXT_BOLD_YELLO     11
+# define CONSOLE_TEXT_BOLD_BLUE      12
+# define CONSOLE_TEXT_BOLD_MAGENTA   13
+# define CONSOLE_TEXT_BOLD_CYAN      14
+# define CONSOLE_TEXT_BOLD_WHITE     15
+
+// background color
+# define CONSOLE_BG_BLACK            0
+# define CONSOLE_BG_RED              (1 << 4)
+# define CONSOLE_BG_GREEN            (2 << 4)
+# define CONSOLE_BG_YELLO            (3 << 4)
+# define CONSOLE_BG_BLUE             (4 << 4)
+# define CONSOLE_BG_MAGENTA          (5 << 4)
+# define CONSOLE_BG_CYAN             (6 << 4)
+# define CONSOLE_BG_WHITE            (7 << 4)
+#endif
+
+static void consoleSetColor(int color)
 {
-public:
-    virtual void onTrace(const char* msg, const char* time, TraceLevel level)
+#ifdef _WIN32
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    WORD result = 0;
+    if (color & 1) result |= FOREGROUND_RED;
+    if (color & 2) result |= FOREGROUND_GREEN;
+    if (color & 4) result |= FOREGROUND_BLUE;
+    if (color & 8) result |= FOREGROUND_INTENSITY;
+    if (color & 16) result |= BACKGROUND_RED;
+    if (color & 32) result |= BACKGROUND_GREEN;
+    if (color & 64) result |= BACKGROUND_BLUE;
+    if (color & 128) result |= BACKGROUND_INTENSITY;
+    SetConsoleTextAttribute(hConsole, (WORD)result);
+#else
+    int foreground = color & 7;
+    int background = (color >> 4) & 7;
+    int bold = color & 8;
+    printf("\033[%s3%d;4%dm", bold? "01;" : "", foreground, background);
+#endif
+}
+
+static void consoleResetColor()
+{
+#ifdef _WIN32
+    consoleSetColor(7);
+#else
+    printf("\033[0m");
+#endif
+}
+
+class ConsolePrinter : public ILogPrinter
+{
+  public:
+    virtual void onPrint(const char *msg, const char *time, ELogLevel level)
     {
         assert(msg != NULL);
 
         static int color[] =
         {
             0,
-            CONSOLE_TEXT_WHITE,     // Info
-            CONSOLE_TEXT_GREEN,     // Trace
+            CONSOLE_TEXT_WHITE,     // Debug
+            CONSOLE_TEXT_GREEN,     // Info
             0,
             CONSOLE_TEXT_YELLOW,    // Warning
             0,0,0,
@@ -99,36 +94,42 @@ public:
             0,0,0,0,0,0,0,
             CONSOLE_TEXT_BOLD_RED,  // Emphasis
         };
+        static const char *levelstr[] =
+        {
+            0,
+            "[Debug]",     // Debug
+            "[Info]",      // Info
+            0,
+            "[Warn]",      // Warning
+            0,0,0,
+            "[Error]",     // Error
+            0,0,0,0,0,0,0,
+            "[Emphasis]",  // Emphasis
+        };
 
         consoleSetColor(color[level]);
+        
+        unsigned i = (unsigned)level;
+        if (i < sizeof(levelstr) / sizeof(levelstr[0]) && levelstr[i])            
+            printf("%s", levelstr[i]);
         if (time && hasTime())
         {
             printf("%s", time);
         }
-        printf("%s", msg);
+        printf("%s\n", msg);
         consoleResetColor();
     }
 };
-
-CORE_API STrace::Listener* output2Console(int level, bool hasTime)
-{
-    TraceConsole* sink = new TraceConsole();
-    sink->setTraceLevel(level);
-    sink->hasTime(hasTime);
-    registerTrace(sink);
-    return sink;
-}
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
 // 输出到Html文件
-class TraceHtmlFile : public STrace::Listener
+class HtmlFilePrinter : public ILogPrinter
 {
-    FILE* mFile;
-public:
-    TraceHtmlFile() : mFile(0) {}
+  public:
+    HtmlFilePrinter() : mFile(0) {}
 
-    ~TraceHtmlFile()
+    ~HtmlFilePrinter()
     {
         if (mFile)
         {
@@ -176,7 +177,7 @@ public:
         return true;
     }
 
-    virtual void onTrace(const char* msg, const char* time, TraceLevel level)
+    virtual void onPrint(const char* msg, const char* time, ELogLevel level)
     {
         assert(msg != NULL);
 
@@ -229,265 +230,72 @@ public:
 
         fflush(mFile);
     }
-};
 
-CORE_API STrace::Listener* output2Html(const tchar* filename, int level, bool hasTime)
-{
-    TraceHtmlFile* sink = new TraceHtmlFile();
-    if (!sink->create(filename, true))
-    {
-        delete sink;
-        return 0;
-    }
-    sink->setTraceLevel(level);
-    sink->hasTime(hasTime);
-    registerTrace(sink);
-    return sink;
-}
-//--------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------
-// 输出到文本文件
-class TraceFile : public STrace::Listener
-{
+  private:
     FILE* mFile;
-  public:
-    TraceFile() : mFile(0) {}
-
-    ~TraceFile()
-    {
-        if (mFile)
-        {
-            fclose(mFile);
-        }
-    }
-
-    bool create(const char* filename, bool bWrite)
-    {
-        if(bWrite)
-            mFile = fopen(filename, "wt");
-        else
-            mFile = fopen(filename, "at");
-
-        if (!mFile)
-            return false;
-        assert(mFile != 0);
-        
-        return true;
-    }
-
-    virtual void onTrace(const char* msg, const char* time, TraceLevel level)
-    {
-        assert(msg != NULL);
-
-        static const char* s_headline[] =
-        {
-            0,
-            "[INFO]", // Info
-            "[TRACE]", // Trace
-            0,
-            "WARNING",  // Warning
-            0,0,0,
-            "ERROR",    // Error
-            0,0,0,0,0,0,0,
-            "EMPHASIS", // Emphasis
-        };
-
-        if (time && hasTime())
-        {
-            fprintf(mFile, "%s%s %s", s_headline[(int)level], time, msg);
-        }
-        else
-        {
-            fprintf(mFile, "%s %s", s_headline[(int)level], msg);
-        }
-
-        fflush(mFile);
-    }
 };
-
-CORE_API STrace::Listener* output2File(const tchar* filename, int level, bool hasTime)
-{
-    TraceFile* sink = new TraceFile();
-    if (!sink->create(filename, true))
-    {
-        delete sink;
-        return 0;
-    }
-    sink->setTraceLevel(level);
-    sink->hasTime(hasTime);
-    registerTrace(sink);
-    return sink;
-}
 //--------------------------------------------------------------------------
 
-//--------------------------------------------------------------------------
-// windows RichEdit
-#if PLATFORM == PLATFORM_WIN32
-#ifdef _DEBUG
-#   define MAX_RICHEDIT_MESSAGE_LEN (256 * 1024) // RichEdit中最大容纳长度
-#else
-#   define MAX_RICHEDIT_MESSAGE_LEN (128 * 1024)
-#endif
+static Log *gpLog = NULL;
 
-class TraceRichEdit : public STrace::Listener
-{
-private:
-    void* mHwnd;
-public:
-    TraceRichEdit(void* hwnd) : mHwnd(hwnd) {}
-
-    virtual void onTrace(const char* msg, const char* time, TraceLevel level)
-    {
-        if (!mHwnd)
-            return;
-
-        if (time && hasTime())
-            addTraceToRichEdit(mHwnd, time, level);
-        addTraceToRichEdit(mHwnd, msg, level);
-    }
-
-    void dispatch()
-    {
-    }
-};
-
-CORE_API void addTraceToRichEdit(void* hWndRichEdit, const char* msg, TraceLevel level)
-{
-    assert(msg != NULL);
-
-    if (!msg || *msg == 0)
-        return;
-
-    HWND hWnd = (HWND)hWndRichEdit;
-    if (hWnd == NULL || !::IsWindow(hWnd))
-        return;
-
-    // GetSel
-    CHARRANGE crOld;
-    ::SendMessage(hWnd, EM_EXGETSEL, 0, (LPARAM)&crOld);
-
-    // GetTextLength
-    int nLen = (int)::SendMessage(hWnd, WM_GETTEXTLENGTH, NULL, NULL);
-    int nStrLen = (int)_tcslen(msg);
-    CHARRANGE cr;
-    if (nLen + nStrLen > MAX_RICHEDIT_MESSAGE_LEN)
-    {
-        // SetSel
-        cr.cpMin = 0;
-        cr.cpMax = nLen + nStrLen - MAX_RICHEDIT_MESSAGE_LEN; //+ (MAX_RICHEDIT_MESSAGE_LEN>>5);
-        ::SendMessage(hWnd, EM_EXSETSEL, 0, (LPARAM)&cr);
-        // ReplaceSel
-        ::SendMessage(hWnd, EM_REPLACESEL, (WPARAM)0, (LPARAM)"");
-        // GetTextLength
-        nLen = (int)::SendMessage(hWnd, WM_GETTEXTLENGTH, NULL, NULL);
-    }
-
-    // SetSel
-    cr.cpMin = nLen;
-    cr.cpMax = nLen;
-    ::SendMessage(hWnd, EM_EXSETSEL, 0, (LPARAM)&cr);
-
-    // SetSelectionCharFormat
-    CHARFORMAT2 cf;
-    memset(&cf, 0, sizeof(CHARFORMAT2));
-    cf.dwMask = CFM_COLOR | CFM_CHARSET | CFM_SIZE
-        | CFM_BOLD | CFM_ITALIC | CFM_STRIKEOUT |  CFM_UNDERLINE | CFM_LINK | CFM_SHADOW;
-    cf.dwEffects = 0;
-    cf.bCharSet = GB2312_CHARSET;
-    static const COLORREF cls[] =
-    {
-        0,
-        RGB(0,0,0),     // Info
-        RGB(0,0,255),   // Trace
-        0,
-        RGB(255,0,255), // Warning
-        0,0,0,
-        RGB(255,0,0),   // Error
-        0,0,0,0,0,0,0,
-        RGB(255,255,0)  // Emphasis
-    };
-    if (level == levelEmphasis)
-    {
-        cf.dwMask |= CFM_BACKCOLOR;
-        cf.crBackColor = RGB(106,57,5);
-    }
-    cf.crTextColor = cls[(int)level];
-    cf.yHeight = 9 * 20;
-    cf.cbSize = sizeof(CHARFORMAT2);
-    ::SendMessage(hWnd, EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
-
-    // ReplaceSel
-    ::SendMessage(hWnd, EM_REPLACESEL, (WPARAM) 0, (LPARAM)msg);
-
-    if (crOld.cpMax > crOld.cpMin)
-    {
-        // SetSel
-        ::SendMessage(hWnd, EM_EXSETSEL, 0, (LPARAM)&crOld);
-    }
-
-    // Scroll lines
-    SCROLLINFO ScrollInfo;
-    ScrollInfo.cbSize = sizeof(SCROLLINFO);
-    ScrollInfo.fMask = SIF_ALL;
-    ::GetScrollInfo(hWnd, SB_VERT, &ScrollInfo);
-
-    int nTotalLine = (int)::SendMessage(hWnd, EM_GETLINECOUNT, 0, 0);
-    if (nTotalLine > 0)
-    {
-        int nEachLineHeihgt = ScrollInfo.nMax / nTotalLine;
-        if (nEachLineHeihgt > 0)
-        {
-            int nUpLine = 0;
-            if (nTotalLine > 0 && ScrollInfo.nMax > 0 && nEachLineHeihgt > 0)
-                nUpLine = (ScrollInfo.nMax - ScrollInfo.nPos - (ScrollInfo.nPage - 1)) / nEachLineHeihgt;
-            if (nUpLine > 0)
-                ::SendMessage(hWnd, EM_LINESCROLL, 0, nUpLine);
-        }
-    }
-}
-
-CORE_API void dispatch2RichEdit(STrace::Listener* tl)
-{
-    TraceRichEdit* tre = (TraceRichEdit*)tl;
-    if (tre)
-    {
-        tre->dispatch();
-    }
-}
-
-CORE_API STrace::Listener* output2RichEdit(void* hwnd, int level, bool hasTime)
-{
-    TraceRichEdit* sink = new TraceRichEdit(hwnd);
-    sink->setTraceLevel(level);
-    sink->hasTime(hasTime);
-    registerTrace(sink);
-    return sink;
-}
-#endif
-//--------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------
-CORE_API void output(const tchar* msg, TraceLevel level)
-{
-    if (NULL == gTrace)
-    {
-#if PLATFORM == PLATFORM_WIN32
-#ifdef _DEBUG
-        if (::IsDebuggerPresent())
-        {
-            ::OutputDebugString(msg);
-        }
-#endif
-#endif
-    }
-    else
-    {
-        gTrace->output(msg, level);
-    }
-}
-//--------------------------------------------------------------------------
+static ConsolePrinter gConsolePrinter;
+static HtmlFilePrinter gHtmlFilePrinter;
 
 NAMESPACE_END // namespace core
 
-#endif // #ifndef DISABLE_TRACE
+using namespace core;
+
+extern "C" {
+
+int log_initialise(int level)
+{
+    if (gpLog)
+    {
+        return 0;
+    }
+
+    gpLog = new Log();
+    if (!gpLog)
+    {
+        return -1;
+    }
+
+    if (!gpLog->initialise(level, true))
+    {
+        return -1;
+    }
+
+    return 0;
+}
+
+void log_finalise()
+{
+    if (gpLog)
+    {
+        delete gpLog;
+        gpLog = NULL;
+    }
+}
+
+void log_reg_console()
+{
+    assert(gpLog && "log_reg_console && gpLog");
+
+    gpLog->regPrinter(&gConsolePrinter);
+}
+
+void log_print(int loglv, const char *fmt, ...)
+{
+    assert(gpLog && "log_print && gpLog");
+
+    va_list args;
+	char buf[MAX_LOG_SIZE];
+
+    va_start(args, fmt);
+	vsnprintf(buf, sizeof(buf), fmt, args);
+	va_end(args);
+
+    gpLog->printLog((ELogLevel)loglv, buf);
+}
+
+} // extern "C"
