@@ -74,8 +74,9 @@ class Log
 
     bool hasTime(bool b);
 
-    void regPrinter(ILogPrinter *sink);
-    void unregPrinter(ILogPrinter *sink);
+    void regPrinter(ILogPrinter *p);
+    void unregPrinter(ILogPrinter *p);
+    bool isRegitered(ILogPrinter *p);
 
     void printLog(ELogLevel level, const char *msg);
 

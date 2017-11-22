@@ -208,6 +208,18 @@ void Log::unregPrinter(ILogPrinter *p)
     }
 }
 
+bool Log::isRegitered(ILogPrinter *p)
+{
+    for (PrinterList::iterator it = mLogPrinter.begin(); it != mLogPrinter.end(); ++it)
+    {
+        if (*it == p)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 void Log::printLog(ELogLevel level, const char *msg)
 {
     if (NULL == msg)

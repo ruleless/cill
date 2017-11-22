@@ -239,6 +239,7 @@ class HtmlFilePrinter : public ILogPrinter
 //--------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------
+// 文件日志
 class FileLogImpl : public FileLog
 {
   public:
@@ -335,11 +336,60 @@ class FileLogImpl : public FileLog
 };
 //--------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------
+// 自定义日志
+class CustomLogPrinter : public ILogPrinter
+{
+    typedef std::list<CustomLog *> LogList;
+
+  public:
+    CustomLogPrinter() :ILogPrinter()
+                    ,mLogList()
+    {}
+
+    virtual ~CustomLogPrinter() {}
+
+    void regLog(CustomLog *log)
+    {
+        mLogList.push_back(log);
+    }
+
+    void unregLog(CustomLog *log)
+    {
+        for (LogList::iterator it = mLogList.begin(); it != mLogList.end(); it++)
+        {
+            if (*it == log)
+            {
+                mLogList.erase(it++);
+                break;
+            }
+        }
+    }
+
+    virtual void onPrint(ELogLevel level, time_t t, const char *time, const char *msg)
+    {
+        for (LogList::iterator it = mLogList.begin(); it != mLogList.end(); it++)
+        {
+            CustomLog *l = *it;
+
+            if (l)
+            {
+                l->print_log(level, t, time, msg);
+            }
+        }
+    }
+
+  private:
+    LogList mLogList;
+};
+//--------------------------------------------------------------------------
+
 static Log *gpLog = NULL;
 
 static ConsolePrinter gConsolePrinter;
 static HtmlFilePrinter gHtmlFilePrinter;
 static FileLogImpl gFileLog;
+static CustomLogPrinter gCustomLog;
 
 NAMESPACE_END // namespace core
 
@@ -406,16 +456,33 @@ void log_reg_filelog(const char *suffix,
     gpLog->regPrinter(&gFileLog);
 }
 
+void log_reg_custom(CustomLog *log)
+{
+    assert(gpLog && "log_reg_custom && gpLog");
+
+    if (!log)
+    {
+        return;
+    }
+
+    if (!gpLog->isRegitered(&gCustomLog))
+    {
+        gpLog->regPrinter(&gCustomLog);
+    }
+
+    gCustomLog.regLog(log);
+}
+
 void log_print(int loglv, const char *fmt, ...)
 {
     assert(gpLog && "log_print && gpLog");
 
     va_list args;
-	char buf[MAX_LOG_SIZE];
+    char buf[MAX_LOG_SIZE];
 
     va_start(args, fmt);
-	vsnprintf(buf, sizeof(buf), fmt, args);
-	va_end(args);
+    vsnprintf(buf, sizeof(buf), fmt, args);
+    va_end(args);
 
     gpLog->printLog((ELogLevel)loglv, buf);
 }

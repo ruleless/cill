@@ -96,6 +96,14 @@ enum ELogLevel
     AllLog = DebugLog|InfoLog|WarningLog|ErrorLog|EmphasisLog,
 };
 
+/* 
+ * 自定义的日志输出结构
+ */
+struct CustomLog
+{
+    void (*print_log)(ELogLevel level, time_t t, const char *time, const char *msg);
+};
+
 /*
  * 日志系统初始化
  */
@@ -119,6 +127,11 @@ void log_reg_filelog(const char *suffix,
                      const char *curfile_dir,
                      const char *storefile_prefix,
                      const char *storefile_dir);
+
+/* 
+ * 注册自定义的日志输出接口
+ */
+void log_reg_custom(CustomLog *log);
 
 /*
  * 日志打印

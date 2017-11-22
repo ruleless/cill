@@ -5,6 +5,11 @@
 
 #include "log_inc.h"
 
+static void printLog(ELogLevel level, time_t t, const char *time, const char *msg)
+{
+    printf("%s\n", msg);
+}
+
 int main(int argc, char *argv[])
 {
     static ELogLevel LOG_LEVEL[] = {
@@ -19,6 +24,10 @@ int main(int argc, char *argv[])
     log_initialise(AllLog);
     //log_reg_console();
     log_reg_filelog("log", "cur-", "/home/liuy", "store-", "/home/liuy");
+
+    struct CustomLog mylog;
+    mylog.print_log = printLog;
+    log_reg_custom(&mylog);
 
     if (argc > 1)
     {
