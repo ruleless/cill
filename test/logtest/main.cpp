@@ -17,8 +17,9 @@ int main(int argc, char *argv[])
     srand(time(NULL));
 
     log_initialise(AllLog);
-    log_reg_console();
-    
+    //log_reg_console();
+    log_reg_filelog("log", "cur-", "/home/liuy", "store-", "/home/liuy");
+
     if (argc > 1)
     {
         count = atoi(argv[1]);

@@ -10,6 +10,8 @@
 #include "log_inc.h"
 #include "log.h"
 
+#include "file_log.h"
+
 NAMESPACE_BEG(core)
 
 //--------------------------------------------------------------------------
@@ -78,7 +80,7 @@ static void consoleResetColor()
 class ConsolePrinter : public ILogPrinter
 {
   public:
-    virtual void onPrint(const char *msg, const char *time, ELogLevel level)
+    virtual void onPrint(ELogLevel level, time_t t, const char *time, const char *msg)
     {
         assert(msg != NULL);
 
@@ -108,9 +110,9 @@ class ConsolePrinter : public ILogPrinter
         };
 
         consoleSetColor(color[level]);
-        
+
         unsigned i = (unsigned)level;
-        if (i < sizeof(levelstr) / sizeof(levelstr[0]) && levelstr[i])            
+        if (i < sizeof(levelstr) / sizeof(levelstr[0]) && levelstr[i])
             printf("%s", levelstr[i]);
         if (time && hasTime())
         {
@@ -177,7 +179,7 @@ class HtmlFilePrinter : public ILogPrinter
         return true;
     }
 
-    virtual void onPrint(const char* msg, const char* time, ELogLevel level)
+    virtual void onPrint(ELogLevel level, time_t t, const char *time, const char *msg)
     {
         assert(msg != NULL);
 
@@ -236,10 +238,108 @@ class HtmlFilePrinter : public ILogPrinter
 };
 //--------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------
+class FileLogImpl : public FileLog
+{
+  public:
+    FileLogImpl() :FileLog()
+    {
+        *mCurFileDir = '\0';
+        *mCurFilePrefix = '\0';
+        *mStoreFileDir = '\0';
+        *mStoreFilePrefix = '\0';
+        *mSuffix = '\0';
+
+        *mCurFileTmp = '\0';
+        *mStoreFileTmp = '\0';
+    }
+
+    virtual ~FileLogImpl() {}
+
+    void setCurFileInfo(const char *dir, const char *prefix)
+    {
+        snprintf(mCurFileDir, sizeof(mCurFileDir), "%s", dir);
+        snprintf(mCurFilePrefix, sizeof(mCurFilePrefix), "%s", prefix);
+    }
+
+    void setStoreFileInfo(const char *dir, const char *prefix)
+    {
+        snprintf(mStoreFileDir, sizeof(mStoreFileDir), "%s", dir);
+        snprintf(mStoreFilePrefix, sizeof(mStoreFilePrefix), "%s", prefix);
+    }
+
+    void setSuffix(const char *suffix)
+    {
+        snprintf(mSuffix, sizeof(mSuffix), "%s", suffix);
+    }
+
+  protected:
+    virtual const char *_getTodayFilePath(const UtilDay &d)
+    {
+        snprintf(mCurFileTmp, sizeof(mCurFileTmp), "%s/%s%04d%02d%02d.%s",
+                 mCurFileDir, mCurFilePrefix, d.year, d.month, d.day, mSuffix);
+        return mCurFileTmp;
+    }
+
+    virtual const char *_getTodayFileDir() const
+    {
+        return mCurFileDir;
+    }
+
+    virtual const char *_getStoreFilePath(const UtilDay &d)
+    {
+        snprintf(mStoreFileTmp, sizeof(mStoreFileTmp), "%s/%s%04d%02d%02d.%s",
+                 mStoreFileDir, mStoreFilePrefix, d.year, d.month, d.day, mSuffix);
+        return mStoreFileTmp;
+    }
+
+    virtual const char *_getStoreFileDir() const
+    {
+        return mStoreFileDir;
+    }
+
+    virtual const char *_getSuffix() const
+    {
+        return mSuffix;
+    }
+
+    virtual const char *_todayFileDate(const char *filename) const
+    {
+        const char *datestr = strstr(filename, mCurFilePrefix);
+        if (datestr == filename)
+        {
+            return datestr + strlen(mCurFilePrefix);
+        }
+        return NULL;
+    }
+
+    virtual const char *_storeFileDate(const char *filename) const
+    {
+        const char *datestr = strstr(filename, mStoreFilePrefix);
+        if (datestr == filename)
+        {
+            return datestr + strlen(mStoreFilePrefix);
+        }
+        return NULL;
+    }
+
+  private:
+    char mCurFileDir[PATH_MAX];
+    char mCurFilePrefix[PATH_MAX];
+    char mStoreFileDir[PATH_MAX];
+    char mStoreFilePrefix[PATH_MAX];
+    char mSuffix[PATH_MAX];
+
+    char mCurFileTmp[PATH_MAX];
+    char mStoreFileTmp[PATH_MAX];
+};
+//--------------------------------------------------------------------------
+
 static Log *gpLog = NULL;
 
 static ConsolePrinter gConsolePrinter;
 static HtmlFilePrinter gHtmlFilePrinter;
+static FileLogImpl gFileLog;
 
 NAMESPACE_END // namespace core
 
@@ -282,6 +382,28 @@ void log_reg_console()
     assert(gpLog && "log_reg_console && gpLog");
 
     gpLog->regPrinter(&gConsolePrinter);
+}
+
+void log_reg_filelog(const char *suffix,
+                     const char *curfile_prefix,
+                     const char *curfile_dir,
+                     const char *storefile_prefix,
+                     const char *storefile_dir)
+{
+    assert(gpLog && "log_reg_filelog && gpLog");
+
+    if (!suffix || !curfile_prefix || !curfile_dir ||
+        !storefile_prefix || !storefile_dir)
+    {
+        return;
+    }
+
+    gFileLog.setSuffix(suffix);
+    gFileLog.setCurFileInfo(curfile_dir, curfile_prefix);
+    gFileLog.setStoreFileInfo(storefile_dir, storefile_prefix);
+    gFileLog.openRecentFile();
+
+    gpLog->regPrinter(&gFileLog);
 }
 
 void log_print(int loglv, const char *fmt, ...)

@@ -1,7 +1,7 @@
 #ifndef __CILL_LOG_INC_H__
 #define __CILL_LOG_INC_H__
 
-/* 
+/*
  * 平台定义
  */
 #ifndef PLATFORM_WIN32
@@ -30,7 +30,7 @@
 # endif
 #endif /* #ifndef PLATFORM */
 
-/* 
+/*
  * 线程定义
  */
 #if PLATFORM == PLATFORM_WIN32
@@ -82,7 +82,7 @@
 extern "C" {
 #endif
 
-/* 
+/*
  * 日志级别
  */
 enum ELogLevel
@@ -96,22 +96,31 @@ enum ELogLevel
     AllLog = DebugLog|InfoLog|WarningLog|ErrorLog|EmphasisLog,
 };
 
-/* 
+/*
  * 日志系统初始化
  */
 int log_initialise(int level);
 
-/* 
+/*
  * 日志系统去初始化
  */
 void log_finalise();
 
-/* 
+/*
  * 注册控制台Log
  */
 void log_reg_console();
 
-/* 
+/*
+ * 注册文件日志
+ */
+void log_reg_filelog(const char *suffix,
+                     const char *curfile_prefix,
+                     const char *curfile_dir,
+                     const char *storefile_prefix,
+                     const char *storefile_dir);
+
+/*
  * 日志打印
  */
 void log_print(int loglv, const char *fmt, ...);

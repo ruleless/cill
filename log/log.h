@@ -48,7 +48,7 @@ class ILogPrinter
         return mLevel;
     }
 
-    virtual void onPrint(const char* msg, const char* time, ELogLevel level) {}
+    virtual void onPrint(ELogLevel level, time_t t, const char *time, const char *msg) {}
 
   protected:
     int mLevel;

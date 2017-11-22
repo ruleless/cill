@@ -28,7 +28,7 @@ bool Log::initialise(int level, bool hasTime)
 {
     if (mInited)
         return true;
-    
+
     mLevel = level;
     mHasTime = hasTime;
     mInlist = &mMsgs1;
@@ -69,7 +69,7 @@ void Log::finalise()
 {
     if (!mInited)
         return;
-    
+
     mbExit = true;
     THREAD_SINGNAL_SET(mCond);
 #if PLATFORM == PLATFORM_WIN32
@@ -77,14 +77,13 @@ void Log::finalise()
     ::CloseHandle(mTid);
 #else
     pthread_join(mTid, NULL);
-#endif    
+#endif
 
-    _flushOutlist();
     mOutlist = mInlist;
-    _flushOutlist();    
+    _flushOutlist();
 
     THREAD_SINGNAL_DELETE(mCond);
-    THREAD_MUTEX_DELETE(mMutex);        
+    THREAD_MUTEX_DELETE(mMutex);
 
     mLogPrinter.clear();
 
@@ -151,7 +150,7 @@ void Log::_flushOutlist()
                 ILogPrinter *obj = *it;
                 if (obj->getLevel() & msgnode.level)
                 {
-                    obj->onPrint(msgnode.msg.c_str(), pTimeStr, msgnode.level);
+                    obj->onPrint(msgnode.level, msgnode.time, pTimeStr, msgnode.msg.c_str());
                 }
             }
         }
