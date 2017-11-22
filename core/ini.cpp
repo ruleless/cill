@@ -1,5 +1,4 @@
 #include "ini.h"
-#include "trace.h"
 
 NAMESPACE_BEG(core)
 
@@ -32,7 +31,7 @@ void Ini::_parse()
 
 void Ini::onParseError()
 {
-    logErrorLn("parse "<<mPath<<" error!");
+    ErrorPrint("parse %s error!", mPath);
 }
 
 int Ini::getInt(const char* section, const char* key, int def) const

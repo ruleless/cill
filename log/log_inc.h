@@ -65,7 +65,7 @@
 # define DebugPrint(fmt, ...)                                           \
     do { log_print("[%s:%d] [%s]" fmt, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__); } while (0)
 # define InfoPrint(fmt, ...)     do { log_print(InfoLog, fmt, ##__VA_ARGS__); } while(0)
-# define WarningPrint(fmt, ...)  do { log_print(Warning, fmt, ##__VA_ARGS__); } while(0)
+# define WarningPrint(fmt, ...)  do { log_print(WarningLog, fmt, ##__VA_ARGS__); } while(0)
 # define ErrorPrint(fmt, ...)    do { log_print(ErrorLog, fmt, ##__VA_ARGS__); } while(0)
 # define EmphasisPrint(fmt, ...) do { log_print(EmphasisLog, fmt, ##__VA_ARGS__); } while(0)
 #else

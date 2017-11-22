@@ -11,7 +11,7 @@ ObjectPool<MemoryStream>& MemoryStream::ObjPool()
 
 void MemoryStream::destroyObjPool()
 {
-    logErrorLn("MemoryStream::destroyObjPool(): size "<<s_ObjPool.size());
+    ErrorPrint("MemoryStream::destroyObjPool(): size %d", (int)s_ObjPool.size());
 
     s_ObjPool.destroy();
 }

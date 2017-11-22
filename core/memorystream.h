@@ -4,7 +4,6 @@
 #include "corebase.h"
 #include "memorystream_converter.h"
 #include "objectpool.h"
-#include "trace.h"
 
 NAMESPACE_BEG(core)
 
@@ -19,7 +18,8 @@ class CORE_CLASS MemoryStreamException
 
     void PrintPosError() const
     {
-        logErrorLn("Attempted to "<<(_m_add ? "put" : "get")<<" in MemoryStream (pos:"<<_m_pos<<"  size: "<<_m_size<<").");
+        ErrorPrint("Attempted to %s in MemoryStream (pos:%u size:%u).",
+                   _m_add ? "put" : "get", (unsigned)_m_pos, (unsigned)_m_size);
     }
   private:
     bool _m_add;
@@ -471,8 +471,7 @@ class CORE_CLASS MemoryStream : public PoolObject
             fbuffer += buf;
         }
 
-        fbuffer += " \n";
-        logTrace(fbuffer.c_str());
+        InfoPrint("%s", fbuffer.c_str());
 
         rpos_ = trpos;
     }
@@ -493,8 +492,7 @@ class CORE_CLASS MemoryStream : public PoolObject
             fbuffer += buf;
         }
 
-        fbuffer += " \n";
-        logTrace(fbuffer.c_str());
+        InfoPrint("%s", fbuffer.c_str());
 
         rpos_ = trpos;
     }
@@ -558,9 +556,7 @@ class CORE_CLASS MemoryStream : public PoolObject
             }
         }
 
-        fbuffer += "\n";
-
-        logTrace(fbuffer.c_str());
+        InfoPrint("%s", fbuffer.c_str());
 
         rpos_ = trpos;
     }
