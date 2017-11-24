@@ -111,13 +111,13 @@ class ConsolePrinter : public ILogPrinter
 
         consoleSetColor(color[level]);
 
-        unsigned i = (unsigned)level;
-        if (i < sizeof(levelstr) / sizeof(levelstr[0]) && levelstr[i])
-            printf("%s", levelstr[i]);
         if (time && hasTime())
         {
             printf("%s", time);
         }
+        unsigned i = (unsigned)level;
+        if (i < sizeof(levelstr) / sizeof(levelstr[0]) && levelstr[i])
+            printf("%s", levelstr[i]);
         printf("%s\n", msg);
         consoleResetColor();
     }
