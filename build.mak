@@ -4,8 +4,8 @@ CC=gcc
 CXX=g++
 MAKE=make
 
-CFLAGS+=-g -Wall
-CXXFLAGS+=-g -Wall
+CFLAGS+=-g -Wall -D_USE_KMEM
+CXXFLAGS+=-g -Wall -D_USE_KMEM
 
 AR=ar cr
 RM=-rm -rf

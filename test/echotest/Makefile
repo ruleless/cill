@@ -7,8 +7,8 @@ CXXFLAGS+=-g -Wall
 
 CILLDIR:=../..
 
-CXXFLAGS:=-I $(CILLDIR) -I $(CILLDIR)/kmem
-LDFLAGS:=-L $(CILLDIR)/lib -lcill -lasyncnet -lkmem -lpthread -lrt -ldl
+CXXFLAGS:=-I$(CILLDIR)/log -I$(CILLDIR) -I$(CILLDIR)/kmem
+LDFLAGS:=-L $(CILLDIR)/lib -lcill -llog -lasyncnet -lkmem -lpthread -lrt -ldl
 
 SRCS=$(wildcard *.cpp)
 OBJS=$(SRCS:%.cpp=%.o)
@@ -17,10 +17,10 @@ TARGETS:=$(SRCS:%.cpp=%.out)
 
 all:$(TARGETS)
 
-EchoServer.out:EchoServer.o
+echo_server.out:echo_server.o
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
-EchoClient.out:EchoClient.o
+echo_client.out:echo_client.o
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
 $(OBJS):%.o:%.cpp

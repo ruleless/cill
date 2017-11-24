@@ -17,7 +17,6 @@
 #include "allocator.h"
 #include "buffer.h"
 #include "str_buffer.h"
-#include "trace.h"
 
 #include "corestd.h"
 

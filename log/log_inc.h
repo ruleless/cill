@@ -2,7 +2,7 @@
 #define __CILL_LOG_INC_H__
 
 /*
- * Æ½Ì¨¶¨Òå
+ * å¹³å°å®šä¹‰
  */
 #ifndef PLATFORM_WIN32
 # define PLATFORM_WIN32 0
@@ -31,7 +31,7 @@
 #endif /* #ifndef PLATFORM */
 
 /*
- * Ïß³Ì¶¨Òå
+ * çº¿ç¨‹å®šä¹‰
  */
 #if PLATFORM == PLATFORM_WIN32
 # ifndef THREAD_ID
@@ -61,6 +61,9 @@
 # endif
 #endif
 
+/*
+ * æ—¥å¿—æ‰“å°å®å®šä¹‰
+ */
 #ifndef DISABLE_LOG
 # define DebugPrint(fmt, ...)                                           \
     do { log_print("[%s:%d] [%s]" fmt, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__); } while (0)
@@ -83,7 +86,7 @@ extern "C" {
 #endif
 
 /*
- * ÈÕÖ¾¼¶±ğ
+ * æ—¥å¿—çº§åˆ«
  */
 enum ELogLevel
 {
@@ -96,8 +99,8 @@ enum ELogLevel
     AllLog = DebugLog|InfoLog|WarningLog|ErrorLog|EmphasisLog,
 };
 
-/* 
- * ×Ô¶¨ÒåµÄÈÕÖ¾Êä³ö½á¹¹
+/*
+ * è‡ªå®šä¹‰çš„æ—¥å¿—è¾“å‡ºç»“æ„
  */
 struct CustomLog
 {
@@ -105,22 +108,22 @@ struct CustomLog
 };
 
 /*
- * ÈÕÖ¾ÏµÍ³³õÊ¼»¯
+ * æ—¥å¿—ç³»ç»Ÿåˆå§‹åŒ–
  */
 int log_initialise(int level);
 
 /*
- * ÈÕÖ¾ÏµÍ³È¥³õÊ¼»¯
+ * æ—¥å¿—ç³»ç»Ÿå»åˆå§‹åŒ–
  */
 void log_finalise();
 
 /*
- * ×¢²á¿ØÖÆÌ¨Log
+ * æ³¨å†Œæ§åˆ¶å°Log
  */
 void log_reg_console();
 
 /*
- * ×¢²áÎÄ¼şÈÕÖ¾
+ * æ³¨å†Œæ–‡ä»¶æ—¥å¿—
  */
 void log_reg_filelog(const char *suffix,
                      const char *curfile_prefix,
@@ -128,13 +131,13 @@ void log_reg_filelog(const char *suffix,
                      const char *storefile_prefix,
                      const char *storefile_dir);
 
-/* 
- * ×¢²á×Ô¶¨ÒåµÄÈÕÖ¾Êä³ö½Ó¿Ú
+/*
+ * æ³¨å†Œè‡ªå®šä¹‰çš„æ—¥å¿—è¾“å‡ºæ¥å£
  */
 void log_reg_custom(CustomLog *log);
 
 /*
- * ÈÕÖ¾´òÓ¡
+ * æ—¥å¿—æ‰“å°
  */
 void log_print(int loglv, const char *fmt, ...);
 

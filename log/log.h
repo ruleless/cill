@@ -17,6 +17,27 @@
 # define NAMESPACE_END }
 #endif
 
+// 使用kmem做内存管理
+#ifdef _USE_KMEM
+# include "kmem/imembase.h"
+
+# define malloc  ikmem_malloc
+# define realloc ikmem_realloc
+# define free    ikmem_free
+
+# if defined( __WIN32__ ) || defined( WIN32 ) || defined( _WIN32 )
+inline void *__cdecl operator new(size_t size)   { return malloc(size); }
+inline void *__cdecl operator new[](size_t size) { return malloc(size); }
+inline void __cdecl operator delete(void* ptr)   { free(ptr); }
+inline void __cdecl operator delete[](void* ptr) { free(ptr); }
+# else
+inline void *operator new(size_t size) throw(std::bad_alloc)   { return malloc(size); }
+inline void *operator new[](size_t size) throw(std::bad_alloc) { return malloc(size); }
+inline void operator delete(void* ptr) throw()   { free(ptr); }
+inline void operator delete[](void* ptr) throw() { free(ptr); }
+# endif
+#endif
+
 NAMESPACE_BEG(core)
 
 //--------------------------------------------------------------------------
