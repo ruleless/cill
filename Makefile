@@ -1,5 +1,5 @@
 dirs:= kmem log
-dirs+= core build
+dirs+= core cmd build
 dirs+= asyncnet
 
 include build.mak
